@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataModel;
+using Loader;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -38,16 +40,16 @@ namespace GeneticAlgorithm
         /// </summary>
         private readonly int POPULATION_SIZE = 100;
 
+        private readonly DataLoader _dataLoader;
+        private readonly DataContainer _container;
+
         public Population(int dimension)
         {
-            _random = new Random((int)DateTime.UtcNow.Ticks);
             Dimension = dimension;
+            _random = new Random((int)DateTime.UtcNow.Ticks);
+            _dataLoader = new DataLoader();
+            _container = _dataLoader.GetCreatedDataContainerFromFileAsync().Result;
 
-            Individuals = new List<Individual>(POPULATION_SIZE);
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                Individuals.Add(new Individual());
-            }
             //first
             BestIndividual = Individuals.ElementAt(0);
 
@@ -181,21 +183,6 @@ namespace GeneticAlgorithm
             SaveBest();
         }
 
-        private void DoSelectionThatCross()
-        {
-            #region Select pivot
-
-            int pivotIndex = SelectRandomPivot();
-            //or at middle :
-            //int pivotIndex = Dimension / 2;
-
-            #endregion Select pivot
-
-            // я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
-            // зачем ломать , а потом чинить, если можно сразу не ломать ? :)
-            CreateNewIndividuals(pivotIndex);
-        }
-
         private void DoMutation()
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
@@ -222,6 +209,21 @@ namespace GeneticAlgorithm
             }
         }
 
+        private void DoSelectionThatCross()
+        {
+            #region Select pivot
+
+            int pivotIndex = SelectRandomPivot();
+            //or at middle :
+            //int pivotIndex = Dimension / 2;
+
+            #endregion Select pivot
+
+            // я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
+            // зачем ломать , а потом чинить, если можно сразу не ломать ? :)
+            CreateNewIndividuals(pivotIndex);
+        }
+
         private Individual DoTournamentSelection(int tournamentSize)
         {
             int bestId = GetRandomId();
@@ -237,15 +239,6 @@ namespace GeneticAlgorithm
             return Individuals.ElementAt(bestId);
         }
 
-        /// <summary>
-        /// Returns random index at population permutation
-        /// </summary>
-        /// <returns></returns>
-        private int GetRandomId()
-        {
-            return _random.Next(POPULATION_SIZE);
-        }
-
         private int FindThisNumberInArray(int[] permutation, int value)
         {
             int premutationSize = permutation.Length;
@@ -257,6 +250,15 @@ namespace GeneticAlgorithm
                 }
             }
             return NOT_FOUND_INDEX;
+        }
+
+        /// <summary>
+        /// Returns random index at population permutation
+        /// </summary>
+        /// <returns></returns>
+        private int GetRandomId()
+        {
+            return _random.Next(POPULATION_SIZE);
         }
 
         private void SaveBest()

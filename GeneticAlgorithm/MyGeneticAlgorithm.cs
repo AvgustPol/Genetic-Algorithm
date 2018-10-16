@@ -1,6 +1,4 @@
-﻿using DataModel;
-using Loader;
-using System;
+﻿using System;
 using System.Linq;
 
 namespace GeneticAlgorithm
@@ -9,16 +7,6 @@ namespace GeneticAlgorithm
     {
         private bool _stopCondition; //=> TODO write stopCondition logics
         public Population Population { get; set; }
-
-        private readonly FileLoader _fileLoader;
-        private readonly DataContainer _container;
-
-        public MyGeneticAlgorithm()
-        {
-            _fileLoader = new FileLoader();
-
-            _container = _fileLoader.CreateDataContainer();
-        }
 
         public void StartGeneticAlgorithm()
         {
