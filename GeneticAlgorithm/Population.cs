@@ -4,41 +4,147 @@ using System.Linq;
 
 namespace GeneticAlgorithm
 {
-    internal class Population
+    public class Population
     {
-        private Random random;
+        private readonly Random _random;
 
-        private readonly int GENRATION_NUMBERS_STOP_CONDITION = 101; // количество итараций
-                                                                     //readonly int TIMER_STOP_CONDITION = 5000; // время в милисикундах
+        /// <summary>
+        /// STOP_CONDITION
+        /// Number of generations that will be generated before stop.
+        /// </summary>
+        private readonly int GENRATION_NUMBERS_STOP_CONDITION = 101;
 
-        private readonly int POPULATION_SIZE = 100;
-        private readonly int NUMBER_OF_TOURNAMENT_PARTICIPANTS = 5;
+        /// <summary>
+        /// HYBRIDIZATION PROBABILITY
+        /// (e. g. 70% )
+        /// </summary>
+        private readonly int HYBRIDIZATION_PROBABILITY = 70;
 
-        private readonly int HYBRIDIZATION_PROBABILITY = 70; // x%
-        private readonly int MUTATION_PROBABILITY = 1; // x%
-        private readonly int MAX_PROBABILITY = 100; // 100%
+        /// <summary>
+        /// MAX PROBABILITY = 100%
+        /// </summary>
+        private readonly int MAX_PROBABILITY = 100;
+
+        /// <summary>
+        /// MUTATION PROBABILITY (e. g. 1% )
+        /// </summary>
+        private readonly int MUTATION_PROBABILITY = 1;
 
         private readonly int NOT_FOUND_INDEX = -1;
+        private readonly int NUMBER_OF_TOURNAMENT_PARTICIPANTS = 5;
 
-        private List<Individual> individuals;
-        public Individual BestIndividual { get; set; }
-        public int Dimension { get; set; }
+        /// <summary>
+        /// Number of population individuals
+        /// </summary>
+        private readonly int POPULATION_SIZE = 100;
 
         public Population(int dimension)
         {
-            random = new Random((int)DateTime.UtcNow.Ticks);
+            _random = new Random((int)DateTime.UtcNow.Ticks);
             Dimension = dimension;
-            individuals = new List<Individual>(POPULATION_SIZE);
+            Individuals = new List<Individual>(POPULATION_SIZE);
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                individuals.Add(new Individual());
+                Individuals.Add(new Individual());
             }
             //first
-            BestIndividual = individuals.ElementAt(0);
+            BestIndividual = Individuals.ElementAt(0);
 
             CreateNewRandomPopulation();
             CountCostForAllIndividuals();
             SaveBest();
+        }
+
+        public Individual BestIndividual { get; set; }
+
+        public int Dimension { get; set; }
+
+        public List<Individual> Individuals { get; set; }
+
+        public double CountAverageCost()
+        {
+            int sumCost = 0;
+            foreach (var item in Individuals)
+            {
+                sumCost += item.Fitness;
+            }
+            return sumCost / POPULATION_SIZE;
+        }
+
+        public int FindWorstCost()
+        {
+            int worstCost = Individuals.FirstOrDefault().Fitness;
+            foreach (var item in Individuals)
+            {
+                if (worstCost < item.Fitness)
+                {
+                    worstCost = item.Fitness;
+                }
+            }
+            return worstCost;
+        }
+
+        public AverageCounter RunAlgorythmWithCounterCondition()
+        {
+            int counter = 0;
+
+            AverageCounter averageCounter = new AverageCounter();
+            while (GENRATION_NUMBERS_STOP_CONDITION > counter)
+            {
+                CreateNextPopulationCircle();
+
+                averageCounter.SaveData(counter++, BestIndividual.Fitness, CountAverageCost(), FindWorstCost());
+            }
+
+            return averageCounter;
+        }
+
+        private void CountCostForAllIndividuals()
+        {
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                Individuals.ElementAt(i).Fitness = CountFitnes(Individuals.ElementAt(i).Permutation);
+            }
+        }
+
+        private int CountFitnes(int[] permutation)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void CreateNewIndividuals(int pivot)
+        {
+            int halfPopulation = POPULATION_SIZE / 2;
+            for (int i = 0; i < halfPopulation; i += 2)
+            {
+                int randomNumber = _random.Next(MAX_PROBABILITY);
+                if (HYBRIDIZATION_PROBABILITY > randomNumber)
+                {
+                    CreateNewPairIndividuals(pivot, Individuals.ElementAt(i), Individuals.ElementAt(i + 1));
+                }
+
+                #region Recount cost for changed permutation
+
+                Individuals.ElementAt(i).Fitness = CostCounter.CountCost(Individuals.ElementAt(i).Permutation);
+                Individuals.ElementAt(i + 1).Fitness = CostCounter.CountCost(Individuals.ElementAt(i + 1).Permutation);
+
+                #endregion Recount cost for changed permutation
+            }
+        }
+
+        private void CreateNewPairIndividuals(int indexTo, Individual firstIndividual, Individual secondIndividual)
+        {
+            for (int i = 0; i < indexTo; i++)
+            {
+                int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.Permutation.ElementAt(i);
+                int[] hybridizationTmpArray = new int[indexTo];
+                Array.Copy(firstIndividual.Permutation, hybridizationTmpArray, indexTo);
+                if (WasHere(hybridizationTmpArray, secondIndividualPermutationElementAtCurrentIndexI))
+                {
+                    Permutator.Swap(firstIndividual.Permutation, i, FindThisNumberInArray(firstIndividual.Permutation, secondIndividualPermutationElementAtCurrentIndexI));
+                    Permutator.SwapBeetweenArrays(firstIndividual.Permutation, secondIndividual.Permutation, i);
+                }
+            }
         }
 
         private void CreateNewRandomPopulation()
@@ -55,154 +161,13 @@ namespace GeneticAlgorithm
 
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                individuals.ElementAt(i).Permutation = Permutator.GetRandomPermutation(defaultArray);
+                Individuals.ElementAt(i).Permutation = Permutator.GetRandomPermutation(defaultArray);
             }
-        }
-
-        private void CountCostForAllIndividuals()
-        {
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                individuals.ElementAt(i).Fitnes = CountFitnes(individuals.ElementAt(i).Permutation);
-            }
-        }
-
-        private int CountFitnes(int[] permutation)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void DoTournamentSelection()
-        {
-            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
-
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                int randomIndex1 = random.Next(POPULATION_SIZE - 1);
-                int randomIndex2 = random.Next(POPULATION_SIZE - 1);
-                while (randomIndex1 == randomIndex2)
-                {
-                    randomIndex2 = random.Next(POPULATION_SIZE - 1);
-                }
-                //we are looking for the smalles cost.
-                if (individuals.ElementAt(randomIndex1).Fitnes > individuals.ElementAt(randomIndex2).Fitnes)
-                {
-                    tmpIndividuals.Add(individuals.ElementAt(randomIndex2));
-                }
-                else
-                {
-                    tmpIndividuals.Add(individuals.ElementAt(randomIndex1));
-                }
-            }
-            individuals = tmpIndividuals;
-        }
-
-        private void DoMultiTournamentSelection(int participantsNumber)
-        {
-            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
-
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                #region Create random indexes
-
-                int[] randomIndexes = new int[participantsNumber];
-                for (int z = 0; z < participantsNumber; z++)
-                {
-                    randomIndexes[z] = random.Next(POPULATION_SIZE);
-                }
-
-                #endregion Create random indexes
-
-                #region Create tmp list of individuals (by random indexes)
-
-                List<Individual> tmpTournamentIndividuals = new List<Individual>();
-                foreach (var item in randomIndexes)
-                {
-                    tmpTournamentIndividuals.Add((Individual)individuals.ElementAt(item).Clone());
-                }
-
-                #endregion Create tmp list of individuals (by random indexes)
-
-                #region Find best in tmp list
-
-                Individual tmpBest = tmpTournamentIndividuals.First();
-
-                foreach (var item in tmpTournamentIndividuals)
-                {
-                    if (item.Fitnes < tmpBest.Fitnes)
-                        tmpBest = item;
-                }
-
-                #endregion Find best in tmp list
-
-                tmpIndividuals.Add(tmpBest);
-            }
-            individuals = new List<Individual>(tmpIndividuals);
-        }
-
-        public class RuletkaPobability
-        {
-            public int Index { get; set; }
-            public decimal Probability { get; set; }
-
-            public RuletkaPobability(int index, decimal probability)
-            {
-                Index = index;
-                Probability = probability;
-            }
-        }
-
-        private void DoRuletkaSelection()
-        {
-            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
-            List<RuletkaPobability> ruletkaList = new List<RuletkaPobability>();
-            decimal costSum = 0;
-            int counter = 0;
-            foreach (var item in individuals)
-            {
-                costSum += Decimal.Parse(item.Fitnes.ToString());
-            }
-            foreach (var item in individuals)
-            {
-                ruletkaList.Add(new RuletkaPobability(counter++, (decimal)(item.Fitnes / costSum)));
-            }
-
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                bool found = false;
-                while (!found)
-                {
-                    int randomProbability = random.Next(MAX_PROBABILITY);
-                    int randomElement = random.Next(POPULATION_SIZE);
-                    if (ruletkaList.ElementAt(randomElement).Probability > randomProbability)
-                    {
-                        found = true;
-                        tmpIndividuals.Add(individuals.ElementAt(randomElement));
-                    }
-                }
-            }
-
-            individuals = tmpIndividuals;
-        }
-
-        public AverageCounter RunAlgorythmWithCounterCondition()
-        {
-            int counter = 0;
-
-            AverageCounter averageCounter = new AverageCounter();
-            while (GENRATION_NUMBERS_STOP_CONDITION > counter)
-            {
-                CreateNextPopulationCircle();
-
-                averageCounter.SaveData(counter++, BestIndividual.Fitnes, CountAverageCost(), FindWorstCost());
-            }
-
-            return averageCounter;
         }
 
         private void CreateNextPopulationCircle()
         {
-            //DoMultiTournamentSelection(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
+            //DoTournamentSelection(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
             DoRuletkaSelection();
             DoHybridization(); // krzyrzowa
             DoMutation();
@@ -224,39 +189,103 @@ namespace GeneticAlgorithm
             CreateNewIndividuals(pivotIndex);
         }
 
-        private void CreateNewIndividuals(int pivot)
+        private void DoMutation()
         {
-            int halfPopulation = POPULATION_SIZE / 2;
-            for (int i = 0; i < halfPopulation; i += 2)
+            for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                int randomNumber = random.Next(MAX_PROBABILITY);
-                if (HYBRIDIZATION_PROBABILITY > randomNumber)
+                Individual tmp = Individuals.ElementAt(i);
+                for (int j = 0; j < Dimension; j++)
                 {
-                    CreateNewPairIndividuals(pivot, individuals.ElementAt(i), individuals.ElementAt(i + 1));
+                    int randomNumber = _random.Next(MAX_PROBABILITY);
+                    if (MUTATION_PROBABILITY > randomNumber)
+                    {
+                        int randomIndex = _random.Next(Dimension);
+                        while (j == randomIndex)
+                        {
+                            randomIndex = _random.Next(Dimension);
+                        }
+                        //MUTATE
+                        Permutator.Swap(tmp.Permutation, j, randomIndex);
+                        tmp.Fitness = CostCounter.CountCost(tmp.Permutation);
+                    }
                 }
-
-                #region Recount cost for changed permutation
-
-                individuals.ElementAt(i).Fitnes = CostCounter.CountCost(individuals.ElementAt(i).Permutation);
-                individuals.ElementAt(i + 1).Fitnes = CostCounter.CountCost(individuals.ElementAt(i + 1).Permutation);
-
-                #endregion Recount cost for changed permutation
             }
         }
 
-        private void CreateNewPairIndividuals(int indexTo, Individual firstIndividual, Individual secondIndividual)
+        private void DoRuletkaSelection()
         {
-            for (int i = 0; i < indexTo; i++)
+            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
+            List<RuletkaPobability> ruletkaList = new List<RuletkaPobability>();
+            decimal costSum = 0;
+            int counter = 0;
+            foreach (var item in Individuals)
             {
-                int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.Permutation.ElementAt(i);
-                int[] hybridizationTmpArray = new int[indexTo];
-                Array.Copy(firstIndividual.Permutation, hybridizationTmpArray, indexTo);
-                if (WasHere(hybridizationTmpArray, secondIndividualPermutationElementAtCurrentIndexI))
+                costSum += Decimal.Parse(item.Fitness.ToString());
+            }
+            foreach (var item in Individuals)
+            {
+                ruletkaList.Add(new RuletkaPobability(counter++, (decimal)(item.Fitness / costSum)));
+            }
+
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                bool found = false;
+                while (!found)
                 {
-                    Permutator.Swap(firstIndividual.Permutation, i, FindThisNumberInArray(firstIndividual.Permutation, secondIndividualPermutationElementAtCurrentIndexI));
-                    Permutator.SwapBeetweenArrays(firstIndividual.Permutation, secondIndividual.Permutation, i);
+                    int randomProbability = _random.Next(MAX_PROBABILITY);
+                    int randomElement = _random.Next(POPULATION_SIZE);
+                    if (ruletkaList.ElementAt(randomElement).Probability > randomProbability)
+                    {
+                        found = true;
+                        tmpIndividuals.Add(Individuals.ElementAt(randomElement));
+                    }
                 }
             }
+
+            Individuals = tmpIndividuals;
+        }
+
+        private void DoTournamentSelection(int participantsNumber)
+        {
+            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
+
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                #region Create _random indexes
+
+                int[] randomIndexes = new int[participantsNumber];
+                for (int z = 0; z < participantsNumber; z++)
+                {
+                    randomIndexes[z] = _random.Next(POPULATION_SIZE);
+                }
+
+                #endregion Create _random indexes
+
+                #region Create tmp list of Individuals (by _random indexes)
+
+                List<Individual> tmpTournamentIndividuals = new List<Individual>();
+                foreach (var item in randomIndexes)
+                {
+                    tmpTournamentIndividuals.Add((Individual)Individuals.ElementAt(item).Clone());
+                }
+
+                #endregion Create tmp list of Individuals (by _random indexes)
+
+                #region Find best in tmp list
+
+                Individual tmpBest = tmpTournamentIndividuals.First();
+
+                foreach (var item in tmpTournamentIndividuals)
+                {
+                    if (item.Fitness < tmpBest.Fitness)
+                        tmpBest = item;
+                }
+
+                #endregion Find best in tmp list
+
+                tmpIndividuals.Add(tmpBest);
+            }
+            Individuals = new List<Individual>(tmpIndividuals);
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)
@@ -270,6 +299,24 @@ namespace GeneticAlgorithm
                 }
             }
             return NOT_FOUND_INDEX;
+        }
+
+        private void SaveBest()
+        {
+            //check is best still best
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                if (BestIndividual.Fitness > Individuals.ElementAt(i).Fitness)
+                {
+                    BestIndividual = (Individual)Individuals.ElementAt(i).Clone();
+                }
+            }
+        }
+
+        private int SelectRandomPivot()
+        {
+            int randomPivot = _random.Next(1, Dimension - 2);
+            return randomPivot;
         }
 
         /// <summary>
@@ -288,68 +335,16 @@ namespace GeneticAlgorithm
             return false;
         }
 
-        private int SelectRandomPivot()
+        public class RuletkaPobability
         {
-            int randomPivot = random.Next(1, Dimension - 2);
-            return randomPivot;
-        }
-
-        private void DoMutation()
-        {
-            for (int i = 0; i < POPULATION_SIZE; i++)
+            public RuletkaPobability(int index, decimal probability)
             {
-                Individual tmp = individuals.ElementAt(i);
-                for (int j = 0; j < Dimension; j++)
-                {
-                    int randomNumber = random.Next(MAX_PROBABILITY);
-                    if (MUTATION_PROBABILITY > randomNumber)
-                    {
-                        int randomIndex = random.Next(Dimension);
-                        while (j == randomIndex)
-                        {
-                            randomIndex = random.Next(Dimension);
-                        }
-                        //MUTATE
-                        Permutator.Swap(tmp.Permutation, j, randomIndex);
-                        tmp.Fitnes = CostCounter.CountCost(tmp.Permutation);
-                    }
-                }
+                Index = index;
+                Probability = probability;
             }
-        }
 
-        private void SaveBest()
-        {
-            //check is best still best
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                if (BestIndividual.Fitnes > individuals.ElementAt(i).Fitnes)
-                {
-                    BestIndividual = (Individual)individuals.ElementAt(i).Clone();
-                }
-            }
-        }
-
-        public double CountAverageCost()
-        {
-            int sumCost = 0;
-            foreach (var item in individuals)
-            {
-                sumCost += item.Fitnes;
-            }
-            return sumCost / POPULATION_SIZE;
-        }
-
-        public int FindWorstCost()
-        {
-            int worstCost = individuals.FirstOrDefault().Fitnes;
-            foreach (var item in individuals)
-            {
-                if (worstCost < item.Fitnes)
-                {
-                    worstCost = item.Fitnes;
-                }
-            }
-            return worstCost;
+            public int Index { get; set; }
+            public decimal Probability { get; set; }
         }
     }
 }

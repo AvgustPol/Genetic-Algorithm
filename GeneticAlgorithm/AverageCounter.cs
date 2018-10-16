@@ -2,7 +2,7 @@
 
 namespace GeneticAlgorithm
 {
-    internal class AverageCounter
+    public class AverageCounter
     {
         public List<double> generationCounterList;
         public List<double> bestIndividualCostList;

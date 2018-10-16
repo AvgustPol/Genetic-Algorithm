@@ -2,9 +2,9 @@
 
 namespace GeneticAlgorithm
 {
-    internal class Individual : ICloneable
+    public class Individual : ICloneable
     {
-        public int Fitnes { get; set; }
+        public int Fitness { get; set; }
         public int[] Permutation { get; set; }
 
         public int[] PermutationItems { get; set; }
@@ -14,7 +14,7 @@ namespace GeneticAlgorithm
         public object Clone()
         {
             Individual clone = new Individual();
-            clone.Fitnes = Fitnes;
+            clone.Fitness = Fitness;
             clone.Permutation = (int[])Permutation.Clone();
             return clone;
         }
@@ -61,6 +61,12 @@ namespace GeneticAlgorithm
             int temp = array1[index];
             array1[index] = array2[index];
             array2[index] = temp;
+        }
+
+        public void CountFitness()
+        {
+            throw new NotImplementedException();
+            // Fitness = 42;
         }
     }
 }
