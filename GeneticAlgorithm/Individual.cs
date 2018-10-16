@@ -4,7 +4,7 @@ namespace GeneticAlgorithm
 {
     public class Individual : ICloneable
     {
-        public int Fitness => CountFitness();
+        public int Fitness { get; set; }
 
         /// <summary>
         /// KNP problem

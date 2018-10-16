@@ -16,7 +16,7 @@ namespace GeneticAlgorithm
 
             while (!_stopCondition)
             {
-                SelectThatCross(Population);
+                SelectAndCross(Population);
                 Mutate(Population);
                 CountFitness(Population);
                 //localCounter++;
@@ -45,11 +45,12 @@ namespace GeneticAlgorithm
 
         private void CreatePopulation()
         {
-            Population = new Population(_container.Dimension);
+            Population = new Population(GeneticAlgorithmParameters.Dimension);
         }
 
-        private void SelectThatCross(Population population)
+        private void SelectAndCross(Population population)
         {
+            population.SelectAndCross();
         }
 
         private void Mutate(Population population)
