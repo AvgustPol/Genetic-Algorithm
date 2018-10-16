@@ -167,8 +167,7 @@ namespace GeneticAlgorithm
 
         private void CreateNextPopulationCircle()
         {
-            //DoTournamentSelection(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
-            DoRuletkaSelection();
+            DoTournamentSelection(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
             DoHybridization(); // krzyrzowa
             DoMutation();
             SaveBest();
@@ -210,39 +209,6 @@ namespace GeneticAlgorithm
                     }
                 }
             }
-        }
-
-        private void DoRuletkaSelection()
-        {
-            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
-            List<RuletkaPobability> ruletkaList = new List<RuletkaPobability>();
-            decimal costSum = 0;
-            int counter = 0;
-            foreach (var item in Individuals)
-            {
-                costSum += Decimal.Parse(item.Fitness.ToString());
-            }
-            foreach (var item in Individuals)
-            {
-                ruletkaList.Add(new RuletkaPobability(counter++, (decimal)(item.Fitness / costSum)));
-            }
-
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                bool found = false;
-                while (!found)
-                {
-                    int randomProbability = _random.Next(MAX_PROBABILITY);
-                    int randomElement = _random.Next(POPULATION_SIZE);
-                    if (ruletkaList.ElementAt(randomElement).Probability > randomProbability)
-                    {
-                        found = true;
-                        tmpIndividuals.Add(Individuals.ElementAt(randomElement));
-                    }
-                }
-            }
-
-            Individuals = tmpIndividuals;
         }
 
         private void DoTournamentSelection(int participantsNumber)
@@ -317,34 +283,6 @@ namespace GeneticAlgorithm
         {
             int randomPivot = _random.Next(1, Dimension - 2);
             return randomPivot;
-        }
-
-        /// <summary>
-        /// Checks , if value was in array
-        /// </summary>
-        /// <param name="array"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        private bool WasHere(int[] array, int value)
-        {
-            foreach (var item in array)
-            {
-                if (item == value)
-                    return true;
-            }
-            return false;
-        }
-
-        public class RuletkaPobability
-        {
-            public RuletkaPobability(int index, decimal probability)
-            {
-                Index = index;
-                Probability = probability;
-            }
-
-            public int Index { get; set; }
-            public decimal Probability { get; set; }
         }
     }
 }
