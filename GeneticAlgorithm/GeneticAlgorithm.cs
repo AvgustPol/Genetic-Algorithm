@@ -18,9 +18,8 @@ namespace GeneticAlgorithm
 
             while (!_stopCondition)
             {
-                Selection(Population);
-                Crossover();
-                Mutation(Population);
+                SelectThatCross(Population);
+                Mutate(Population);
                 CountFitness(Population);
                 //localCounter++;
             }
@@ -51,15 +50,11 @@ namespace GeneticAlgorithm
             Population = new Population(_container.Dimension);
         }
 
-        public void Selection(Population population)
+        public void SelectThatCross(Population population)
         {
         }
 
-        public void Crossover()
-        {
-        }
-
-        public void Mutation(Population population)
+        public void Mutate(Population population)
         {
             //TODO - compare foreach and for
             for (int i = 0; i < population.Individuals.Count; i++)

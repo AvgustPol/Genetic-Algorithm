@@ -4,18 +4,23 @@ namespace GeneticAlgorithm
 {
     public class Individual : ICloneable
     {
-        public int Fitness { get; set; }
-        public int[] Permutation { get; set; }
+        public int Fitness => CountFitness();
 
+        /// <summary>
+        /// KNP problem
+        /// </summary>
         public int[] PermutationItems { get; set; }
 
+        /// <summary>
+        /// TSP problem
+        /// </summary>
         public int[] PermutationPlaces { get; set; }
 
         public object Clone()
         {
             Individual clone = new Individual();
-            clone.Fitness = Fitness;
-            clone.Permutation = (int[])Permutation.Clone();
+            clone.PermutationItems = (int[])PermutationItems.Clone();
+            clone.PermutationPlaces = (int[])PermutationPlaces.Clone();
             return clone;
         }
 
@@ -63,7 +68,7 @@ namespace GeneticAlgorithm
             array2[index] = temp;
         }
 
-        public void CountFitness()
+        public int CountFitness()
         {
             throw new NotImplementedException();
             // Fitness = 42;

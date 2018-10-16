@@ -42,6 +42,7 @@ namespace GeneticAlgorithm
         {
             _random = new Random((int)DateTime.UtcNow.Ticks);
             Dimension = dimension;
+
             Individuals = new List<Individual>(POPULATION_SIZE);
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
@@ -57,6 +58,9 @@ namespace GeneticAlgorithm
 
         public Individual BestIndividual { get; set; }
 
+        /// <summary>
+        /// number of places at TSP problem
+        /// </summary>
         public int Dimension { get; set; }
 
         public List<Individual> Individuals { get; set; }
@@ -103,7 +107,7 @@ namespace GeneticAlgorithm
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Individuals.ElementAt(i).Fitness = CountFitnes(Individuals.ElementAt(i).Permutation);
+                Individuals.ElementAt(i).Fitness = CountFitnes(Individuals.ElementAt(i).PermutationItems);
             }
         }
 
@@ -125,8 +129,8 @@ namespace GeneticAlgorithm
 
                 #region Recount cost for changed permutation
 
-                Individuals.ElementAt(i).Fitness = CostCounter.CountCost(Individuals.ElementAt(i).Permutation);
-                Individuals.ElementAt(i + 1).Fitness = CostCounter.CountCost(Individuals.ElementAt(i + 1).Permutation);
+                Individuals.ElementAt(i).Fitness = CostCounter.CountCost(Individuals.ElementAt(i).PermutationItems);
+                Individuals.ElementAt(i + 1).Fitness = CostCounter.CountCost(Individuals.ElementAt(i + 1).PermutationItems);
 
                 #endregion Recount cost for changed permutation
             }
@@ -136,13 +140,13 @@ namespace GeneticAlgorithm
         {
             for (int i = 0; i < indexTo; i++)
             {
-                int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.Permutation.ElementAt(i);
+                int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.PermutationItems.ElementAt(i);
                 int[] hybridizationTmpArray = new int[indexTo];
-                Array.Copy(firstIndividual.Permutation, hybridizationTmpArray, indexTo);
+                Array.Copy(firstIndividual.PermutationItems, hybridizationTmpArray, indexTo);
                 if (WasHere(hybridizationTmpArray, secondIndividualPermutationElementAtCurrentIndexI))
                 {
-                    Permutator.Swap(firstIndividual.Permutation, i, FindThisNumberInArray(firstIndividual.Permutation, secondIndividualPermutationElementAtCurrentIndexI));
-                    Permutator.SwapBeetweenArrays(firstIndividual.Permutation, secondIndividual.Permutation, i);
+                    Permutator.Swap(firstIndividual.PermutationItems, i, FindThisNumberInArray(firstIndividual.PermutationItems, secondIndividualPermutationElementAtCurrentIndexI));
+                    Permutator.SwapBeetweenArrays(firstIndividual.PermutationItems, secondIndividual.PermutationItems, i);
                 }
             }
         }
@@ -161,19 +165,19 @@ namespace GeneticAlgorithm
 
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Individuals.ElementAt(i).Permutation = Permutator.GetRandomPermutation(defaultArray);
+                Individuals.ElementAt(i).PermutationItems = Permutator.GetRandomPermutation(defaultArray);
             }
         }
 
         private void CreateNextPopulationCircle()
         {
             DoTournamentSelection(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
-            DoHybridization(); // krzyrzowa
+            DoSelectionThatCross(); // krzyrzowanie
             DoMutation();
             SaveBest();
         }
 
-        private void DoHybridization()
+        private void DoSelectionThatCross()
         {
             #region Select pivot
 
@@ -204,54 +208,35 @@ namespace GeneticAlgorithm
                             randomIndex = _random.Next(Dimension);
                         }
                         //MUTATE
-                        Permutator.Swap(tmp.Permutation, j, randomIndex);
-                        tmp.Fitness = CostCounter.CountCost(tmp.Permutation);
+                        Permutator.Swap(tmp.PermutationItems, j, randomIndex);
+                        tmp.Fitness = CostCounter.CountCost(tmp.PermutationItems);
                     }
                 }
             }
         }
 
-        private void DoTournamentSelection(int participantsNumber)
+        private Individual DoTournamentSelection(int tournamentSize)
         {
-            List<Individual> tmpIndividuals = new List<Individual>(POPULATION_SIZE);
-
-            for (int i = 0; i < POPULATION_SIZE; i++)
+            int bestId = GetRandomId();
+            tournamentSize--;
+            for (int i = 0; i < tournamentSize; i++)
             {
-                #region Create _random indexes
-
-                int[] randomIndexes = new int[participantsNumber];
-                for (int z = 0; z < participantsNumber; z++)
+                if (Individuals.ElementAt(GetRandomId()).Fitness > Individuals.ElementAt(bestId).Fitness)
                 {
-                    randomIndexes[z] = _random.Next(POPULATION_SIZE);
+                    bestId = i;
                 }
-
-                #endregion Create _random indexes
-
-                #region Create tmp list of Individuals (by _random indexes)
-
-                List<Individual> tmpTournamentIndividuals = new List<Individual>();
-                foreach (var item in randomIndexes)
-                {
-                    tmpTournamentIndividuals.Add((Individual)Individuals.ElementAt(item).Clone());
-                }
-
-                #endregion Create tmp list of Individuals (by _random indexes)
-
-                #region Find best in tmp list
-
-                Individual tmpBest = tmpTournamentIndividuals.First();
-
-                foreach (var item in tmpTournamentIndividuals)
-                {
-                    if (item.Fitness < tmpBest.Fitness)
-                        tmpBest = item;
-                }
-
-                #endregion Find best in tmp list
-
-                tmpIndividuals.Add(tmpBest);
             }
-            Individuals = new List<Individual>(tmpIndividuals);
+
+            return Individuals.ElementAt(bestId);
+        }
+
+        /// <summary>
+        /// Returns random index at population permutation
+        /// </summary>
+        /// <returns></returns>
+        private int GetRandomId()
+        {
+            return _random.Next(POPULATION_SIZE);
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)
