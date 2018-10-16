@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using System;
 using System.Linq;
 
 namespace GeneticAlgorithm
@@ -59,7 +60,8 @@ namespace GeneticAlgorithm
             //TODO - compare foreach and for
             for (int i = 0; i < population.Individuals.Count; i++)
             {
-                population.Individuals.ElementAt(i).Mutate();
+                throw new NotImplementedException();
+                //population.Individuals.ElementAt(i).Mutate();
             }
 
             //TODO - compare foreach and for

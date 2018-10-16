@@ -105,10 +105,12 @@ namespace GeneticAlgorithm
 
         private void CountCostForAllIndividuals()
         {
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                Individuals.ElementAt(i).Fitness = CountFitnes(Individuals.ElementAt(i).PermutationItems);
-            }
+            throw new NotImplementedException();
+
+            //for (int i = 0; i < POPULATION_SIZE; i++)
+            //{
+            //    Individuals.ElementAt(i).Fitness = CountFitnes(Individuals.ElementAt(i).PermutationItems);
+            //}
         }
 
         private int CountFitnes(int[] permutation)
@@ -118,37 +120,39 @@ namespace GeneticAlgorithm
 
         private void CreateNewIndividuals(int pivot)
         {
-            int halfPopulation = POPULATION_SIZE / 2;
-            for (int i = 0; i < halfPopulation; i += 2)
-            {
-                int randomNumber = _random.Next(MAX_PROBABILITY);
-                if (HYBRIDIZATION_PROBABILITY > randomNumber)
-                {
-                    CreateNewPairIndividuals(pivot, Individuals.ElementAt(i), Individuals.ElementAt(i + 1));
-                }
+            throw new NotImplementedException();
+            //int halfPopulation = POPULATION_SIZE / 2;
+            //for (int i = 0; i < halfPopulation; i += 2)
+            //{
+            //    int randomNumber = _random.Next(MAX_PROBABILITY);
+            //    if (HYBRIDIZATION_PROBABILITY > randomNumber)
+            //    {
+            //        CreateNewPairIndividuals(pivot, Individuals.ElementAt(i), Individuals.ElementAt(i + 1));
+            //    }
 
-                #region Recount cost for changed permutation
+            //    #region Recount cost for changed permutation
 
-                Individuals.ElementAt(i).Fitness = CostCounter.CountCost(Individuals.ElementAt(i).PermutationItems);
-                Individuals.ElementAt(i + 1).Fitness = CostCounter.CountCost(Individuals.ElementAt(i + 1).PermutationItems);
+            //    Individuals.ElementAt(i).Fitness = CostCounter.CountCost(Individuals.ElementAt(i).PermutationItems);
+            //    Individuals.ElementAt(i + 1).Fitness = CostCounter.CountCost(Individuals.ElementAt(i + 1).PermutationItems);
 
-                #endregion Recount cost for changed permutation
-            }
+            //    #endregion Recount cost for changed permutation
+            //}
         }
 
         private void CreateNewPairIndividuals(int indexTo, Individual firstIndividual, Individual secondIndividual)
         {
-            for (int i = 0; i < indexTo; i++)
-            {
-                int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.PermutationItems.ElementAt(i);
-                int[] hybridizationTmpArray = new int[indexTo];
-                Array.Copy(firstIndividual.PermutationItems, hybridizationTmpArray, indexTo);
-                if (WasHere(hybridizationTmpArray, secondIndividualPermutationElementAtCurrentIndexI))
-                {
-                    Permutator.Swap(firstIndividual.PermutationItems, i, FindThisNumberInArray(firstIndividual.PermutationItems, secondIndividualPermutationElementAtCurrentIndexI));
-                    Permutator.SwapBeetweenArrays(firstIndividual.PermutationItems, secondIndividual.PermutationItems, i);
-                }
-            }
+            throw new NotImplementedException();
+            //for (int i = 0; i < indexTo; i++)
+            //{
+            //    int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.PermutationItems.ElementAt(i);
+            //    int[] hybridizationTmpArray = new int[indexTo];
+            //    Array.Copy(firstIndividual.PermutationItems, hybridizationTmpArray, indexTo);
+            //    if (WasHere(hybridizationTmpArray, secondIndividualPermutationElementAtCurrentIndexI))
+            //    {
+            //        Permutator.Swap(firstIndividual.PermutationItems, i, FindThisNumberInArray(firstIndividual.PermutationItems, secondIndividualPermutationElementAtCurrentIndexI));
+            //        Permutator.SwapBeetweenArrays(firstIndividual.PermutationItems, secondIndividual.PermutationItems, i);
+            //    }
+            //}
         }
 
         private void CreateNewRandomPopulation()
@@ -209,7 +213,10 @@ namespace GeneticAlgorithm
                         }
                         //MUTATE
                         Permutator.Swap(tmp.PermutationItems, j, randomIndex);
-                        tmp.Fitness = CostCounter.CountCost(tmp.PermutationItems);
+
+                        throw new NotImplementedException();
+
+                        //tmp.Fitness = CostCounter.CountCost(tmp.PermutationItems);
                     }
                 }
             }
