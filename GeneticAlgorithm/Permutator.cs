@@ -4,7 +4,7 @@ namespace GeneticAlgorithm
 {
     public class Permutator
     {
-        public static void Shuffle(int[] permutation)
+        private static void Shuffle(int[] permutation)
         {
             int n = permutation.Length;
             Random random = new Random(n);

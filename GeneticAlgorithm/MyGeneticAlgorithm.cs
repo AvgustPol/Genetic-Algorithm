@@ -1,15 +1,24 @@
 ﻿using DataModel;
+using Loader;
 using System;
 using System.Linq;
 
 namespace GeneticAlgorithm
 {
-    public class GeneticAlgorithm
+    public class MyGeneticAlgorithm
     {
         private bool _stopCondition; //=> TODO write stopCondition logics
         public Population Population { get; set; }
 
+        private readonly FileLoader _fileLoader;
         private readonly DataContainer _container;
+
+        public MyGeneticAlgorithm()
+        {
+            _fileLoader = new FileLoader();
+
+            _container = _fileLoader.CreateDataContainer();
+        }
 
         public void StartGeneticAlgorithm()
         {
@@ -51,11 +60,11 @@ namespace GeneticAlgorithm
             Population = new Population(_container.Dimension);
         }
 
-        public void SelectThatCross(Population population)
+        private void SelectThatCross(Population population)
         {
         }
 
-        public void Mutate(Population population)
+        private void Mutate(Population population)
         {
             //TODO - compare foreach and for
             for (int i = 0; i < population.Individuals.Count; i++)
