@@ -2,12 +2,13 @@
 using Loader;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GeneticAlgorithm
 {
     public class Population
     {
+        private readonly DataContainer _container;
+        private readonly DataLoader _dataLoader;
         private readonly Random _random;
 
         /// <summary>
@@ -40,9 +41,6 @@ namespace GeneticAlgorithm
         /// </summary>
         private readonly int POPULATION_SIZE = 100;
 
-        private readonly DataLoader _dataLoader;
-        private readonly DataContainer _container;
-
         public Population(int dimension)
         {
             Dimension = dimension;
@@ -51,16 +49,10 @@ namespace GeneticAlgorithm
             _container = _dataLoader.GetCreatedDataContainerFromFileAsync().Result;
 
             //first
-            BestIndividual = Individuals.ElementAt(0);
+            BestIndividual = Individuals[0];
 
             CreateNewRandomPopulation();
-            CountCostForAllIndividuals();
-            SaveBest();
-        }
-
-        private void CountCostForAllIndividuals()
-        {
-            throw new NotImplementedException();
+            //SaveBest();
         }
 
         public Individual BestIndividual { get; set; }
@@ -70,26 +62,35 @@ namespace GeneticAlgorithm
         /// </summary>
         public int Dimension { get; set; }
 
-        public List<Individual> Individuals { get; set; }
+        public Dictionary<int, Individual> Individuals { get; set; }
 
         public double CountAverageCost()
         {
             int sumCost = 0;
-            foreach (var item in Individuals)
+            for (int i = 0; i < Individuals.Count; i++)
             {
-                sumCost += item.Fitness;
+                sumCost += Individuals[i].Fitness;
             }
             return sumCost / POPULATION_SIZE;
         }
 
+        public void CountFitnessForTheEntirePopulation()
+        {
+            for (int i = 0; i < Individuals.Count; i++)
+            {
+                Individuals[i].CountFitness();
+            }
+        }
+
         public int FindWorstCost()
         {
-            int worstCost = Individuals.FirstOrDefault().Fitness;
-            foreach (var item in Individuals)
+            //starts searching from first id
+            int worstCost = Individuals[0].Fitness;
+            for (int i = 0; i < Individuals.Count; i++)
             {
-                if (worstCost < item.Fitness)
+                if (worstCost < Individuals[i].Fitness)
                 {
-                    worstCost = item.Fitness;
+                    worstCost = Individuals[i].Fitness;
                 }
             }
             return worstCost;
@@ -110,45 +111,17 @@ namespace GeneticAlgorithm
             return averageCounter;
         }
 
-        /// <summary>
-        /// TODO
-        ///  я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
-        ///  зачем ломать , а потом чинить, если можно сразу не ломать ? :)
-        /// </summary>
-        /// <param name="pivot"></param>
-        private void Cross(int pivot)
+        public void SelectAndCross()
         {
-            int halfPopulation = POPULATION_SIZE / 2;
-            for (int i = 0; i < halfPopulation; i += 2)
-            {
-                int randomNumber = _random.Next(MAX_PROBABILITY);
-                if (HYBRIDIZATION_PROBABILITY > randomNumber)
-                {
-                    CreateNewPairIndividuals(pivot, Individuals.ElementAt(i), Individuals.ElementAt(i + 1));
-                }
+            Individual individual1 = GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
+            Individual individual2 = GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
 
-                #region Recount cost for changed permutation
-
-                //Individuals.ElementAt(i).Fitness = CostCounter.CountCost(Individuals.ElementAt(i).PermutationItems);
-                //Individuals.ElementAt(i + 1).Fitness = CostCounter.CountCost(Individuals.ElementAt(i + 1).PermutationItems);
-
-                #endregion Recount cost for changed permutation
-            }
+            Cross(ref individual1, ref individual2);
         }
 
-        private void CreateNewPairIndividuals(int pivot, Individual firstIndividual, Individual secondIndividual)
+        private void CreateNewItemsPermutation(ref Individual firstIndividual, ref Individual secondIndividual)
         {
-            //for (int i = 0; i < pivot; i++)
-            //{
-            //    int secondIndividualPermutationElementAtCurrentIndexI = secondIndividual.PermutationItems.ElementAt(i);
-            //    int[] tmpArray = new int[pivot];
-            //    Array.Copy(firstIndividual.PermutationItems, tmpArray, pivot);
-            //    if (WasHere(tmpArray, secondIndividualPermutationElementAtCurrentIndexI))
-            //    {
-            //        Permutator.Swap(firstIndividual.PermutationItems, i, FindThisNumberInArray(firstIndividual.PermutationItems, secondIndividualPermutationElementAtCurrentIndexI));
-            //        Permutator.SwapBeetweenArrays(firstIndividual.PermutationItems, secondIndividual.PermutationItems, i);
-            //    }
-            //}
+            throw new NotImplementedException();
         }
 
         private void CreateNewRandomPopulation()
@@ -165,7 +138,7 @@ namespace GeneticAlgorithm
 
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Individuals.ElementAt(i).PermutationItems = Permutator.GetRandomPermutation(defaultArray);
+                Individuals[i].PermutationPlaces = Permutator.GetRandomPermutation(defaultArray);
             }
         }
 
@@ -177,11 +150,23 @@ namespace GeneticAlgorithm
             SaveBest();
         }
 
+        /// <summary>
+        /// TODO
+        ///  я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
+        ///  зачем ломать , а потом чинить, если можно сразу не ломать ? :)
+        /// </summary>
+        /// <param name="pivot"></param>
+        private void Cross(ref Individual firstIndividual, ref Individual secondIndividual)
+        {
+            UseCrossOperator(ref firstIndividual, ref secondIndividual);
+            CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
+        }
+
         private void DoMutation()
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Individual tmp = Individuals.ElementAt(i);
+                Individual tmp = Individuals[i];
                 for (int j = 0; j < Dimension; j++)
                 {
                     int randomNumber = _random.Next(MAX_PROBABILITY);
@@ -193,45 +178,14 @@ namespace GeneticAlgorithm
                             randomIndex = _random.Next(Dimension);
                         }
                         //MUTATE
-                        Permutator.Swap(tmp.PermutationItems, j, randomIndex);
+                        Permutator.Swap(tmp.PermutationPlaces, j, randomIndex);
 
                         throw new NotImplementedException();
 
-                        //tmp.Fitness = CostCounter.CountCost(tmp.PermutationItems);
+                        //tmp.Fitness = CostCounter.CountCost(tmp.PermutationPlaces);
                     }
                 }
             }
-        }
-
-        public void SelectAndCross()
-        {
-            Individual individual1 = GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
-            Individual individual2 = GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
-
-            #region Select pivot
-
-            int pivotIndex = GetRandomPivot();
-            //or at middle :
-            //int pivotIndex = Dimension / 2;
-
-            #endregion Select pivot
-
-            Cross(pivotIndex);
-        }
-
-        private Individual GetTournamentSelectionWinner(int numberOfTournamentParticipants)
-        {
-            int bestId = GetRandomId();
-            numberOfTournamentParticipants--;
-            for (int i = 0; i < numberOfTournamentParticipants; i++)
-            {
-                if (Individuals.ElementAt(GetRandomId()).Fitness > Individuals.ElementAt(bestId).Fitness)
-                {
-                    bestId = i;
-                }
-            }
-
-            return Individuals.ElementAt(bestId);
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)
@@ -256,27 +210,47 @@ namespace GeneticAlgorithm
             return _random.Next(POPULATION_SIZE);
         }
 
+        private Individual GetTournamentSelectionWinner(int numberOfTournamentParticipants)
+        {
+            int bestId = GetRandomId();
+            numberOfTournamentParticipants--;
+            for (int i = 0; i < numberOfTournamentParticipants; i++)
+            {
+                if (Individuals[GetRandomId()].Fitness > Individuals[bestId].Fitness)
+                {
+                    bestId = i;
+                }
+            }
+
+            return Individuals[bestId];
+        }
+
         private void SaveBest()
         {
             //check is best still best
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                if (BestIndividual.Fitness > Individuals.ElementAt(i).Fitness)
+                if (BestIndividual.Fitness > Individuals[i].Fitness)
                 {
-                    BestIndividual = (Individual)Individuals.ElementAt(i).Clone();
+                    BestIndividual = (Individual)Individuals[i].Clone();
                 }
             }
         }
 
         /// <summary>
-        /// Returns random value from 1 to Dimension - 2
-        /// pivot can't be first (0) or last (Dimension - 2) index
+        /// надписывает
         /// </summary>
-        /// <returns></returns>
-        private int GetRandomPivot()
+        /// <param name="leftPivot"></param>
+        /// <param name="rightPivot"></param>
+        /// <param name="firstIndividual"></param>
+        /// <param name="secondIndividual"></param>
+        private void UseCrossOperator(ref Individual firstIndividual, ref Individual secondIndividual)
         {
-            int randomPivot = _random.Next(1, Dimension - 2);
-            return randomPivot;
+            var tmp1 = firstIndividual.PermutationPlaces;
+            var tmp2 = secondIndividual.PermutationPlaces;
+
+            firstIndividual.PMXoperator(secondIndividual);
+            secondIndividual.PMXoperator(firstIndividual);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace GeneticAlgorithm
 {
@@ -31,16 +30,7 @@ namespace GeneticAlgorithm
         /// <param name="population"></param>
         private void CountFitness(Population population)
         {
-            //TODO - compare foreach and for
-            for (int i = 0; i < population.Individuals.Count; i++)
-            {
-                population.Individuals.ElementAt(i).CountFitness();
-            }
-
-            //foreach (Individual individual in population.Individuals)
-            //{
-            //    individual.CountFitness();
-            //}
+            population.CountFitnessForTheEntirePopulation();
         }
 
         private void CreatePopulation()
@@ -58,6 +48,7 @@ namespace GeneticAlgorithm
             //TODO - compare foreach and for
             for (int i = 0; i < population.Individuals.Count; i++)
             {
+                //population.
                 throw new NotImplementedException();
                 //population.Individuals.ElementAt(i).Mutate();
             }

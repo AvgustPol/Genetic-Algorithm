@@ -40,12 +40,12 @@ namespace GeneticAlgorithm
         public static int[] GetRandomPermutation(int[] originalMatrix)
         {
             // нужно ли создавать tmp ???
-            int[] tmp = new int[originalMatrix.Length];
-            Array.Copy(originalMatrix, tmp, originalMatrix.Length);
+            //int[] tmp = new int[originalMatrix.Length];
+            //Array.Copy(originalMatrix, tmp, originalMatrix.Length);
 
-            Shuffle(tmp);
+            Shuffle(originalMatrix);
 
-            return tmp;
+            return originalMatrix;
         }
 
         public static void SwapBeetweenArrays(int[] array1, int[] array2, int index)

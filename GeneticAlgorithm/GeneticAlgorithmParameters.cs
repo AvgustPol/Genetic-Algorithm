@@ -7,6 +7,6 @@
         /// </summary>
         public const int CrossProbability = 7;
 
-        public static int Dimension;
+        public static int Dimension = 10;
     }
 }
