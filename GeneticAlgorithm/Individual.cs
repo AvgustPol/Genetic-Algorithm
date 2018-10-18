@@ -21,8 +21,16 @@ namespace GeneticAlgorithm
         public object Clone()
         {
             Individual clone = new Individual();
-            clone.PermutationPlaces = (int[])PermutationPlaces.Clone();
-            clone.PermutationItems = (int[])PermutationItems.Clone();
+            if (PermutationPlaces != null)
+            {
+                clone.PermutationPlaces = (int[])PermutationPlaces.Clone();
+            }
+
+            if (PermutationItems != null)
+            {
+                clone.PermutationItems = (int[])PermutationItems.Clone();
+            }
+
             return clone;
         }
 

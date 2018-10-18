@@ -59,6 +59,6 @@ namespace GeneticAlgorithm
 
         public static readonly int MaxProbability = 100;
 
-        public static readonly int NumberOfTournamentParticipants = 5;
+        public static readonly int NumberOfTournamentParticipants = 3;
     }
 }

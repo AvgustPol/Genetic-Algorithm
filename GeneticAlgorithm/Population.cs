@@ -10,7 +10,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// Number of population individuals
         /// </summary>
-        private readonly int POPULATION_SIZE = 5;
+        private readonly int POPULATION_SIZE = 100;
 
         public Individual BestIndividual { get; set; }
         public Dictionary<int, Individual> Individuals { get; set; }
@@ -107,7 +107,7 @@ namespace GeneticAlgorithm
             Individual individual1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
             Individual individual2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
-            Cross(ref individual1, ref individual2);
+            Cross(individual1, individual2);
         }
 
         private void CreateNewItemsPermutation(ref Individual firstIndividual, ref Individual secondIndividual)
@@ -156,11 +156,15 @@ namespace GeneticAlgorithm
         ///  зачем ломать , а потом чинить, если можно сразу не ломать ? :)
         /// </summary>
         /// <param name="pivot"></param>
-        private void Cross(ref Individual firstIndividual, ref Individual secondIndividual)
+        private void Cross(Individual firstIndividual, Individual secondIndividual)
         {
-            UseCrossOperator(ref firstIndividual, ref secondIndividual);
-            //TODO finish
-            //CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
+            int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
+            if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
+            {
+                UseCrossOperator(ref firstIndividual, ref secondIndividual);
+                //TODO finish
+                //CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
+            }
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)
@@ -214,8 +218,11 @@ namespace GeneticAlgorithm
 
         private void UseCrossOperator(ref Individual firstIndividual, ref Individual secondIndividual)
         {
-            firstIndividual.CrossWithPMXoperator(secondIndividual);
-            secondIndividual.CrossWithPMXoperator(firstIndividual);
+            Individual firstIndividualCopy = (Individual)firstIndividual.Clone();
+            Individual secondIndividualCopy = (Individual)secondIndividual.Clone();
+
+            firstIndividual.CrossWithPMXoperator(secondIndividualCopy);
+            secondIndividual.CrossWithPMXoperator(firstIndividualCopy);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using StatisticsCounter;
 
 namespace GeneticAlgorithm
 {
@@ -10,29 +10,34 @@ namespace GeneticAlgorithm
 
         public void StartGeneticAlgorithm()
         {
-            int localCounter = 0;
+            int generationsCounter = 0;
             CreatePopulation();
             CountFitness();
 
+            //ExcelWorker excel = new ExcelWorker();
+
             //while (!_stopCondition)
-            while (localCounter < 42)
+            while (generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers)
             {
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                LogPopulationData();
+                //LogPopulationData(generationsCounter, excel);
+                LogPopulationData(generationsCounter);
 
-                localCounter++;
+                generationsCounter++;
             }
 
             //return the_best_solution;
         }
 
-        private void LogPopulationData()
+        private void LogPopulationData(int generationsCounter)
         {
-            Debug.Write($"Best: {String.Format("{0:0.00}", Population.GetBestFitness()),-15 }");
-            Debug.Write($"Average: {String.Format("{0:0.00}", Population.GetAverageFitness()),-15}");
-            Debug.WriteLine($"Worst: {String.Format("{0:0.00}", Population.GetWorstFitness()),-15}");
+            //excel.AddCellToWorksheetIntoColumnsABCD(generationsCounter, Population.GetBestFitness(), Population.GetAverageFitness(), Population.GetWorstFitness());
+
+            //Debug.Write($"Best: {String.Format("{0:0.00}", Population.GetBestFitness()),-15 }");
+            //Debug.Write($"Average: {String.Format("{0:0.00}", Population.GetAverageFitness()),-15}");
+            //Debug.WriteLine($"Worst: {String.Format("{0:0.00}", Population.GetWorstFitness()),-15}");
         }
 
         /// <summary>
