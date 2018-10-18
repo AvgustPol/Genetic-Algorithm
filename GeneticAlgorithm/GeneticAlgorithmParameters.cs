@@ -1,12 +1,52 @@
-﻿namespace GeneticAlgorithm
+﻿using DataModel;
+using Loader;
+
+namespace GeneticAlgorithm
 {
-    internal static class GeneticAlgorithmParameters
+    public class GeneticAlgorithmParameters
     {
+        static GeneticAlgorithmParameters()
+        {
+            DataLoader dataLoader = new DataLoader();
+            DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync().Result;
+
+            Dimension = container.Dimension;
+            MinSpeed = container.MinSpeed;
+            MaxSpeed = container.MaxSpeed;
+            RentingRatio = container.RentingRatio;
+        }
+
+        public static readonly int Dimension;
+        public static readonly double MinSpeed;
+        public static readonly double MaxSpeed;
+        public static readonly double RentingRatio;
+
         /// <summary>
-        /// e.g. 7%
+        /// STOP_CONDITION
+        /// Number of generations that will be generated before stop.
+        /// </summary>
+        public static readonly int StopConditionGenerationNumbers = 101;
+
+        /// <summary>
+        /// The probability of crossing two individuals. (e. g. 1% )
         /// </summary>
         public const int CrossProbability = 7;
 
-        public static int Dimension = 10;
+        /// <summary>
+        /// The mutations probability of an individual gene  (e. g. 1% )
+        /// Example :
+        /// Genome (permutation) looks like {1 2 3 4 5} and it is successfully mutated
+        /// If it mutated in a position 2 we must swap value at position 2 (permutation[2]) with a random gene
+        ///     For example random gene = 4
+        /// So we must swap 2 and 4 positions in an array.
+        ///
+        /// Result:
+        /// Genome (permutation) looks like {1 2 5 4 3} after mutation
+        /// </summary>
+        public static readonly int MutationProbability = 1;
+
+        public static readonly int MaxProbability = 100;
+
+        public static readonly int NumberOfTournamentParticipants = 5;
     }
 }

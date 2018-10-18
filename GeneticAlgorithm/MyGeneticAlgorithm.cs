@@ -35,7 +35,7 @@ namespace GeneticAlgorithm
 
         private void CreatePopulation()
         {
-            Population = new Population(GeneticAlgorithmParameters.Dimension);
+            Population = new Population();
         }
 
         private void SelectAndCross(Population population)

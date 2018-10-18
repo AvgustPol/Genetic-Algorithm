@@ -4,7 +4,7 @@ namespace GeneticAlgorithm
 {
     public class Individual : ICloneable
     {
-        public readonly int MAX_PERMUTATION_INDEX = GeneticAlgorithmParameters.Dimension - 1;
+        public readonly int MAX_PERMUTATION_PLACES_INDEX = GeneticAlgorithmParameters.Dimension - 1;
 
         private static readonly Random _random = new Random((int)DateTime.UtcNow.Ticks);
 
@@ -40,7 +40,7 @@ namespace GeneticAlgorithm
             //int[] tmp = new int[originalMatrix.Length];
             //Array.Copy(originalMatrix, tmp, originalMatrix.Length);
 
-            Shuffle(originalMatrix);
+            Permutator.Shuffle(originalMatrix);
 
             return originalMatrix;
         }
@@ -51,7 +51,7 @@ namespace GeneticAlgorithm
             //int[] tmp = new int[originalMatrix.Length];
             //Array.Copy(originalMatrix, tmp, originalMatrix.Length);
 
-            Shuffle(originalMatrix);
+            Permutator.Shuffle(originalMatrix);
 
             return originalMatrix;
         }
@@ -61,7 +61,7 @@ namespace GeneticAlgorithm
         /// http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/PMXCrossoverOperator.aspx/
         /// </summary>
         /// <param name="parent2"></param>
-        public void PMXoperator(Individual parent2)
+        public void CrossWithPMXoperator(Individual parent2)
         {
             #region Select pivot
 
@@ -164,27 +164,6 @@ namespace GeneticAlgorithm
 
         public int NOT_FOUND_CODE = -1;
 
-        public void Shuffle(int[] permutation)
-        {
-            int n = permutation.Length;
-
-            while (n > 1)
-            {
-                n--;
-                int k = _random.Next(n + 1);
-                int value = permutation[k];
-                permutation[k] = permutation[n];
-                permutation[n] = value;
-            }
-        }
-
-        public void SwapBeetweenArrays(int[] array1, int[] array2, int index)
-        {
-            int temp = array1[index];
-            array1[index] = array2[index];
-            array2[index] = temp;
-        }
-
         /// <summary>
         /// The pivot is a range [1, Dimension - 2]
         /// so length is a range [1, Dimension - 3]
@@ -194,7 +173,7 @@ namespace GeneticAlgorithm
         private int GetRandomLength(int pivot)
         {
             int minlength = 1;
-            int maxlength = MAX_PERMUTATION_INDEX - pivot;
+            int maxlength = MAX_PERMUTATION_PLACES_INDEX - pivot;
             return _random.Next(minlength, maxlength);
         }
 
@@ -205,8 +184,26 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         private int GetRandomPivot()
         {
-            int randomPivot = _random.Next(0, MAX_PERMUTATION_INDEX);
+            int randomPivot = _random.Next(0, MAX_PERMUTATION_PLACES_INDEX);
             return randomPivot;
+        }
+
+        public void Mutate()
+        {
+            for (int j = 0; j < GeneticAlgorithmParameters.Dimension; j++)
+            {
+                int randomNumber = _random.Next(GeneticAlgorithmParameters.MaxProbability);
+                if (GeneticAlgorithmParameters.MutationProbability > randomNumber)
+                {
+                    int randomIndex = _random.Next(GeneticAlgorithmParameters.Dimension);
+                    while (j == randomIndex)
+                    {
+                        randomIndex = _random.Next(GeneticAlgorithmParameters.Dimension);
+                    }
+                    //MUTATE
+                    Permutator.Swap(PermutationPlaces, j, randomIndex);
+                }
+            }
         }
     }
 }

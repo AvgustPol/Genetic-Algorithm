@@ -7,46 +7,32 @@ namespace GeneticAlgorithm
 {
     public class Population
     {
-        private readonly DataContainer _container;
-        private readonly DataLoader _dataLoader;
+        /// <summary>
+        /// number of places at TSP problem
+        /// </summary>
+        public int Dimension { get; set; }
+
         private readonly Random _random;
 
-        /// <summary>
-        /// STOP_CONDITION
-        /// Number of generations that will be generated before stop.
-        /// </summary>
-        private readonly int GENRATION_NUMBERS_STOP_CONDITION = 101;
-
-        /// <summary>
-        /// HYBRIDIZATION PROBABILITY
-        /// (e. g. 70% )
-        /// </summary>
-        private readonly int HYBRIDIZATION_PROBABILITY = 70;
-
-        /// <summary>
-        /// MAX PROBABILITY = 100%
-        /// </summary>
-        private readonly int MAX_PROBABILITY = 100;
-
-        /// <summary>
-        /// MUTATION PROBABILITY (e. g. 1% )
-        /// </summary>
-        private readonly int MUTATION_PROBABILITY = 1;
-
         private readonly int NOT_FOUND_INDEX = -1;
-        private readonly int NUMBER_OF_TOURNAMENT_PARTICIPANTS = 5;
 
         /// <summary>
         /// Number of population individuals
         /// </summary>
         private readonly int POPULATION_SIZE = 100;
 
-        public Population(int dimension)
+        public Population()
         {
-            Dimension = dimension;
             _random = new Random((int)DateTime.UtcNow.Ticks);
-            _dataLoader = new DataLoader();
-            _container = _dataLoader.GetCreatedDataContainerFromFileAsync().Result;
+
+            #region Create data container and get all data from file
+
+            DataLoader dataLoader = new DataLoader();
+            DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync().Result;
+
+            #endregion Create data container and get all data from file
+
+            Dimension = container.Dimension;
 
             //first
             BestIndividual = Individuals[0];
@@ -55,12 +41,8 @@ namespace GeneticAlgorithm
             //SaveBest();
         }
 
-        public Individual BestIndividual { get; set; }
-
-        /// <summary>
-        /// number of places at TSP problem
-        /// </summary>
-        public int Dimension { get; set; }
+        public Individual BestIndividual
+        { get; set; }
 
         public Dictionary<int, Individual> Individuals { get; set; }
 
@@ -101,7 +83,7 @@ namespace GeneticAlgorithm
             int counter = 0;
 
             AverageCounter averageCounter = new AverageCounter();
-            while (GENRATION_NUMBERS_STOP_CONDITION > counter)
+            while (GeneticAlgorithmParameters.StopConditionGenerationNumbers > counter)
             {
                 CreateNextPopulationCircle();
 
@@ -113,8 +95,8 @@ namespace GeneticAlgorithm
 
         public void SelectAndCross()
         {
-            Individual individual1 = GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
-            Individual individual2 = GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
+            Individual individual1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+            Individual individual2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
             Cross(ref individual1, ref individual2);
         }
@@ -144,9 +126,9 @@ namespace GeneticAlgorithm
 
         private void CreateNextPopulationCircle()
         {
-            GetTournamentSelectionWinner(NUMBER_OF_TOURNAMENT_PARTICIPANTS);
+            GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
             SelectAndCross(); // krzyrzowanie
-            DoMutation();
+            Mutate();
             SaveBest();
         }
 
@@ -162,29 +144,11 @@ namespace GeneticAlgorithm
             CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
         }
 
-        private void DoMutation()
+        public void Mutate()
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Individual tmp = Individuals[i];
-                for (int j = 0; j < Dimension; j++)
-                {
-                    int randomNumber = _random.Next(MAX_PROBABILITY);
-                    if (MUTATION_PROBABILITY > randomNumber)
-                    {
-                        int randomIndex = _random.Next(Dimension);
-                        while (j == randomIndex)
-                        {
-                            randomIndex = _random.Next(Dimension);
-                        }
-                        //MUTATE
-                        Permutator.Swap(tmp.PermutationPlaces, j, randomIndex);
-
-                        throw new NotImplementedException();
-
-                        //tmp.Fitness = CostCounter.CountCost(tmp.PermutationPlaces);
-                    }
-                }
+                Individuals[i].Mutate(GeneticAlgorithmParameters.MutationProbability);
             }
         }
 
@@ -237,20 +201,10 @@ namespace GeneticAlgorithm
             }
         }
 
-        /// <summary>
-        /// надписывает
-        /// </summary>
-        /// <param name="leftPivot"></param>
-        /// <param name="rightPivot"></param>
-        /// <param name="firstIndividual"></param>
-        /// <param name="secondIndividual"></param>
         private void UseCrossOperator(ref Individual firstIndividual, ref Individual secondIndividual)
         {
-            var tmp1 = firstIndividual.PermutationPlaces;
-            var tmp2 = secondIndividual.PermutationPlaces;
-
-            firstIndividual.PMXoperator(secondIndividual);
-            secondIndividual.PMXoperator(firstIndividual);
+            firstIndividual.CrossWithPMXoperator(secondIndividual);
+            secondIndividual.CrossWithPMXoperator(firstIndividual);
         }
     }
 }

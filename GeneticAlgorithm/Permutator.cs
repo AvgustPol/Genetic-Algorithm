@@ -4,15 +4,16 @@ namespace GeneticAlgorithm
 {
     public class Permutator
     {
-        private static void Shuffle(int[] permutation)
+        private static readonly Random _random = new Random((int)DateTime.UtcNow.Ticks);
+
+        public static void Shuffle(int[] permutation)
         {
             int n = permutation.Length;
-            Random random = new Random(n);
 
             while (n > 1)
             {
                 n--;
-                int k = random.Next(n + 1);
+                int k = _random.Next(n + 1);
                 int value = permutation[k];
                 permutation[k] = permutation[n];
                 permutation[n] = value;
