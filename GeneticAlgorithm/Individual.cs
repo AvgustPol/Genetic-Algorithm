@@ -45,6 +45,8 @@ namespace GeneticAlgorithm
 
             Fitness += GeneticAlgorithmParameters.GetDistance(PermutationPlaces[0], PermutationPlaces[GeneticAlgorithmParameters.Dimension - 1]);
 
+            Fitness = 1 / Fitness;
+
             //for (int i = 0; i < PermutationPlaces.Length; i++)
             //{
             //    for (int j = 0; j < PermutationPlaces.Length; j++)
@@ -186,19 +188,17 @@ namespace GeneticAlgorithm
 
         public void Mutate()
         {
-            for (int j = 0; j < GeneticAlgorithmParameters.Dimension; j++)
+            int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
+            if (GeneticAlgorithmParameters.MutationProbability > randomNumber)
             {
-                int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
-                if (GeneticAlgorithmParameters.MutationProbability > randomNumber)
+                int randomIndex1 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+                int randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+                while (randomIndex1 == randomIndex2)
                 {
-                    int randomIndex = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
-                    while (j == randomIndex)
-                    {
-                        randomIndex = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
-                    }
-                    //MUTATE
-                    Permutator.Swap(PermutationPlaces, j, randomIndex);
+                    randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
                 }
+                //MUTATE
+                Permutator.Swap(PermutationPlaces, randomIndex1, randomIndex2);
             }
         }
     }

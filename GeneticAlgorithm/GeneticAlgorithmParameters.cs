@@ -42,7 +42,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )
         /// </summary>
-        public const int CrossProbability = 7;
+        public const int CrossProbability = 40;
 
         /// <summary>
         /// The mutations probability of an individual gene  (e. g. 1% )
@@ -55,7 +55,7 @@ namespace GeneticAlgorithm
         /// Result:
         /// Genome (permutation) looks like {1 2 5 4 3} after mutation
         /// </summary>
-        public static readonly int MutationProbability = 1;
+        public static readonly int MutationProbability = 5;
 
         public static readonly int MaxProbability = 100;
 

@@ -27,8 +27,8 @@ namespace GeneticAlgorithm
 
         public double GetAverageFitness()
         {
-            double sumCost = 0;
-            for (int i = 0; i < Individuals.Count; i++)
+            double sumCost = Individuals[0].Fitness;
+            for (int i = 1; i < Individuals.Count; i++)
             {
                 sumCost += Individuals[i].Fitness;
             }
@@ -51,7 +51,7 @@ namespace GeneticAlgorithm
         {
             //starts searching from first id
             double worstCost = Individuals[0].Fitness;
-            for (int i = 0; i < Individuals.Count; i++)
+            for (int i = 1; i < Individuals.Count; i++)
             {
                 if (Individuals[i].Fitness > worstCost)
                 {
@@ -67,16 +67,16 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         public double GetBestFitness()
         {
-            double bestFitness = 0;
+            double worstCost = Individuals[0].Fitness;
 
-            for (int i = 0; i < Individuals.Count; i++)
+            for (int i = 1; i < Individuals.Count; i++)
             {
-                if (Individuals[i].Fitness < bestFitness)
+                if (Individuals[i].Fitness < worstCost)
                 {
-                    bestFitness = Individuals[i].Fitness;
+                    worstCost = Individuals[i].Fitness;
                 }
             }
-            return bestFitness;
+            return worstCost;
         }
 
         public void Mutate()
