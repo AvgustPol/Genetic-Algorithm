@@ -16,10 +16,16 @@
                 SelectAndCross();
                 Mutate();
                 CountFitness();
+                LogPopulationData();
                 //localCounter++;
             }
 
             //return the_best_solution;
+        }
+
+        private void LogPopulationData()
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

@@ -1,32 +1,34 @@
-﻿using System;
+﻿using System.Linq;
 
 namespace GeneticAlgorithm
 {
     public class Permutator
     {
-        public static void Shuffle(int[] permutation)
+        /// <summary>
+        /// Shuffles source array
+        /// </summary>
+        /// <param name="array"></param>
+        public static void Shuffle(int[] array)
         {
-            int n = permutation.Length;
+            int n = array.Length;
 
             while (n > 1)
             {
                 n--;
                 int k = Randomizer.random.Next(n + 1);
-                int value = permutation[k];
-                permutation[k] = permutation[n];
-                permutation[n] = value;
+                int value = array[k];
+                array[k] = array[n];
+                array[n] = value;
             }
         }
 
-        public static int[] GetNextGreedyPermutation(int[] originalMatrix)
+        public static int[] GetNextGreedyPermutation(int[] originalArray)
         {
-            // нужно ли создавать tmp ???
-            int[] tmp = new int[originalMatrix.Length];
-            Array.Copy(originalMatrix, tmp, originalMatrix.Length);
+            int[] arrayCopy = originalArray.ToArray();
 
-            Shuffle(tmp);
+            Shuffle(arrayCopy);
 
-            return tmp;
+            return arrayCopy;
         }
 
         public static void Swap(int[] source, int index1, int index2)
@@ -36,15 +38,13 @@ namespace GeneticAlgorithm
             source[index2] = temp;
         }
 
-        public static int[] GetRandomPermutation(int[] originalMatrix)
+        public static int[] GetRandomPermutation(int[] originalArray)
         {
-            // нужно ли создавать tmp ???
-            //int[] tmp = new int[originalMatrix.Length];
-            //Array.Copy(originalMatrix, tmp, originalMatrix.Length);
+            int[] arrayCopy = originalArray.ToArray();
 
-            Shuffle(originalMatrix);
+            Shuffle(arrayCopy);
 
-            return originalMatrix;
+            return arrayCopy;
         }
 
         public static void SwapBeetweenArrays(int[] array1, int[] array2, int index)

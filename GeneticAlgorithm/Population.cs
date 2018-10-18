@@ -128,7 +128,7 @@ namespace GeneticAlgorithm
 
             #endregion Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 
-            for (int i = 0; i < Dimension; i++)
+            for (int i = 0; i < POPULATION_SIZE; i++)
             {
                 Individuals.Add(i, new Individual()
                 {

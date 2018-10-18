@@ -32,28 +32,6 @@ namespace GeneticAlgorithm
             // Fitness = 42;
         }
 
-        public int[] GetNextGreedyPermutation(int[] originalMatrix)
-        {
-            // нужно ли создавать tmp ???
-            //int[] tmp = new int[originalMatrix.Length];
-            //Array.Copy(originalMatrix, tmp, originalMatrix.Length);
-
-            Permutator.Shuffle(originalMatrix);
-
-            return originalMatrix;
-        }
-
-        public int[] GetRandomPermutation(int[] originalMatrix)
-        {
-            // нужно ли создавать tmp ???
-            //int[] tmp = new int[originalMatrix.Length];
-            //Array.Copy(originalMatrix, tmp, originalMatrix.Length);
-
-            Permutator.Shuffle(originalMatrix);
-
-            return originalMatrix;
-        }
-
         /// <summary>
         /// Source :
         /// http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/PMXCrossoverOperator.aspx/
