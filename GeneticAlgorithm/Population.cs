@@ -7,17 +7,12 @@ namespace GeneticAlgorithm
 {
     public class Population
     {
-        /// <summary>
-        /// number of places at TSP problem
-        /// </summary>
-        public int Dimension { get; set; }
-
         private readonly int NOT_FOUND_INDEX = -1;
 
         /// <summary>
         /// Number of population individuals
         /// </summary>
-        private readonly int POPULATION_SIZE = 100;
+        private readonly int POPULATION_SIZE = 5;
 
         public Population()
         {
@@ -30,15 +25,26 @@ namespace GeneticAlgorithm
 
             Dimension = container.Dimension;
 
-            //first
-            BestIndividual = Individuals[0];
+            CreatePopulationIndividuals();
 
-            CreateNewRandomPopulation();
+            //first
+            //BestIndividual = Individuals[0];
+
             //SaveBest();
         }
 
-        public Individual BestIndividual
-        { get; set; }
+        private void CreatePopulationIndividuals()
+        {
+            Individuals = new Dictionary<int, Individual>(POPULATION_SIZE);
+            CreateNewRandomPopulation();
+        }
+
+        public Individual BestIndividual { get; set; }
+
+        /// <summary>
+        /// number of places at TSP problem
+        /// </summary>
+        public int Dimension { get; set; }
 
         public Dictionary<int, Individual> Individuals { get; set; }
 
@@ -72,6 +78,14 @@ namespace GeneticAlgorithm
                 }
             }
             return worstCost;
+        }
+
+        public void Mutate()
+        {
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                Individuals[i].Mutate();
+            }
         }
 
         public AverageCounter RunAlgorythmWithCounterCondition()
@@ -114,9 +128,12 @@ namespace GeneticAlgorithm
 
             #endregion Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 
-            for (int i = 0; i < POPULATION_SIZE; i++)
+            for (int i = 0; i < Dimension; i++)
             {
-                Individuals[i].PermutationPlaces = Permutator.GetRandomPermutation(defaultArray);
+                Individuals.Add(i, new Individual()
+                {
+                    PermutationPlaces = Permutator.GetRandomPermutation(defaultArray)
+                });
             }
         }
 
@@ -138,14 +155,6 @@ namespace GeneticAlgorithm
         {
             UseCrossOperator(ref firstIndividual, ref secondIndividual);
             CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
-        }
-
-        public void Mutate()
-        {
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                Individuals[i].Mutate();
-            }
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)

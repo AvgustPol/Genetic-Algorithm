@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GeneticAlgorithm
+﻿namespace GeneticAlgorithm
 {
     public class MyGeneticAlgorithm
     {
@@ -11,13 +9,13 @@ namespace GeneticAlgorithm
         {
             //int localCounter = 0;
             CreatePopulation();
-            CountFitness(Population);
+            CountFitness();
 
             while (!_stopCondition)
             {
-                SelectAndCross(Population);
-                Mutate(Population);
-                CountFitness(Population);
+                SelectAndCross();
+                Mutate();
+                CountFitness();
                 //localCounter++;
             }
 
@@ -28,9 +26,9 @@ namespace GeneticAlgorithm
         /// Counts fitness for each element in a population
         /// </summary>
         /// <param name="population"></param>
-        private void CountFitness(Population population)
+        private void CountFitness()
         {
-            population.CountFitnessForTheEntirePopulation();
+            Population.CountFitnessForTheEntirePopulation();
         }
 
         private void CreatePopulation()
@@ -38,26 +36,14 @@ namespace GeneticAlgorithm
             Population = new Population();
         }
 
-        private void SelectAndCross(Population population)
+        private void SelectAndCross()
         {
-            population.SelectAndCross();
+            Population.SelectAndCross();
         }
 
-        private void Mutate(Population population)
+        private void Mutate()
         {
-            //TODO - compare foreach and for
-            for (int i = 0; i < population.Individuals.Count; i++)
-            {
-                //population.
-                throw new NotImplementedException();
-                //population.Individuals.ElementAt(i).Mutate();
-            }
-
-            //TODO - compare foreach and for
-            //for (Individual individual in population.Individuals.Count)
-            //{
-            //    individual.CountFitness();
-            //}
+            Population.Mutate();
         }
     }
 }
