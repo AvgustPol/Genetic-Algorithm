@@ -6,8 +6,6 @@ namespace GeneticAlgorithm
     {
         public readonly int MAX_PERMUTATION_PLACES_INDEX = GeneticAlgorithmParameters.Dimension - 1;
 
-        private static readonly Random _random = new Random((int)DateTime.UtcNow.Ticks);
-
         public int Fitness { get; set; }
 
         /// <summary>
@@ -174,7 +172,7 @@ namespace GeneticAlgorithm
         {
             int minlength = 1;
             int maxlength = MAX_PERMUTATION_PLACES_INDEX - pivot;
-            return _random.Next(minlength, maxlength);
+            return Randomizer.random.Next(minlength, maxlength);
         }
 
         /// <summary>
@@ -184,7 +182,7 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         private int GetRandomPivot()
         {
-            int randomPivot = _random.Next(0, MAX_PERMUTATION_PLACES_INDEX);
+            int randomPivot = Randomizer.random.Next(0, MAX_PERMUTATION_PLACES_INDEX);
             return randomPivot;
         }
 
@@ -192,13 +190,13 @@ namespace GeneticAlgorithm
         {
             for (int j = 0; j < GeneticAlgorithmParameters.Dimension; j++)
             {
-                int randomNumber = _random.Next(GeneticAlgorithmParameters.MaxProbability);
+                int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
                 if (GeneticAlgorithmParameters.MutationProbability > randomNumber)
                 {
-                    int randomIndex = _random.Next(GeneticAlgorithmParameters.Dimension);
+                    int randomIndex = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
                     while (j == randomIndex)
                     {
-                        randomIndex = _random.Next(GeneticAlgorithmParameters.Dimension);
+                        randomIndex = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
                     }
                     //MUTATE
                     Permutator.Swap(PermutationPlaces, j, randomIndex);

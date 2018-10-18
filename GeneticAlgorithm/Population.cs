@@ -12,8 +12,6 @@ namespace GeneticAlgorithm
         /// </summary>
         public int Dimension { get; set; }
 
-        private readonly Random _random;
-
         private readonly int NOT_FOUND_INDEX = -1;
 
         /// <summary>
@@ -23,8 +21,6 @@ namespace GeneticAlgorithm
 
         public Population()
         {
-            _random = new Random((int)DateTime.UtcNow.Ticks);
-
             #region Create data container and get all data from file
 
             DataLoader dataLoader = new DataLoader();
@@ -148,7 +144,7 @@ namespace GeneticAlgorithm
         {
             for (int i = 0; i < POPULATION_SIZE; i++)
             {
-                Individuals[i].Mutate(GeneticAlgorithmParameters.MutationProbability);
+                Individuals[i].Mutate();
             }
         }
 
@@ -171,7 +167,7 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         private int GetRandomId()
         {
-            return _random.Next(POPULATION_SIZE);
+            return Randomizer.random.Next(POPULATION_SIZE);
         }
 
         private Individual GetTournamentSelectionWinner(int numberOfTournamentParticipants)
