@@ -1,23 +1,28 @@
-﻿namespace GeneticAlgorithm
+﻿using System;
+using System.Diagnostics;
+
+namespace GeneticAlgorithm
 {
     public class MyGeneticAlgorithm
     {
-        private bool _stopCondition; //=> TODO write stopCondition logics
+        //private bool _stopCondition; //=> TODO write stopCondition logics
         public Population Population { get; set; }
 
         public void StartGeneticAlgorithm()
         {
-            //int localCounter = 0;
+            int localCounter = 0;
             CreatePopulation();
             CountFitness();
 
-            while (!_stopCondition)
+            //while (!_stopCondition)
+            while (localCounter < 42)
             {
                 SelectAndCross();
                 Mutate();
                 CountFitness();
                 LogPopulationData();
-                //localCounter++;
+
+                localCounter++;
             }
 
             //return the_best_solution;
@@ -25,7 +30,9 @@
 
         private void LogPopulationData()
         {
-            throw new System.NotImplementedException();
+            Debug.Write($"Best: {String.Format("{0:0.00}", Population.GetBestFitness()),-15 }");
+            Debug.Write($"Average: {String.Format("{0:0.00}", Population.GetAverageFitness()),-15}");
+            Debug.WriteLine($"Worst: {String.Format("{0:0.00}", Population.GetWorstFitness()),-15}");
         }
 
         /// <summary>

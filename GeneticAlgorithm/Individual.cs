@@ -6,7 +6,7 @@ namespace GeneticAlgorithm
     {
         public readonly int MAX_PERMUTATION_PLACES_INDEX = GeneticAlgorithmParameters.Dimension - 1;
 
-        public int Fitness { get; set; }
+        public double Fitness { get; set; }
 
         /// <summary>
         /// KNP problem
@@ -26,10 +26,26 @@ namespace GeneticAlgorithm
             return clone;
         }
 
-        public int CountFitness()
+        public void CountFitness()
         {
-            throw new NotImplementedException();
-            // Fitness = 42;
+            Fitness = 0;
+
+            for (int i = 0; i < GeneticAlgorithmParameters.Dimension - 1; i++)
+            {
+                Fitness += GeneticAlgorithmParameters.GetDistance(PermutationPlaces[i], PermutationPlaces[i + 1]);
+            }
+
+            Fitness += GeneticAlgorithmParameters.GetDistance(PermutationPlaces[0], PermutationPlaces[GeneticAlgorithmParameters.Dimension - 1]);
+
+            //for (int i = 0; i < PermutationPlaces.Length; i++)
+            //{
+            //    for (int j = 0; j < PermutationPlaces.Length; j++)
+            //    {
+            //        //result += StaticMatrixObject.GetFlow(array[i], array[j]) * StaticMatrixObject.GetDistance(i, j);
+
+            //        Fitness += GeneticAlgorithmParameters.GetDistance(i, j);
+            //    }
+            //}
         }
 
         /// <summary>
@@ -95,10 +111,6 @@ namespace GeneticAlgorithm
             #endregion Fill Empty Array Elements
 
             PermutationPlaces = childPermutationPlaces;
-        }
-
-        private void FillEmptyArrayElements()
-        {
         }
 
         private int FindChildIndex(

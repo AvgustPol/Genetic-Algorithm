@@ -1,6 +1,4 @@
-﻿using DataModel;
-using Loader;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
@@ -14,17 +12,11 @@ namespace GeneticAlgorithm
         /// </summary>
         private readonly int POPULATION_SIZE = 5;
 
+        public Individual BestIndividual { get; set; }
+        public Dictionary<int, Individual> Individuals { get; set; }
+
         public Population()
         {
-            #region Create data container and get all data from file
-
-            DataLoader dataLoader = new DataLoader();
-            DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync().Result;
-
-            #endregion Create data container and get all data from file
-
-            Dimension = container.Dimension;
-
             CreatePopulationIndividuals();
 
             //first
@@ -33,18 +25,9 @@ namespace GeneticAlgorithm
             //SaveBest();
         }
 
-        public Individual BestIndividual { get; set; }
-
-        /// <summary>
-        /// number of places at TSP problem
-        /// </summary>
-        public int Dimension { get; set; }
-
-        public Dictionary<int, Individual> Individuals { get; set; }
-
-        public double CountAverageCost()
+        public double GetAverageFitness()
         {
-            int sumCost = 0;
+            double sumCost = 0;
             for (int i = 0; i < Individuals.Count; i++)
             {
                 sumCost += Individuals[i].Fitness;
@@ -54,24 +37,46 @@ namespace GeneticAlgorithm
 
         public void CountFitnessForTheEntirePopulation()
         {
-            for (int i = 0; i < Individuals.Count; i++)
+            for (int i = 0; i < POPULATION_SIZE; i++)
             {
                 Individuals[i].CountFitness();
             }
         }
 
-        public int FindWorstCost()
+        /// <summary>
+        /// Worst = smallest fitness
+        /// </summary>
+        /// <returns></returns>
+        public double GetWorstFitness()
         {
             //starts searching from first id
-            int worstCost = Individuals[0].Fitness;
+            double worstCost = Individuals[0].Fitness;
             for (int i = 0; i < Individuals.Count; i++)
             {
-                if (worstCost < Individuals[i].Fitness)
+                if (Individuals[i].Fitness > worstCost)
                 {
                     worstCost = Individuals[i].Fitness;
                 }
             }
             return worstCost;
+        }
+
+        /// <summary>
+        /// Best = biggest fitness
+        /// </summary>
+        /// <returns></returns>
+        public double GetBestFitness()
+        {
+            double bestFitness = 0;
+
+            for (int i = 0; i < Individuals.Count; i++)
+            {
+                if (Individuals[i].Fitness < bestFitness)
+                {
+                    bestFitness = Individuals[i].Fitness;
+                }
+            }
+            return bestFitness;
         }
 
         public void Mutate()
@@ -91,7 +96,7 @@ namespace GeneticAlgorithm
             {
                 CreateNextPopulationCircle();
 
-                averageCounter.SaveData(counter++, BestIndividual.Fitness, CountAverageCost(), FindWorstCost());
+                averageCounter.SaveData(counter++, BestIndividual.Fitness, GetAverageFitness(), GetWorstFitness());
             }
 
             return averageCounter;
@@ -114,8 +119,8 @@ namespace GeneticAlgorithm
         {
             #region Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 
-            int[] defaultArray = new int[Dimension];
-            for (int i = 0; i < Dimension; i++)
+            int[] defaultArray = new int[GeneticAlgorithmParameters.Dimension];
+            for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
             {
                 defaultArray[i] = i;
             }
@@ -154,7 +159,8 @@ namespace GeneticAlgorithm
         private void Cross(ref Individual firstIndividual, ref Individual secondIndividual)
         {
             UseCrossOperator(ref firstIndividual, ref secondIndividual);
-            CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
+            //TODO finish
+            //CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)

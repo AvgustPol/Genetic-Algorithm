@@ -14,9 +14,21 @@ namespace GeneticAlgorithm
             MinSpeed = container.MinSpeed;
             MaxSpeed = container.MaxSpeed;
             RentingRatio = container.RentingRatio;
+            DistanceMatrix = container.DistanceMatrix;
         }
 
+        public static double GetDistance(int i, int j)
+        {
+            return DistanceMatrix[i, j];
+        }
+
+        /// <summary>
+        /// number of places at TSP problem
+        /// </summary>
         public static readonly int Dimension;
+
+        public static double[,] DistanceMatrix;
+
         public static readonly double MinSpeed;
         public static readonly double MaxSpeed;
         public static readonly double RentingRatio;

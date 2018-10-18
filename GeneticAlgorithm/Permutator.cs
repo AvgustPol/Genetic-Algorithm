@@ -47,7 +47,7 @@ namespace GeneticAlgorithm
             return arrayCopy;
         }
 
-        public static void SwapBeetweenArrays(int[] array1, int[] array2, int index)
+        public static void SwapBetweenArrays(int[] array1, int[] array2, int index)
         {
             int temp = array1[index];
             array1[index] = array2[index];
