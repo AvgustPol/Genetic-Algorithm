@@ -33,12 +33,6 @@ namespace GeneticAlgorithm
             //SaveBest();
         }
 
-        private void CreatePopulationIndividuals()
-        {
-            Individuals = new Dictionary<int, Individual>(POPULATION_SIZE);
-            CreateNewRandomPopulation();
-        }
-
         public Individual BestIndividual { get; set; }
 
         /// <summary>
@@ -143,6 +137,12 @@ namespace GeneticAlgorithm
             SelectAndCross(); // krzyrzowanie
             Mutate();
             SaveBest();
+        }
+
+        private void CreatePopulationIndividuals()
+        {
+            Individuals = new Dictionary<int, Individual>(POPULATION_SIZE);
+            CreateNewRandomPopulation();
         }
 
         /// <summary>
