@@ -46,6 +46,7 @@ namespace GeneticAlgorithm
         private void CreatePopulation()
         {
             Population = new Population();
+            Population.CreatePopulationIndividuals();
         }
 
         private void SelectAndCross()

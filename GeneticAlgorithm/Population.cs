@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
@@ -12,12 +11,12 @@ namespace GeneticAlgorithm
         /// </summary>
         private readonly int POPULATION_SIZE = 100;
 
-        public Individual BestIndividual { get; set; }
+        //public Individual BestIndividual { get; set; }
         public Dictionary<int, Individual> Individuals { get; set; }
 
         public Population()
         {
-            CreatePopulationIndividuals();
+            //CreatePopulationIndividuals();
 
             //first
             //BestIndividual = Individuals[0];
@@ -96,7 +95,8 @@ namespace GeneticAlgorithm
             {
                 CreateNextPopulationCircle();
 
-                averageCounter.SaveData(counter++, BestIndividual.Fitness, GetAverageFitness(), GetWorstFitness());
+                //averageCounter.SaveData(counter++, BestIndividual.Fitness, GetAverageFitness(), GetWorstFitness());
+                averageCounter.SaveData(counter++, GetBestFitness(), GetAverageFitness(), GetWorstFitness());
             }
 
             return averageCounter;
@@ -104,15 +104,21 @@ namespace GeneticAlgorithm
 
         public void SelectAndCross()
         {
-            Individual individual1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-            Individual individual2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+            Dictionary<int, Individual> newNextPopulationIndividuals = new Dictionary<int, Individual>();
 
-            Cross(individual1, individual2);
-        }
+            while (newNextPopulationIndividuals.Count < POPULATION_SIZE)
+            {
+                Individual individual1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                Individual individual2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
-        private void CreateNewItemsPermutation(ref Individual firstIndividual, ref Individual secondIndividual)
-        {
-            throw new NotImplementedException();
+                Individual child = Cross(individual1, individual2);
+                if (child != null)
+                {
+                    newNextPopulationIndividuals.Add(newNextPopulationIndividuals.Count, child);
+                }
+            }
+
+            Individuals = newNextPopulationIndividuals;
         }
 
         private void CreateNewRandomPopulation()
@@ -141,10 +147,10 @@ namespace GeneticAlgorithm
             GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
             SelectAndCross(); // krzyrzowanie
             Mutate();
-            SaveBest();
+            //SaveBest();
         }
 
-        private void CreatePopulationIndividuals()
+        public void CreatePopulationIndividuals()
         {
             Individuals = new Dictionary<int, Individual>(POPULATION_SIZE);
             CreateNewRandomPopulation();
@@ -156,15 +162,18 @@ namespace GeneticAlgorithm
         ///  зачем ломать , а потом чинить, если можно сразу не ломать ? :)
         /// </summary>
         /// <param name="pivot"></param>
-        private void Cross(Individual firstIndividual, Individual secondIndividual)
+        private Individual Cross(Individual firstIndividual, Individual secondIndividual)
         {
             int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
             if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
             {
-                UseCrossOperator(ref firstIndividual, ref secondIndividual);
+                //return CrossAndGetChild(firstIndividual, secondIndividual);
+                return CrossAndGetChild(firstIndividual, secondIndividual);
                 //TODO finish
                 //CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
             }
+
+            return null;
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)
@@ -204,25 +213,27 @@ namespace GeneticAlgorithm
             return Individuals[bestId];
         }
 
-        private void SaveBest()
-        {
-            //check is best still best
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                if (BestIndividual.Fitness > Individuals[i].Fitness)
-                {
-                    BestIndividual = (Individual)Individuals[i].Clone();
-                }
-            }
-        }
+        //private void SaveBest()
+        //{
+        //    //check is best still best
+        //    for (int i = 0; i < POPULATION_SIZE; i++)
+        //    {
+        //        if (BestIndividual.Fitness > Individuals[i].Fitness)
+        //        {
+        //            BestIndividual = (Individual)Individuals[i].Clone();
+        //        }
+        //    }
+        //}
 
-        private void UseCrossOperator(ref Individual firstIndividual, ref Individual secondIndividual)
+        private Individual CrossAndGetChild(Individual firstIndividual, Individual secondIndividual)
         {
             Individual firstIndividualCopy = (Individual)firstIndividual.Clone();
             Individual secondIndividualCopy = (Individual)secondIndividual.Clone();
 
-            firstIndividual.CrossWithPMXoperator(secondIndividualCopy);
-            secondIndividual.CrossWithPMXoperator(firstIndividualCopy);
+            return new Individual()
+            {
+                PermutationPlaces = firstIndividualCopy.CrossWithPMXoperator(secondIndividualCopy)
+            };
         }
     }
 }

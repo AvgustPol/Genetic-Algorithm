@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace GeneticAlgorithm
 {
@@ -36,6 +37,10 @@ namespace GeneticAlgorithm
 
         public void CountFitness()
         {
+            // Fitness = Sum(itemValue) - R * ( ti - t0)
+            //
+            // ti - czas z przedmiotem
+            // t- czas z pustym plecakiem
             Fitness = 0;
 
             for (int i = 0; i < GeneticAlgorithmParameters.Dimension - 1; i++)
@@ -59,11 +64,27 @@ namespace GeneticAlgorithm
         }
 
         /// <summary>
+        /// Checks , if value was in array
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        private bool WasHere(int[] array, int value)
+        {
+            foreach (var item in array)
+            {
+                if (item == value)
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Source :
         /// http://www.rubicite.com/Tutorials/GeneticAlgorithms/CrossoverOperators/PMXCrossoverOperator.aspx/
         /// </summary>
         /// <param name="parent2"></param>
-        public void CrossWithPMXoperator(Individual parent2)
+        public int[] CrossWithPMXoperator(Individual parent2)
         {
             #region Select pivot
 
@@ -86,7 +107,11 @@ namespace GeneticAlgorithm
             //Note the indexes of the segment:
             //  start - pivot
             //  end - pivotPlusLength
-            Array.Copy(PermutationPlaces, pivot, childPermutationPlaces, pivot, length);
+            //Array.Copy((PermutationPlaces, pivot, childPermutationPlaces, pivot, length);
+            for (int i = pivot; i < pivot + length; i++)
+            {
+                childPermutationPlaces[i] = PermutationPlaces[i];
+            }
 
             #endregion Create child permutation
 
@@ -95,18 +120,20 @@ namespace GeneticAlgorithm
             for (int i = pivot; i < pivotPlusLength; i++)
             {
                 int valueToFindIndex = parent2.PermutationPlaces[i];
-                int indexOfValueInParent2 = FindIndexInArray(valueToFindIndex, childPermutationPlaces);
 
-                if (indexOfValueInParent2 == NOT_FOUND_CODE)
+                if (!childPermutationPlaces.Contains(valueToFindIndex))
                 {
-                    // заменить из parent2.PermutationPlaces[i] с childPermutationPlaces
+                    // заменить из parent2.PermutationPlaces[i] с array
                     // FindChildIndex должен найти индекс, куда значение parent2.PermutationPlaces[i] будет вставлено , то есть:
                     int childIndex = FindChildIndex(valueToFindIndex, pivot, pivotPlusLength, parent2);
-                    childPermutationPlaces[childIndex] = parent2.PermutationPlaces[i];
+                    childPermutationPlaces[childIndex] = valueToFindIndex;
                 }
             }
 
             #endregion Copy swath
+
+            //bool isBrocken1 = IsBrocken(childPermutationPlaces);
+            //bool isBrocken2 = IsBrocken(parent2.PermutationPlaces);
 
             #region Fill Empty Array Elements
 
@@ -120,7 +147,31 @@ namespace GeneticAlgorithm
 
             #endregion Fill Empty Array Elements
 
-            PermutationPlaces = childPermutationPlaces;
+            return childPermutationPlaces;
+
+            //isBrocken1 = IsBrocken(childPermutationPlaces);
+            //isBrocken2 = IsBrocken(parent2.PermutationPlaces);
+        }
+
+        private bool IsBrocken(int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                int counter = 0;
+                for (int j = 0; j < array.Length; j++)
+                {
+                    if (array[j] == array[i])
+                    {
+                        counter++;
+                        if (counter == 2)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         private int FindChildIndex(
@@ -130,24 +181,24 @@ namespace GeneticAlgorithm
             Individual parent2)
         {
             //Note the index of this value in Parent 2.
-            int index = FindIndexInArray(valueToFindIndex, parent2.PermutationPlaces);
+            int index = GetIndexOfValueInArray(valueToFindIndex, parent2.PermutationPlaces);
 
             //Locate the value, V, from parent 1 in this same position.
             int valueInParent1 = PermutationPlaces[index];
 
             //Locate this same value in parent 2.
-            int indexToSwap = FindIndexInArray(valueInParent1, parent2.PermutationPlaces);
+            int indexInParent2 = GetIndexOfValueInArray(valueInParent1, parent2.PermutationPlaces);
 
             //If the index of this value in Parent 2 is part of the original swath, go to step i. using this value.
-            if (indexToSwap >= pivot && indexToSwap <= pivotPlusLength)
+            if (indexInParent2 >= pivot && indexInParent2 <= pivotPlusLength)
             {
-                return FindChildIndex(parent2.PermutationPlaces[indexToSwap], pivot, pivotPlusLength, parent2);
+                return FindChildIndex(valueInParent1, pivot, pivotPlusLength, parent2);
             }
 
-            return indexToSwap;
+            return indexInParent2;
         }
 
-        private int FindIndexInArray(int value, int[] array)
+        private int GetIndexOfValueInArray(int value, int[] array)
         {
             for (int i = 0; i < array.Length; i++)
             {
@@ -170,8 +221,8 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         private int GetRandomLength(int pivot)
         {
-            int minlength = 1;
-            int maxlength = MAX_PERMUTATION_PLACES_INDEX - pivot;
+            int minlength = 2;
+            int maxlength = MAX_PERMUTATION_PLACES_INDEX - pivot + 2;
             return Randomizer.random.Next(minlength, maxlength);
         }
 
