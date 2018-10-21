@@ -227,12 +227,13 @@ namespace GeneticAlgorithm
 
         private Individual CrossAndGetChild(Individual firstIndividual, Individual secondIndividual)
         {
-            Individual firstIndividualCopy = (Individual)firstIndividual.Clone();
-            Individual secondIndividualCopy = (Individual)secondIndividual.Clone();
+            int[] firstIndividualCopy = (int[])firstIndividual.PermutationPlaces.Clone();
+            int[] secondIndividualCopy = (int[])secondIndividual.PermutationPlaces.Clone();
 
             return new Individual()
             {
-                PermutationPlaces = firstIndividualCopy.CrossWithPMXoperator(secondIndividualCopy)
+                //PermutationPlaces = firstIndividualCopy.CrossWithPMXoperator(secondIndividualCopy)
+                PermutationPlaces = Permutator.CrossPermutations(firstIndividualCopy, secondIndividualCopy)
             };
         }
     }
