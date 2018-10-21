@@ -9,12 +9,12 @@ namespace GeneticAlgorithm
 
         public void StartGeneticAlgorithm()
         {
-            int generationsCounter = 0;
+            int generationsCounter = 1;
             CreatePopulation();
             CountFitness();
 
             //TODO : add new ToFileLoggerAccumulator
-            ToFileLogger toFileLogger = new ToFileLogger();
+            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result.csv");
 
             //while (!_stopCondition)
             while (generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers)
@@ -22,17 +22,24 @@ namespace GeneticAlgorithm
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                LogPopulationData(generationsCounter, toFileLogger);
+                LogGeneration(generationsCounter, toFileLogger);
 
                 generationsCounter++;
             }
 
+            LogAllGenerationsToFile(toFileLogger);
+
             //return the_best_solution;
         }
 
-        private void LogPopulationData(int generationsCounter, ToFileLogger toFileLogger)
+        private void LogAllGenerationsToFile(ToFileLogger toFileLogger)
         {
-            toFileLogger.Log(generationsCounter, Population.GetBestFitness(), Population.GetAverageFitness(), Population.GetWorstFitness());
+            toFileLogger.LogToFile();
+        }
+
+        private void LogGeneration(int generationsCounter, ToFileLogger toFileLogger)
+        {
+            toFileLogger.LogToObject(generationsCounter, Population.GetBestFitness(), Population.GetAverageFitness(), Population.GetWorstFitness());
         }
 
         /// <summary>

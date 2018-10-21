@@ -16,22 +16,7 @@ namespace GeneticAlgorithm
 
         public Population()
         {
-            //CreatePopulationIndividuals();
-
-            //first
-            //BestIndividual = Individuals[0];
-
             //SaveBest();
-        }
-
-        public double GetAverageFitness()
-        {
-            double sumCost = Individuals[0].Fitness;
-            for (int i = 1; i < Individuals.Count; i++)
-            {
-                sumCost += Individuals[i].Fitness;
-            }
-            return sumCost / POPULATION_SIZE;
         }
 
         public void CountFitnessForTheEntirePopulation()
@@ -42,40 +27,66 @@ namespace GeneticAlgorithm
             }
         }
 
+        public double GetAverageFitness()
+        {
+            double sumCost = Individuals[0].Fitness;
+            for (int i = 1; i < POPULATION_SIZE; i++)
+            {
+                sumCost += Individuals[i].Fitness;
+            }
+            return sumCost / POPULATION_SIZE;
+        }
+
         /// <summary>
+        /// For this problem
         /// Worst = smallest fitness
         /// </summary>
         /// <returns></returns>
         public double GetWorstFitness()
         {
-            //starts searching from first id
-            double worstCost = Individuals[0].Fitness;
-            for (int i = 1; i < Individuals.Count; i++)
+            return GetSmallestFitness();
+        }
+
+        private double GetSmallestFitness()
+        {
+            //starts searching from first id (Individuals[0])
+            double smallestFitness = Individuals[0].Fitness;
+
+            //so we can search from the second one id (i = 1)
+            for (int i = 1; i < POPULATION_SIZE; i++)
             {
-                if (Individuals[i].Fitness > worstCost)
+                if (smallestFitness > Individuals[i].Fitness)
                 {
-                    worstCost = Individuals[i].Fitness;
+                    smallestFitness = Individuals[i].Fitness;
                 }
             }
-            return worstCost;
+            return smallestFitness;
         }
 
         /// <summary>
+        /// For this problem
         /// Best = biggest fitness
         /// </summary>
         /// <returns></returns>
         public double GetBestFitness()
         {
-            double worstCost = Individuals[0].Fitness;
+            return GetBiggestFitness();
+        }
 
-            for (int i = 1; i < Individuals.Count; i++)
+        public double GetBiggestFitness()
+        {
+            //starts searching from first id (Individuals[0])
+            double biggestFitness = Individuals[0].Fitness;
+
+            //so we can search from the second one id (i = 1)
+            for (int i = 1; i < POPULATION_SIZE; i++)
             {
-                if (Individuals[i].Fitness < worstCost)
+                if (Individuals[i].Fitness < biggestFitness)
                 {
-                    worstCost = Individuals[i].Fitness;
+                    biggestFitness = Individuals[i].Fitness;
                 }
             }
-            return worstCost;
+            return biggestFitness;
         }
 
         public void Mutate()
@@ -104,21 +115,32 @@ namespace GeneticAlgorithm
 
         public void SelectAndCross()
         {
-            Dictionary<int, Individual> newNextPopulationIndividuals = new Dictionary<int, Individual>();
+            Dictionary<int, Individual> nextPopulation = new Dictionary<int, Individual>();
 
-            while (newNextPopulationIndividuals.Count != POPULATION_SIZE)
+            while (nextPopulation.Count != POPULATION_SIZE)
             {
-                Individual individual1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-                Individual individual2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                Individual parent2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
-                Individual child = Cross(individual1, individual2);
+                Individual child = Cross(parent1, parent2);
                 if (child != null)
                 {
-                    newNextPopulationIndividuals.Add(newNextPopulationIndividuals.Count, child);
+                    nextPopulation.Add(nextPopulation.Count, child);
+                }
+                else
+                {
+                    if (parent1.Fitness > parent2.Fitness)
+                    {
+                        nextPopulation.Add(nextPopulation.Count, parent1);
+                    }
+                    else
+                    {
+                        nextPopulation.Add(nextPopulation.Count, parent2);
+                    }
                 }
             }
 
-            Individuals = newNextPopulationIndividuals;
+            Individuals = nextPopulation;
         }
 
         private void CreateNewRandomPopulation()
