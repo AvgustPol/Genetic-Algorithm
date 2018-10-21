@@ -37,7 +37,7 @@ namespace GeneticAlgorithm
         /// STOP_CONDITION
         /// Number of generations that will be generated before stop.
         /// </summary>
-        public static readonly int StopConditionGenerationNumbers = 101;
+        public static readonly int StopConditionGenerationNumbers = 1000;
 
         /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )

@@ -73,7 +73,7 @@ namespace GeneticAlgorithm
             return GetBiggestFitness();
         }
 
-        public double GetBiggestFitness()
+        private double GetBiggestFitness()
         {
             //starts searching from first id (Individuals[0])
             double biggestFitness = Individuals[0].Fitness;
@@ -81,7 +81,7 @@ namespace GeneticAlgorithm
             //so we can search from the second one id (i = 1)
             for (int i = 1; i < POPULATION_SIZE; i++)
             {
-                if (Individuals[i].Fitness < biggestFitness)
+                if (biggestFitness < Individuals[i].Fitness)
                 {
                     biggestFitness = Individuals[i].Fitness;
                 }
@@ -119,8 +119,10 @@ namespace GeneticAlgorithm
 
             while (nextPopulation.Count != POPULATION_SIZE)
             {
-                Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-                Individual parent2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                Individual parent1 =
+                    GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                Individual parent2 =
+                    GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
                 Individual child = Cross(parent1, parent2);
                 if (child != null)
@@ -139,7 +141,6 @@ namespace GeneticAlgorithm
                     }
                 }
             }
-
             Individuals = nextPopulation;
         }
 
@@ -169,7 +170,6 @@ namespace GeneticAlgorithm
             GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
             SelectAndCross(); // krzyrzowanie
             Mutate();
-            //SaveBest();
         }
 
         public void CreatePopulationIndividuals()
@@ -236,18 +236,6 @@ namespace GeneticAlgorithm
             return Individuals[bestId];
         }
 
-        //private void SaveBest()
-        //{
-        //    //check is best still best
-        //    for (int i = 0; i < POPULATION_SIZE; i++)
-        //    {
-        //        if (BestIndividual.Fitness > Individuals[i].Fitness)
-        //        {
-        //            BestIndividual = (Individual)Individuals[i].Clone();
-        //        }
-        //    }
-        //}
-
         private Individual CrossAndGetChild(Individual firstIndividual, Individual secondIndividual)
         {
             int[] firstIndividualCopy = (int[])firstIndividual.PermutationPlaces.Clone();
@@ -255,7 +243,6 @@ namespace GeneticAlgorithm
 
             return new Individual()
             {
-                //PermutationPlaces = firstIndividualCopy.CrossWithPMXoperator(secondIndividualCopy)
                 PermutationPlaces = Permutator.CrossPermutations(firstIndividualCopy, secondIndividualCopy)
             };
         }

@@ -13,8 +13,8 @@ namespace GeneticAlgorithm
             CreatePopulation();
             CountFitness();
 
-            //TODO : add new ToFileLoggerAccumulator
-            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result.csv");
+            //ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result.csv");
 
             //while (!_stopCondition)
             while (generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers)
