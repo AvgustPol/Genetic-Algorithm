@@ -42,7 +42,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )
         /// </summary>
-        public const int CrossProbability = 40;
+        public const int CrossProbability = 60;
 
         /// <summary>
         /// The mutations probability of an individual gene  (e. g. 1% )

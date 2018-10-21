@@ -119,26 +119,24 @@ namespace GeneticAlgorithm
 
             while (nextPopulation.Count != POPULATION_SIZE)
             {
-                Individual parent1 =
-                    GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-                Individual parent2 =
-                    GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-
-                Individual child = Cross(parent1, parent2);
-                if (child != null)
+                int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
+                if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
                 {
+                    Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    Individual parent2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+
+                    Individual child = Cross(parent1, parent2);
                     nextPopulation.Add(nextPopulation.Count, child);
                 }
                 else
                 {
-                    if (parent1.Fitness > parent2.Fitness)
-                    {
-                        nextPopulation.Add(nextPopulation.Count, parent1);
-                    }
-                    else
-                    {
-                        nextPopulation.Add(nextPopulation.Count, parent2);
-                    }
+                    //int doubledNumberOfTournamentParticipants =
+                    //    GeneticAlgorithmParameters.NumberOfTournamentParticipants * 2;
+                    //Individual winner = GetTournamentSelectionWinner(doubledNumberOfTournamentParticipants);
+
+                    Individual winner = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+
+                    nextPopulation.Add(nextPopulation.Count, winner);
                 }
             }
             Individuals = nextPopulation;
@@ -178,24 +176,14 @@ namespace GeneticAlgorithm
             CreateNewRandomPopulation();
         }
 
-        /// <summary>
-        /// TODO
-        ///  я не делаю ремонт, потому что я не делаю скрещивание на тех элементах, которых нет на новой таблице
-        ///  зачем ломать , а потом чинить, если можно сразу не ломать ? :)
-        /// </summary>
-        /// <param name="pivot"></param>
         private Individual Cross(Individual firstIndividual, Individual secondIndividual)
         {
-            int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
-            if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
-            {
-                //return CrossAndGetChild(firstIndividual, secondIndividual);
-                return CrossAndGetChild(firstIndividual, secondIndividual);
-                //TODO finish
-                //CreateNewItemsPermutation(ref firstIndividual, ref secondIndividual);
-            }
+            Individual child = CrossAndGetChild(firstIndividual, secondIndividual);
 
-            return null;
+            //TODO finish
+            //CreateNewItemsPermutation(child);
+
+            return child;
         }
 
         private int FindThisNumberInArray(int[] permutation, int value)
