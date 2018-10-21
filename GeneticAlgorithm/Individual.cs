@@ -8,7 +8,7 @@ namespace GeneticAlgorithm
 
         /// <summary>
         /// KNP problem
-        /// </summary>
+        /// </summary
         public int[] PermutationItems { get; set; }
 
         /// <summary>
@@ -58,27 +58,6 @@ namespace GeneticAlgorithm
             //        Fitness += GeneticAlgorithmParameters.GetDistance(i, j);
             //    }
             //}
-        }
-
-        private bool IsBrocken(int[] array)
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                int counter = 0;
-                for (int j = 0; j < array.Length; j++)
-                {
-                    if (array[j] == array[i])
-                    {
-                        counter++;
-                        if (counter == 2)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
         }
 
         public void Mutate()

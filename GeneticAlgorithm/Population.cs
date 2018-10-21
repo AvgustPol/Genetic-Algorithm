@@ -106,7 +106,7 @@ namespace GeneticAlgorithm
         {
             Dictionary<int, Individual> newNextPopulationIndividuals = new Dictionary<int, Individual>();
 
-            while (newNextPopulationIndividuals.Count < POPULATION_SIZE)
+            while (newNextPopulationIndividuals.Count != POPULATION_SIZE)
             {
                 Individual individual1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
                 Individual individual2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
@@ -204,9 +204,10 @@ namespace GeneticAlgorithm
             numberOfTournamentParticipants--;
             for (int i = 0; i < numberOfTournamentParticipants; i++)
             {
-                if (Individuals[GetRandomId()].Fitness > Individuals[bestId].Fitness)
+                int randomId = GetRandomId();
+                if (Individuals[randomId].Fitness > Individuals[bestId].Fitness)
                 {
-                    bestId = i;
+                    bestId = randomId;
                 }
             }
 

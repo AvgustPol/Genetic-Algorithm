@@ -13,6 +13,7 @@ namespace GeneticAlgorithm
             CreatePopulation();
             CountFitness();
 
+            //TODO : add new ToFileLoggerAccumulator
             ToFileLogger toFileLogger = new ToFileLogger();
 
             //while (!_stopCondition)
