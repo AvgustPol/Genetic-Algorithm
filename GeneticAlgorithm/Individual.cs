@@ -13,6 +13,7 @@ namespace GeneticAlgorithm
 
         /// <summary>
         /// TSP problem
+        /// PermutationPlaces is a road
         /// </summary>
         public int[] PermutationPlaces { get; set; }
 
