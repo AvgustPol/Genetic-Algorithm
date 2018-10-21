@@ -17,6 +17,17 @@ namespace GeneticAlgorithm
         /// </summary>
         public int[] PermutationPlaces { get; set; }
 
+        public Individual()
+        {
+        }
+
+        public Individual(int[] road)
+        {
+            PermutationPlaces = road;
+            //CreatePermutationItems();
+            CountFitness();
+        }
+
         public object Clone()
         {
             Individual clone = new Individual();
@@ -75,6 +86,23 @@ namespace GeneticAlgorithm
                 //MUTATE
                 Permutator.Swap(PermutationPlaces, randomIndex1, randomIndex2);
             }
+        }
+
+        public int[] GetMutatation()
+        {
+            int[] mutation = new int[GeneticAlgorithmParameters.Dimension];
+            Array.Copy(PermutationPlaces, mutation, GeneticAlgorithmParameters.Dimension);
+
+            int randomIndex1 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+            int randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+            while (randomIndex1 == randomIndex2)
+            {
+                randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+            }
+            //MUTATE
+            Permutator.Swap(mutation, randomIndex1, randomIndex2);
+
+            return mutation;
         }
     }
 }

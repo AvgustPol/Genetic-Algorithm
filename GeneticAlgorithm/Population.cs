@@ -144,6 +144,17 @@ namespace GeneticAlgorithm
 
         private void CreateNewRandomPopulation()
         {
+            for (int i = 0; i < POPULATION_SIZE; i++)
+            {
+                Individuals.Add(i, new Individual()
+                {
+                    PermutationPlaces = CreateRandomIndividual()
+                });
+            }
+        }
+
+        public int[] CreateRandomIndividual()
+        {
             #region Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 
             int[] defaultArray = new int[GeneticAlgorithmParameters.Dimension];
@@ -154,13 +165,7 @@ namespace GeneticAlgorithm
 
             #endregion Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 
-            for (int i = 0; i < POPULATION_SIZE; i++)
-            {
-                Individuals.Add(i, new Individual()
-                {
-                    PermutationPlaces = Permutator.GetRandomPermutation(defaultArray)
-                });
-            }
+            return Permutator.GetRandomPermutation(defaultArray);
         }
 
         private void CreateNextPopulationCircle()

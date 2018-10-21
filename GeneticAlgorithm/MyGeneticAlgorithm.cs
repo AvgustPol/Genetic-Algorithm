@@ -1,35 +1,72 @@
 ﻿using StatisticsCounter;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
     public class MyGeneticAlgorithm
     {
-        //private bool _stopCondition; //=> TODO write stopCondition logics
+        public int _generationsCounter { get; set; }
+
+        private bool _stopCondition => _generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers;
         public Population Population { get; set; }
+
+        public void StartTabuSearch()
+        {
+            TabuSearch tabuSearch = new TabuSearch();
+            _generationsCounter = 1;
+            ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result TabuSearch.csv");
+
+            Individual best = new Individual()
+            {
+                PermutationPlaces = Population.CreateRandomIndividual()
+            };
+            Individual current = best;
+
+            tabuSearch.AddToTabuList(current.PermutationPlaces);
+
+            while (_stopCondition)
+            {
+                List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+                CountFitness();
+                foreach (var candidate in neighbors)
+                {
+                    Individual tmpCandidate = new Individual(candidate);
+                    if ((!tabuSearch.IsContains(candidate)) && (tmpCandidate.Fitness > current.Fitness))
+                        current = tmpCandidate;
+                }
+                if (current.Fitness > best.Fitness)
+                    best = current;
+
+                // график ведет себя странно, потому что ты удаляешь в определенный момент лучшую пермутацию
+                tabuSearch.AddToTabuList(current.PermutationPlaces);
+
+                toFileLogger.LogToObject(_generationsCounter, best.Fitness, 0, 0);
+                _generationsCounter++;
+            }
+
+            toFileLogger.LogToFile();
+        }
 
         public void StartGeneticAlgorithm()
         {
-            int generationsCounter = 1;
+            _generationsCounter = 1;
             CreatePopulation();
             CountFitness();
 
-            //ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result.csv");
-            ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result.csv");
+            //ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result GA.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result GA.csv");
 
-            //while (!_stopCondition)
-            while (generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers)
+            while (_stopCondition)
             {
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                LogGeneration(generationsCounter, toFileLogger);
+                LogGeneration(_generationsCounter, toFileLogger);
 
-                generationsCounter++;
+                _generationsCounter++;
             }
 
             LogAllGenerationsToFile(toFileLogger);
-
-            //return the_best_solution;
         }
 
         private void LogAllGenerationsToFile(ToFileLogger toFileLogger)
