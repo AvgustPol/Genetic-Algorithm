@@ -40,6 +40,12 @@ namespace GeneticAlgorithm
         public static readonly int StopConditionGenerationNumbers = 1000;
 
         /// <summary>
+        /// STOP_CONDITION
+        /// Number of runs algorithm to exlore it
+        /// </summary>
+        public static readonly int ExploringStopCondition = 10;
+
+        /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )
         /// </summary>
         public const int CrossProbability = 60;

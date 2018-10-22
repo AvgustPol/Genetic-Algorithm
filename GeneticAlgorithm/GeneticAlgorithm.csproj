@@ -10,4 +10,10 @@
     <ProjectReference Include="..\..\StatisticsCounter\StatisticsCounter\StatisticsCounter.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Security.Cryptography.Cng">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.NETCore.App\2.0.9\System.Security.Cryptography.Cng.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

@@ -5,9 +5,10 @@ namespace GeneticAlgorithm
 {
     public class GeneticAlgorithmCore
     {
-        public int _generationsCounter { get; set; }
+        private int _generationsCounter { get; set; }
 
-        private bool _stopCondition => _generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers;
+        private bool _algorytmStopCondition => _generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers;
+        private bool _exploringStopCondition => _generationsCounter < GeneticAlgorithmParameters.ExploringStopCondition;
         public Population Population { get; set; }
 
         public AverageCounter StartTabuSearch()
@@ -27,7 +28,7 @@ namespace GeneticAlgorithm
 
             tabuSearch.AddToTabuList(current.PermutationPlaces);
 
-            for (_generationsCounter = 1; _stopCondition; _generationsCounter++)
+            for (_generationsCounter = 1; _algorytmStopCondition; _generationsCounter++)
             {
                 List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
                 CountFitness();
@@ -47,19 +48,20 @@ namespace GeneticAlgorithm
             }
 
             //toFileLogger.LogToFile();
-            return null;
+            return averageCounter;
         }
 
         public void Explore()
         {
-            List<AverageCounter> populationDataList = new List<AverageCounter>();
-            for (_generationsCounter = 1; _stopCondition; _generationsCounter++)
+            List<AverageCounter> dataList = new List<AverageCounter>();
+
+            for (_generationsCounter = 1; _exploringStopCondition; _generationsCounter++)
             {
                 AverageCounter averageCounter = new AverageCounter();
                 averageCounter.AddGAData(RunGeneticAlgorithm());
                 averageCounter.AddTabuSearchData(StartTabuSearch());
 
-                populationDataList.Add(averageCounter);
+                dataList.Add(averageCounter);
             }
         }
 
@@ -73,7 +75,7 @@ namespace GeneticAlgorithm
             ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result GA.csv");
             //ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result GA.csv");
 
-            for (_generationsCounter = 1; _stopCondition; _generationsCounter++)
+            for (_generationsCounter = 1; _algorytmStopCondition; _generationsCounter++)
             {
                 SelectAndCross();
                 Mutate();
