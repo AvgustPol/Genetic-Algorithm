@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
-    public class MyGeneticAlgorithm
+    public class GeneticAlgorithmCore
     {
         public int _generationsCounter { get; set; }
 
         private bool _stopCondition => _generationsCounter < GeneticAlgorithmParameters.StopConditionGenerationNumbers;
         public Population Population { get; set; }
 
-        public void StartTabuSearch()
+        public AverageCounter StartTabuSearch()
         {
             TabuSearch tabuSearch = new TabuSearch();
-            _generationsCounter = 1;
+
             ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result TabuSearch.csv");
             //ToFileLogger toFileLogger = new ToFileLogger($"hard_4.ttp result TabuSearch.csv");
 
@@ -25,7 +25,7 @@ namespace GeneticAlgorithm
 
             tabuSearch.AddToTabuList(current.PermutationPlaces);
 
-            while (_stopCondition)
+            for (_generationsCounter = 1; _stopCondition; _generationsCounter++)
             {
                 List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
                 CountFitness();
@@ -41,32 +41,41 @@ namespace GeneticAlgorithm
                 tabuSearch.AddToTabuList(current.PermutationPlaces);
 
                 toFileLogger.LogToObject(_generationsCounter, best.Fitness, Randomizer.Seed, 0);
-                _generationsCounter++;
             }
 
             toFileLogger.LogToFile();
         }
 
-        public AverageCounter StartGeneticAlgorithm()
+        public void Explore()
+        {
+            List<AverageCounter> populationDataList = new List<AverageCounter>();
+            for (_generationsCounter = 1; _stopCondition; _generationsCounter++)
+            {
+                AverageCounter averageCounter = new AverageCounter();
+                averageCounter.AddGAData(RunGeneticAlgorithm());
+                averageCounter.AddTabuSearchData(StartTabuSearch());
+
+                populationDataList.Add(averageCounter);
+            }
+        }
+
+        public AverageCounter RunGeneticAlgorithm()
         {
             AverageCounter averageCounter = new AverageCounter();
 
-            _generationsCounter = 1;
             CreatePopulation();
             CountFitness();
 
             ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result GA.csv");
             //ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result GA.csv");
 
-            while (_stopCondition)
+            for (_generationsCounter = 1; _stopCondition; _generationsCounter++)
             {
                 SelectAndCross();
                 Mutate();
                 CountFitness();
                 SaveDataForGA(_generationsCounter, averageCounter);
                 //LogGeneration(_generationsCounter, toFileLogger);
-
-                _generationsCounter++;
             }
 
             //LogAllGenerationsToFile(toFileLogger);

@@ -30,6 +30,18 @@ namespace GeneticAlgorithm
             BestFitnessListTS = new List<double>();
         }
 
+        public void AddGAData(AverageCounter averageCounter)
+        {
+            BestFitnessListGA = averageCounter.BestFitnessListGA;
+            WorstFitnessListGA = averageCounter.WorstFitnessListGA;
+            AverageFitnessListGA = averageCounter.AverageFitnessListGA;
+        }
+
+        public void AddTabuSearchData(AverageCounter averageCounter)
+        {
+            BestFitnessListTS = averageCounter.BestFitnessListTS;
+        }
+
         public void SaveGenerationCounter(double counter)
         {
             GenerationCounterList.Add(counter);
