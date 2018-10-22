@@ -14,7 +14,7 @@ namespace GeneticAlgorithm
         {
             TabuSearch tabuSearch = new TabuSearch();
             _generationsCounter = 1;
-            ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result TabuSearch.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"hard_4.ttp result TabuSearch.csv");
 
             Individual best = new Individual()
             {
@@ -37,10 +37,9 @@ namespace GeneticAlgorithm
                 if (current.Fitness > best.Fitness)
                     best = current;
 
-                // график ведет себя странно, потому что ты удаляешь в определенный момент лучшую пермутацию
                 tabuSearch.AddToTabuList(current.PermutationPlaces);
 
-                toFileLogger.LogToObject(_generationsCounter, best.Fitness, 0, 0);
+                toFileLogger.LogToObject(_generationsCounter, best.Fitness, Randomizer.Seed, 0);
                 _generationsCounter++;
             }
 

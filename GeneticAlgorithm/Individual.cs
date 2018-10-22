@@ -74,14 +74,14 @@ namespace GeneticAlgorithm
 
         public void Mutate()
         {
-            int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
+            int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
             if (GeneticAlgorithmParameters.MutationProbability > randomNumber)
             {
-                int randomIndex1 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
-                int randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+                int randomIndex1 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
+                int randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
                 while (randomIndex1 == randomIndex2)
                 {
-                    randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+                    randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
                 }
                 //MUTATE
                 Permutator.Swap(PermutationPlaces, randomIndex1, randomIndex2);
@@ -93,11 +93,11 @@ namespace GeneticAlgorithm
             int[] mutation = new int[GeneticAlgorithmParameters.Dimension];
             Array.Copy(PermutationPlaces, mutation, GeneticAlgorithmParameters.Dimension);
 
-            int randomIndex1 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
-            int randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+            int randomIndex1 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
+            int randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
             while (randomIndex1 == randomIndex2)
             {
-                randomIndex2 = Randomizer.random.Next(GeneticAlgorithmParameters.Dimension);
+                randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
             }
             //MUTATE
             Permutator.Swap(mutation, randomIndex1, randomIndex2);

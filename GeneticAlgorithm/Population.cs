@@ -119,7 +119,7 @@ namespace GeneticAlgorithm
 
             while (nextPopulation.Count != POPULATION_SIZE)
             {
-                int randomNumber = Randomizer.random.Next(GeneticAlgorithmParameters.MaxProbability);
+                int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
                 if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
                 {
                     Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
@@ -205,12 +205,12 @@ namespace GeneticAlgorithm
         }
 
         /// <summary>
-        /// Returns random index at population permutation
+        /// Returns Random index at population permutation
         /// </summary>
         /// <returns></returns>
         private int GetRandomId()
         {
-            return Randomizer.random.Next(POPULATION_SIZE);
+            return Randomizer.Random.Next(POPULATION_SIZE);
         }
 
         private Individual GetTournamentSelectionWinner(int numberOfTournamentParticipants)

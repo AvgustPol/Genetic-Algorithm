@@ -19,7 +19,7 @@ namespace GeneticAlgorithm
             while (n > 1)
             {
                 n--;
-                int k = Randomizer.random.Next(n + 1);
+                int k = Randomizer.Random.Next(n + 1);
                 int value = array[k];
                 array[k] = array[n];
                 array[n] = value;
@@ -36,17 +36,17 @@ namespace GeneticAlgorithm
         {
             int minlength = 2;
             int maxlength = MAX_PERMUTATION_PLACES_INDEX - pivot + 2;
-            return Randomizer.random.Next(minlength, maxlength);
+            return Randomizer.Random.Next(minlength, maxlength);
         }
 
         /// <summary>
-        /// Returns random value from first (array id = 0)
+        /// Returns Random value from first (array id = 0)
         /// to last (array id = Dimension - 1)
         /// </summary>
         /// <returns></returns>
         private static int GetRandomPivot()
         {
-            int randomPivot = Randomizer.random.Next(0, MAX_PERMUTATION_PLACES_INDEX);
+            int randomPivot = Randomizer.Random.Next(0, MAX_PERMUTATION_PLACES_INDEX);
             return randomPivot;
         }
 

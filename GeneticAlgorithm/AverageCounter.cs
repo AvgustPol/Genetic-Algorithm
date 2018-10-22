@@ -5,24 +5,37 @@ namespace GeneticAlgorithm
     public class AverageCounter
     {
         public List<double> generationCounterList;
-        public List<double> bestIndividualCostList;
-        public List<double> worstCostList;
-        public List<double> averageCostList;
+
+        #region Genetic Algorithm
+
+        public List<double> bestIndividualFitnessListGA;
+        public List<double> worstFitnessListGA;
+        public List<double> averageFitnessListGA;
+
+        #endregion Genetic Algorithm
+
+        #region Tabu Search
+
+        public List<double> worstFitnessListTS { get; set; }
+
+        #endregion Tabu Search
 
         public AverageCounter()
         {
             generationCounterList = new List<double>();
-            bestIndividualCostList = new List<double>();
-            averageCostList = new List<double>();
-            worstCostList = new List<double>();
+            bestIndividualFitnessListGA = new List<double>();
+            averageFitnessListGA = new List<double>();
+            worstFitnessListGA = new List<double>();
+
+            worstFitnessListTS = new List<double>();
         }
 
-        internal void SaveData(double counter, double bestIndividualCost, double countAverage, double worstCost)
+        public void SaveData(double counter, double bestIndividualCost, double countAverage, double worstCost)
         {
             generationCounterList.Add(counter);
-            bestIndividualCostList.Add(bestIndividualCost);
-            averageCostList.Add(countAverage);
-            worstCostList.Add(worstCost);
+            bestIndividualFitnessListGA.Add(bestIndividualCost);
+            averageFitnessListGA.Add(countAverage);
+            worstFitnessListGA.Add(worstCost);
         }
     }
 }
