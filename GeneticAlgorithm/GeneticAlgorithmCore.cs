@@ -12,6 +12,8 @@ namespace GeneticAlgorithm
 
         public AverageCounter StartTabuSearch()
         {
+            AverageCounter averageCounter = new AverageCounter();
+
             TabuSearch tabuSearch = new TabuSearch();
 
             ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result TabuSearch.csv");
@@ -40,10 +42,12 @@ namespace GeneticAlgorithm
 
                 tabuSearch.AddToTabuList(current.PermutationPlaces);
 
-                toFileLogger.LogToObject(_generationsCounter, best.Fitness, Randomizer.Seed, 0);
+                //toFileLogger.LogToObject(_generationsCounter, best.Fitness, Randomizer.Seed, 0);\
+                averageCounter.SaveBestFitnessForTS(best.Fitness);
             }
 
-            toFileLogger.LogToFile();
+            //toFileLogger.LogToFile();
+            return null;
         }
 
         public void Explore()

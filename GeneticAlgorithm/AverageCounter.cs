@@ -42,29 +42,49 @@ namespace GeneticAlgorithm
             BestFitnessListTS = averageCounter.BestFitnessListTS;
         }
 
+        /// <summary>
+        /// Saves Generation number
+        /// </summary>
+        /// <param name="counter"></param>
         public void SaveGenerationCounter(double counter)
         {
             GenerationCounterList.Add(counter);
         }
 
-        public void SaveBestFitnessForGA(double bestIndividualCost)
+        /// <summary>
+        /// Saves best fitness for current generation
+        /// </summary>
+        /// <param name="bestFitness"></param>
+        public void SaveBestFitnessForGA(double bestFitness)
         {
-            BestFitnessListGA.Add(bestIndividualCost);
+            BestFitnessListGA.Add(bestFitness);
         }
 
+        /// <summary>
+        /// Saves Worst fitness for current generation
+        /// </summary>
+        /// <param name="worstFitness"></param>
         public void SaveWorstFitnessForGA(double worstFitness)
         {
             AverageFitnessListGA.Add(worstFitness);
         }
 
+        /// <summary>
+        /// Saves Average fitness for current generation
+        /// </summary>
+        /// <param name="averageFitness"></param>
         public void SaveAverageFitnessForGA(double averageFitness)
         {
             AverageFitnessListGA.Add(averageFitness);
         }
 
-        public void SaveBestFitnessForTS(double averageFitness)
+        /// <summary>
+        /// Saves best fitness for current generation
+        /// </summary>
+        /// <param name="bestFitness"></param>
+        public void SaveBestFitnessForTS(double bestFitness)
         {
-            BestFitnessListTS.Add(averageFitness);
+            BestFitnessListTS.Add(bestFitness);
         }
     }
 }
