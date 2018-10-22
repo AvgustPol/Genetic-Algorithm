@@ -66,7 +66,7 @@ namespace GeneticAlgorithm
         /// <param name="worstFitness"></param>
         public void SaveWorstFitnessForGA(double worstFitness)
         {
-            AverageFitnessListGA.Add(worstFitness);
+            WorstFitnessListGA.Add(worstFitness);
         }
 
         /// <summary>

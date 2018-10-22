@@ -5,13 +5,13 @@ namespace GeneticAlgorithm
 {
     public class ToFileLogger
     {
-        private string Path => _folderPath + _fileName;
-        private readonly string _folderPath = @"D:\7 semestr\Metaheurystyki\Data\Result\";
-        private readonly string _fileName;
+        private string Path => _folderPath + _fileNameName;
+        private readonly string _fileNameName;
+        private readonly string _folderPath = GlobalParameters.PathToResultFolder;
 
         public ToFileLogger(string fileName)
         {
-            _fileName = fileName;
+            _fileNameName = fileName;
 
             //delete old data if exists
             if (File.Exists(Path))

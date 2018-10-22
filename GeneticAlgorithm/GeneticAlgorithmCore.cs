@@ -110,6 +110,7 @@ namespace GeneticAlgorithm
 
             toFileLogger.LogToFile(allAlgorithmsAverage);
 
+            //TODO:
             //CountStandardDeviation
         }
 
