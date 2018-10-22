@@ -8,7 +8,7 @@ namespace GeneticAlgorithm
         static GeneticAlgorithmParameters()
         {
             DataLoader dataLoader = new DataLoader();
-            DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync().Result;
+            DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync(GlobalParameters.PathToTestData).Result;
 
             Dimension = container.Dimension;
             MinSpeed = container.MinSpeed;

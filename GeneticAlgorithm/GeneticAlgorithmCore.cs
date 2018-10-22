@@ -1,4 +1,4 @@
-﻿using StatisticsCounter;
+﻿using DataModel;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
@@ -25,7 +25,7 @@ namespace GeneticAlgorithm
 
             tabuSearch.AddToTabuList(current.PermutationPlaces);
 
-            for (_generationsCounter = 1; _algoritmStopCondition; _generationsCounter++)
+            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
                 CountFitness();
@@ -50,7 +50,7 @@ namespace GeneticAlgorithm
         {
             List<GenerationsStatistics> allAlgorithmsResults = new List<GenerationsStatistics>();
 
-            for (_generationsCounter = 1; _exploringStopCondition; _generationsCounter++)
+            for (_generationsCounter = 0; _exploringStopCondition; _generationsCounter++)
             {
                 GenerationsStatistics generationsStatistics = new GenerationsStatistics();
                 generationsStatistics.AddGAData(RunGeneticAlgorithm());
@@ -66,25 +66,25 @@ namespace GeneticAlgorithm
         {
             GenerationsStatistics allAlgorithmsAverage = new GenerationsStatistics();
 
-            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
+            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 #region Get GA Data
 
-                double averageBestFitnessGA = GetAverageBestFitnessGA(dataList, i);
-                double averageAverageFitnessGA = GetAverageAverageFitnessGA(dataList, i);
-                double averageWorstFitnessGA = GetAverageWorstFitnessGA(dataList, i);
+                double averageBestFitnessGA = GetAverageBestFitnessGA(dataList, _generationsCounter);
+                double averageAverageFitnessGA = GetAverageAverageFitnessGA(dataList, _generationsCounter);
+                double averageWorstFitnessGA = GetAverageWorstFitnessGA(dataList, _generationsCounter);
 
                 #endregion Get GA Data
 
                 #region Get TS data
 
-                double averageBestFitnessTS = GetAverageBestFitnessTS(dataList, i);
+                double averageBestFitnessTS = GetAverageBestFitnessTS(dataList, _generationsCounter);
 
                 #endregion Get TS data
 
                 #region Save GA
 
-                allAlgorithmsAverage.SaveGenerationCounter(i + 1);
+                allAlgorithmsAverage.SaveGenerationCounter(_generationsCounter + 1);
                 allAlgorithmsAverage.SaveBestFitnessForGA(averageBestFitnessGA);
                 allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
                 allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
@@ -103,9 +103,14 @@ namespace GeneticAlgorithm
 
         public void Explore()
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} TS and GA result.csv");
 
             List<GenerationsStatistics> allAlgorithmsResults = RunAllAlgorithms();
+            GenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogToFile(allAlgorithmsAverage);
+
+            //CountStandardDeviation
         }
 
         private double GetAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
@@ -155,19 +160,14 @@ namespace GeneticAlgorithm
             CreatePopulation();
             CountFitness();
 
-            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result GA.csv");
-            //ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result GA.csv");
-
-            for (_generationsCounter = 1; _algoritmStopCondition; _generationsCounter++)
+            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                SaveDataForGA(_generationsCounter, generationsStatistics);
-                //LogGeneration(_generationsCounter, toFileLogger);
+                SaveDataForGA(_generationsCounter + 1, generationsStatistics);
             }
 
-            //LogAllGenerationsToFile(toFileLogger);
             return generationsStatistics;
         }
 
@@ -177,16 +177,6 @@ namespace GeneticAlgorithm
             generationsStatistics.SaveBestFitnessForGA(Population.GetBestFitness());
             generationsStatistics.SaveAverageFitnessForGA(Population.GetAverageFitness());
             generationsStatistics.SaveWorstFitnessForGA(Population.GetWorstFitness());
-        }
-
-        private void LogAllGenerationsToFile(ToFileLogger toFileLogger)
-        {
-            toFileLogger.LogToFile();
-        }
-
-        private void LogGeneration(int generationsCounter, ToFileLogger toFileLogger)
-        {
-            toFileLogger.LogToObject(generationsCounter, Population.GetBestFitness(), Population.GetAverageFitness(), Population.GetWorstFitness());
         }
 
         /// <summary>
