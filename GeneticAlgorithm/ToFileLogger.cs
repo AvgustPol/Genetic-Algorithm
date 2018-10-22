@@ -39,6 +39,20 @@ namespace GeneticAlgorithm
 
                             $"{averageCounter.BestFitnessListTS[i]}"});
             }
+
+            File.AppendAllLines(Path,
+                new[] { $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" +
+                        $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorythmStopCondition}," +
+                        $"Tabu Search" +
+                        $"Rozmiar listy tabu {GlobalParameters.SameSize}" +
+                        $"Ilość sąsiedzi w jednej generacji {GlobalParameters.SameNumber}" +
+                        $"Poziom sąsiedztwa 1" +
+                        $"Genetic Algorithm" +
+                        $"Ilość osobników w populacji {GlobalParameters.SameSize}" +
+                        $"Ilość uczęstników w turnieju {GlobalParameters.SameNumber}" +
+                        $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" +
+                        $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%"
+                        });
         }
     }
 }

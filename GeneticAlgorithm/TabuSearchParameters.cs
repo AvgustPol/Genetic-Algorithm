@@ -1,8 +1,10 @@
-﻿namespace GeneticAlgorithm
+﻿using DataModel;
+
+namespace GeneticAlgorithm
 {
     public class TabuSearchParameters
     {
-        public static int TabuListSize = 100;
-        public static int NumberOfNeighbors = 3;
+        public static int TabuListSize = GlobalParameters.SameSize;
+        public static int NumberOfNeighbors = GlobalParameters.SameNumber;
     }
 }

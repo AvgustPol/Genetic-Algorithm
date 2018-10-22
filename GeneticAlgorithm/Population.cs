@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DataModel;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
@@ -7,7 +8,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// Number of population individuals
         /// </summary>
-        public readonly int PopulationSize = 100;
+        public readonly int PopulationSize = GlobalParameters.SameSize;
 
         public Dictionary<int, Individual> Individuals { get; set; }
 
