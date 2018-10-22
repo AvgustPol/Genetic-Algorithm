@@ -11,14 +11,11 @@ namespace GeneticAlgorithm
         private bool _exploringStopCondition => _generationsCounter < GeneticAlgorithmParameters.ExploringStopCondition;
         public Population Population { get; set; }
 
-        public AverageCounter StartTabuSearch()
+        public GenerationsStatistics StartTabuSearch()
         {
-            AverageCounter averageCounter = new AverageCounter();
+            GenerationsStatistics generationsStatistics = new GenerationsStatistics();
 
             TabuSearch tabuSearch = new TabuSearch();
-
-            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result TabuSearch.csv");
-            //ToFileLogger toFileLogger = new ToFileLogger($"hard_4.ttp result TabuSearch.csv");
 
             Individual best = new Individual()
             {
@@ -43,28 +40,35 @@ namespace GeneticAlgorithm
 
                 tabuSearch.AddToTabuList(current.PermutationPlaces);
 
-                //toFileLogger.LogToObject(_generationsCounter, best.Fitness, Randomizer.Seed, 0);\
-                averageCounter.SaveBestFitnessForTS(best.Fitness);
+                generationsStatistics.SaveBestFitnessForTS(best.Fitness);
             }
 
-            //toFileLogger.LogToFile();
-            return averageCounter;
+            return generationsStatistics;
+        }
+
+        private List<GenerationsStatistics> RunAllAlgorithms()
+        {
+            List<GenerationsStatistics> allAlgorithmsResults = new List<GenerationsStatistics>();
+
+            for (_generationsCounter = 1; _exploringStopCondition; _generationsCounter++)
+            {
+                GenerationsStatistics generationsStatistics = new GenerationsStatistics();
+                generationsStatistics.AddGAData(RunGeneticAlgorithm());
+                generationsStatistics.AddTabuSearchData(StartTabuSearch());
+
+                allAlgorithmsResults.Add(generationsStatistics);
+            }
+
+            return allAlgorithmsResults;
         }
 
         public void Explore()
         {
-            List<AverageCounter> dataList = new List<AverageCounter>();
+            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result.csv");
 
-            for (_generationsCounter = 1; _exploringStopCondition; _generationsCounter++)
-            {
-                AverageCounter averageCounter = new AverageCounter();
-                averageCounter.AddGAData(RunGeneticAlgorithm());
-                averageCounter.AddTabuSearchData(StartTabuSearch());
+            List<GenerationsStatistics> allAlgorithmsResults = RunAllAlgorithms();
 
-                dataList.Add(averageCounter);
-            }
-
-            AverageCounter allAlgorithmsAverage = new AverageCounter();
+            GenerationsStatistics allAlgorithmsAverage = new GenerationsStatistics();
 
             for (int i = 0; i < ; i++)
             {
@@ -82,7 +86,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        private double GetAverageBestFitnessTS(List<AverageCounter> list, int index)
+        private double GetAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             foreach (var item in list)
@@ -92,7 +96,7 @@ namespace GeneticAlgorithm
             return sum / list.Count;
         }
 
-        private double GetAverageBestFitnessGA(List<AverageCounter> list, int index)
+        private double GetAverageBestFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             foreach (var item in list)
@@ -102,7 +106,7 @@ namespace GeneticAlgorithm
             return sum / list.Count;
         }
 
-        private double GetAverageAverageFitnessGA(List<AverageCounter> list, int index)
+        private double GetAverageAverageFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             foreach (var item in list)
@@ -112,7 +116,7 @@ namespace GeneticAlgorithm
             return sum / list.Count;
         }
 
-        private double GetAverageWorstFitnessGA(List<AverageCounter> list, int index)
+        private double GetAverageWorstFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             foreach (var item in list)
@@ -122,9 +126,9 @@ namespace GeneticAlgorithm
             return sum / list.Count;
         }
 
-        public AverageCounter RunGeneticAlgorithm()
+        public GenerationsStatistics RunGeneticAlgorithm()
         {
-            AverageCounter averageCounter = new AverageCounter();
+            GenerationsStatistics generationsStatistics = new GenerationsStatistics();
 
             CreatePopulation();
             CountFitness();
@@ -137,20 +141,20 @@ namespace GeneticAlgorithm
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                SaveDataForGA(_generationsCounter, averageCounter);
+                SaveDataForGA(_generationsCounter, generationsStatistics);
                 //LogGeneration(_generationsCounter, toFileLogger);
             }
 
             //LogAllGenerationsToFile(toFileLogger);
-            return averageCounter;
+            return generationsStatistics;
         }
 
-        private void SaveDataForGA(int generationsCounter, AverageCounter averageCounter)
+        private void SaveDataForGA(int generationsCounter, GenerationsStatistics generationsStatistics)
         {
-            averageCounter.SaveGenerationCounter(generationsCounter);
-            averageCounter.SaveBestFitnessForGA(Population.GetBestFitness());
-            averageCounter.SaveAverageFitnessForGA(Population.GetAverageFitness());
-            averageCounter.SaveWorstFitnessForGA(Population.GetWorstFitness());
+            generationsStatistics.SaveGenerationCounter(generationsCounter);
+            generationsStatistics.SaveBestFitnessForGA(Population.GetBestFitness());
+            generationsStatistics.SaveAverageFitnessForGA(Population.GetAverageFitness());
+            generationsStatistics.SaveWorstFitnessForGA(Population.GetWorstFitness());
         }
 
         private void LogAllGenerationsToFile(ToFileLogger toFileLogger)
