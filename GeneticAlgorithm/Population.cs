@@ -4,19 +4,15 @@ namespace GeneticAlgorithm
 {
     public class Population
     {
-        private readonly int NOT_FOUND_INDEX = -1;
-
         /// <summary>
         /// Number of population individuals
         /// </summary>
         private readonly int POPULATION_SIZE = 100;
 
-        //public Individual BestIndividual { get; set; }
         public Dictionary<int, Individual> Individuals { get; set; }
 
         public Population()
         {
-            //SaveBest();
         }
 
         public void CountFitnessForTheEntirePopulation()
@@ -97,22 +93,6 @@ namespace GeneticAlgorithm
             }
         }
 
-        public AverageCounter RunAlgorythmWithCounterCondition()
-        {
-            int counter = 0;
-
-            AverageCounter averageCounter = new AverageCounter();
-            while (GeneticAlgorithmParameters.StopConditionGenerationNumbers > counter)
-            {
-                CreateNextPopulationCircle();
-
-                //averageCounter.SaveData(counter++, BestIndividual.Fitness, GetAverageFitness(), GetWorstFitness());
-                averageCounter.SaveData(counter++, GetBestFitness(), GetAverageFitness(), GetWorstFitness());
-            }
-
-            return averageCounter;
-        }
-
         public void SelectAndCross()
         {
             Dictionary<int, Individual> nextPopulation = new Dictionary<int, Individual>();
@@ -130,10 +110,6 @@ namespace GeneticAlgorithm
                 }
                 else
                 {
-                    //int doubledNumberOfTournamentParticipants =
-                    //    GeneticAlgorithmParameters.NumberOfTournamentParticipants * 2;
-                    //Individual winner = GetTournamentSelectionWinner(doubledNumberOfTournamentParticipants);
-
                     Individual winner = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
                     nextPopulation.Add(nextPopulation.Count, winner);
@@ -168,13 +144,6 @@ namespace GeneticAlgorithm
             return Permutator.GetRandomPermutation(defaultArray);
         }
 
-        private void CreateNextPopulationCircle()
-        {
-            GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-            SelectAndCross(); // krzyrzowanie
-            Mutate();
-        }
-
         public void CreatePopulationIndividuals()
         {
             Individuals = new Dictionary<int, Individual>(POPULATION_SIZE);
@@ -189,19 +158,6 @@ namespace GeneticAlgorithm
             //CreateNewItemsPermutation(child);
 
             return child;
-        }
-
-        private int FindThisNumberInArray(int[] permutation, int value)
-        {
-            int permutationLength = permutation.Length;
-            for (int i = 0; i < permutationLength; i++)
-            {
-                if (permutation[i] == value)
-                {
-                    return i;
-                }
-            }
-            return NOT_FOUND_INDEX;
         }
 
         /// <summary>

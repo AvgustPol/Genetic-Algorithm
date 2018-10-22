@@ -4,38 +4,55 @@ namespace GeneticAlgorithm
 {
     public class AverageCounter
     {
-        public List<double> generationCounterList;
+        public List<double> GenerationCounterList;
 
         #region Genetic Algorithm
 
-        public List<double> bestIndividualFitnessListGA;
-        public List<double> worstFitnessListGA;
-        public List<double> averageFitnessListGA;
+        public List<double> BestFitnessListGA { get; set; }
+        public List<double> WorstFitnessListGA { get; set; }
+        public List<double> AverageFitnessListGA { get; set; }
 
         #endregion Genetic Algorithm
 
         #region Tabu Search
 
-        public List<double> worstFitnessListTS { get; set; }
+        public List<double> BestFitnessListTS { get; set; }
 
         #endregion Tabu Search
 
         public AverageCounter()
         {
-            generationCounterList = new List<double>();
-            bestIndividualFitnessListGA = new List<double>();
-            averageFitnessListGA = new List<double>();
-            worstFitnessListGA = new List<double>();
+            GenerationCounterList = new List<double>();
+            BestFitnessListGA = new List<double>();
+            AverageFitnessListGA = new List<double>();
+            WorstFitnessListGA = new List<double>();
 
-            worstFitnessListTS = new List<double>();
+            BestFitnessListTS = new List<double>();
         }
 
-        public void SaveData(double counter, double bestIndividualCost, double countAverage, double worstCost)
+        public void SaveGenerationCounter(double counter)
         {
-            generationCounterList.Add(counter);
-            bestIndividualFitnessListGA.Add(bestIndividualCost);
-            averageFitnessListGA.Add(countAverage);
-            worstFitnessListGA.Add(worstCost);
+            GenerationCounterList.Add(counter);
+        }
+
+        public void SaveBestFitnessForGA(double bestIndividualCost)
+        {
+            BestFitnessListGA.Add(bestIndividualCost);
+        }
+
+        public void SaveWorstFitnessForGA(double worstFitness)
+        {
+            AverageFitnessListGA.Add(worstFitness);
+        }
+
+        public void SaveAverageFitnessForGA(double averageFitness)
+        {
+            AverageFitnessListGA.Add(averageFitness);
+        }
+
+        public void SaveBestFitnessForTS(double averageFitness)
+        {
+            BestFitnessListTS.Add(averageFitness);
         }
     }
 }

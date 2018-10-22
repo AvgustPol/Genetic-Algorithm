@@ -14,7 +14,8 @@ namespace GeneticAlgorithm
         {
             TabuSearch tabuSearch = new TabuSearch();
             _generationsCounter = 1;
-            ToFileLogger toFileLogger = new ToFileLogger($"hard_4.ttp result TabuSearch.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result TabuSearch.csv");
+            //ToFileLogger toFileLogger = new ToFileLogger($"hard_4.ttp result TabuSearch.csv");
 
             Individual best = new Individual()
             {
@@ -46,26 +47,38 @@ namespace GeneticAlgorithm
             toFileLogger.LogToFile();
         }
 
-        public void StartGeneticAlgorithm()
+        public AverageCounter StartGeneticAlgorithm()
         {
+            AverageCounter averageCounter = new AverageCounter();
+
             _generationsCounter = 1;
             CreatePopulation();
             CountFitness();
 
-            //ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result GA.csv");
-            ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result GA.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"trivial_0 result GA.csv");
+            //ToFileLogger toFileLogger = new ToFileLogger($"easy_0 result GA.csv");
 
             while (_stopCondition)
             {
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                LogGeneration(_generationsCounter, toFileLogger);
+                SaveDataForGA(_generationsCounter, averageCounter);
+                //LogGeneration(_generationsCounter, toFileLogger);
 
                 _generationsCounter++;
             }
 
-            LogAllGenerationsToFile(toFileLogger);
+            //LogAllGenerationsToFile(toFileLogger);
+            return averageCounter;
+        }
+
+        private void SaveDataForGA(int generationsCounter, AverageCounter averageCounter)
+        {
+            averageCounter.SaveGenerationCounter(generationsCounter);
+            averageCounter.SaveBestFitnessForGA(Population.GetBestFitness());
+            averageCounter.SaveAverageFitnessForGA(Population.GetAverageFitness());
+            averageCounter.SaveWorstFitnessForGA(Population.GetWorstFitness());
         }
 
         private void LogAllGenerationsToFile(ToFileLogger toFileLogger)

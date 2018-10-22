@@ -4,9 +4,9 @@ namespace GeneticAlgorithm
 {
     public class Permutator
     {
-        public static int NOT_FOUND_CODE = -1;
+        public static int NotFoundCode = -1;
 
-        private static readonly int MAX_PERMUTATION_PLACES_INDEX = GeneticAlgorithmParameters.Dimension - 1;
+        private static readonly int MaxPermutationPlacesIndex = GeneticAlgorithmParameters.Dimension - 1;
 
         /// <summary>
         /// Shuffles source array
@@ -35,7 +35,7 @@ namespace GeneticAlgorithm
         private static int GetRandomLength(int pivot)
         {
             int minlength = 2;
-            int maxlength = MAX_PERMUTATION_PLACES_INDEX - pivot + 2;
+            int maxlength = MaxPermutationPlacesIndex - pivot + 2;
             return Randomizer.Random.Next(minlength, maxlength);
         }
 
@@ -46,7 +46,7 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         private static int GetRandomPivot()
         {
-            int randomPivot = Randomizer.Random.Next(0, MAX_PERMUTATION_PLACES_INDEX);
+            int randomPivot = Randomizer.Random.Next(0, MaxPermutationPlacesIndex);
             return randomPivot;
         }
 
@@ -102,8 +102,8 @@ namespace GeneticAlgorithm
             int[] childPermutationPlaces = new int[GeneticAlgorithmParameters.Dimension];
             for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
             {
-                // NOT_FOUND_CODE = -1 - because indexes are integers
-                childPermutationPlaces[i] = NOT_FOUND_CODE;
+                // NotFoundCode = -1 - because indexes are integers
+                childPermutationPlaces[i] = NotFoundCode;
             }
 
             #endregion Create child permutation
@@ -132,7 +132,7 @@ namespace GeneticAlgorithm
 
             for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
             {
-                if (childPermutationPlaces[i] == NOT_FOUND_CODE)
+                if (childPermutationPlaces[i] == NotFoundCode)
                 {
                     childPermutationPlaces[i] = parent2[i];
                 }
@@ -178,7 +178,7 @@ namespace GeneticAlgorithm
                 }
             }
 
-            return NOT_FOUND_CODE;
+            return NotFoundCode;
         }
     }
 }
