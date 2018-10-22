@@ -63,6 +63,63 @@ namespace GeneticAlgorithm
 
                 dataList.Add(averageCounter);
             }
+
+            AverageCounter allAlgorithmsAverage = new AverageCounter();
+
+            for (int i = 0; i < ; i++)
+            {
+                double averageBestFitnessGA = GetAverageBestFitnessGA(dataList, i);
+                double averageAverageFitnessGA = GetAverageAverageFitnessGA(dataList, i);
+                double averageWorstFitnessGA = GetAverageWorstFitnessGA(dataList, i);
+
+                double averageBestFitnessTS = GetAverageBestFitnessTS(dataList, i);
+
+                allAlgorithmsAverage.SaveGenerationCounter(i + 1);
+                allAlgorithmsAverage.SaveBestFitnessForGA(averageBestFitnessGA);
+                allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
+                allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
+                allAlgorithmsAverage.SaveBestFitnessForTS(averageBestFitnessTS);
+            }
+        }
+
+        private double GetAverageBestFitnessTS(List<AverageCounter> list, int index)
+        {
+            double sum = 0;
+            foreach (var item in list)
+            {
+                sum += item.BestFitnessListTS[index];
+            }
+            return sum / list.Count;
+        }
+
+        private double GetAverageBestFitnessGA(List<AverageCounter> list, int index)
+        {
+            double sum = 0;
+            foreach (var item in list)
+            {
+                sum += item.BestFitnessListGA[index];
+            }
+            return sum / list.Count;
+        }
+
+        private double GetAverageAverageFitnessGA(List<AverageCounter> list, int index)
+        {
+            double sum = 0;
+            foreach (var item in list)
+            {
+                sum += item.AverageFitnessListGA[index];
+            }
+            return sum / list.Count;
+        }
+
+        private double GetAverageWorstFitnessGA(List<AverageCounter> list, int index)
+        {
+            double sum = 0;
+            foreach (var item in list)
+            {
+                sum += item.WorstFitnessListGA[index];
+            }
+            return sum / list.Count;
         }
 
         public AverageCounter RunGeneticAlgorithm()

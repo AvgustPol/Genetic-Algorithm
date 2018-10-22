@@ -7,7 +7,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// Number of population individuals
         /// </summary>
-        private readonly int POPULATION_SIZE = 100;
+        public readonly int PopulationSize = 100;
 
         public Dictionary<int, Individual> Individuals { get; set; }
 
@@ -17,7 +17,7 @@ namespace GeneticAlgorithm
 
         public void CountFitnessForTheEntirePopulation()
         {
-            for (int i = 0; i < POPULATION_SIZE; i++)
+            for (int i = 0; i < PopulationSize; i++)
             {
                 Individuals[i].CountFitness();
             }
@@ -26,11 +26,11 @@ namespace GeneticAlgorithm
         public double GetAverageFitness()
         {
             double sumCost = Individuals[0].Fitness;
-            for (int i = 1; i < POPULATION_SIZE; i++)
+            for (int i = 1; i < PopulationSize; i++)
             {
                 sumCost += Individuals[i].Fitness;
             }
-            return sumCost / POPULATION_SIZE;
+            return sumCost / PopulationSize;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace GeneticAlgorithm
             double smallestFitness = Individuals[0].Fitness;
 
             //so we can search from the second one id (i = 1)
-            for (int i = 1; i < POPULATION_SIZE; i++)
+            for (int i = 1; i < PopulationSize; i++)
             {
                 if (smallestFitness > Individuals[i].Fitness)
                 {
@@ -75,7 +75,7 @@ namespace GeneticAlgorithm
             double biggestFitness = Individuals[0].Fitness;
 
             //so we can search from the second one id (i = 1)
-            for (int i = 1; i < POPULATION_SIZE; i++)
+            for (int i = 1; i < PopulationSize; i++)
             {
                 if (biggestFitness < Individuals[i].Fitness)
                 {
@@ -87,7 +87,7 @@ namespace GeneticAlgorithm
 
         public void Mutate()
         {
-            for (int i = 0; i < POPULATION_SIZE; i++)
+            for (int i = 0; i < PopulationSize; i++)
             {
                 Individuals[i].Mutate();
             }
@@ -97,7 +97,7 @@ namespace GeneticAlgorithm
         {
             Dictionary<int, Individual> nextPopulation = new Dictionary<int, Individual>();
 
-            while (nextPopulation.Count != POPULATION_SIZE)
+            while (nextPopulation.Count != PopulationSize)
             {
                 int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
                 if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
@@ -120,7 +120,7 @@ namespace GeneticAlgorithm
 
         private void CreateNewRandomPopulation()
         {
-            for (int i = 0; i < POPULATION_SIZE; i++)
+            for (int i = 0; i < PopulationSize; i++)
             {
                 Individuals.Add(i, new Individual()
                 {
@@ -146,7 +146,7 @@ namespace GeneticAlgorithm
 
         public void CreatePopulationIndividuals()
         {
-            Individuals = new Dictionary<int, Individual>(POPULATION_SIZE);
+            Individuals = new Dictionary<int, Individual>(PopulationSize);
             CreateNewRandomPopulation();
         }
 
@@ -166,7 +166,7 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         private int GetRandomId()
         {
-            return Randomizer.Random.Next(POPULATION_SIZE);
+            return Randomizer.Random.Next(PopulationSize);
         }
 
         private Individual GetTournamentSelectionWinner(int numberOfTournamentParticipants)
