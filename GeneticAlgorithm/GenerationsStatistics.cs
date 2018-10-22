@@ -2,7 +2,7 @@
 
 namespace GeneticAlgorithm
 {
-    public class AverageCounter
+    public class GenerationsStatistics
     {
         public List<double> GenerationCounterList;
 
@@ -20,7 +20,7 @@ namespace GeneticAlgorithm
 
         #endregion Tabu Search
 
-        public AverageCounter()
+        public GenerationsStatistics()
         {
             GenerationCounterList = new List<double>();
             BestFitnessListGA = new List<double>();
@@ -30,16 +30,16 @@ namespace GeneticAlgorithm
             BestFitnessListTS = new List<double>();
         }
 
-        public void AddGAData(AverageCounter averageCounter)
+        public void AddGAData(GenerationsStatistics generationsStatistics)
         {
-            BestFitnessListGA = averageCounter.BestFitnessListGA;
-            WorstFitnessListGA = averageCounter.WorstFitnessListGA;
-            AverageFitnessListGA = averageCounter.AverageFitnessListGA;
+            BestFitnessListGA = generationsStatistics.BestFitnessListGA;
+            WorstFitnessListGA = generationsStatistics.WorstFitnessListGA;
+            AverageFitnessListGA = generationsStatistics.AverageFitnessListGA;
         }
 
-        public void AddTabuSearchData(AverageCounter averageCounter)
+        public void AddTabuSearchData(GenerationsStatistics generationsStatistics)
         {
-            BestFitnessListTS = averageCounter.BestFitnessListTS;
+            BestFitnessListTS = generationsStatistics.BestFitnessListTS;
         }
 
         /// <summary>
