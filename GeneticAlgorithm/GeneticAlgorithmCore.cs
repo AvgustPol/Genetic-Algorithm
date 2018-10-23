@@ -19,11 +19,11 @@ namespace GeneticAlgorithm
 
             Individual best = new Individual()
             {
-                PermutationPlaces = Population.CreateRandomIndividual()
+                Places = Population.CreateRandomIndividual()
             };
             Individual current = best;
 
-            tabuSearch.AddToTabuList(current.PermutationPlaces);
+            tabuSearch.AddToTabuList(current.Places);
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
@@ -38,7 +38,7 @@ namespace GeneticAlgorithm
                 if (current.Fitness > best.Fitness)
                     best = current;
 
-                tabuSearch.AddToTabuList(current.PermutationPlaces);
+                tabuSearch.AddToTabuList(current.Places);
 
                 generationsStatistics.SaveBestFitnessForTS(best.Fitness);
             }

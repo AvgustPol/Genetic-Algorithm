@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DataModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticAlgorithm
 {
@@ -8,14 +11,16 @@ namespace GeneticAlgorithm
 
         /// <summary>
         /// KNP problem
+        /// index: item id
+        /// value: if true then thief takes item
         /// </summary
-        public int[] PermutationItems { get; set; }
+        public bool[] Items { get; set; }
 
         /// <summary>
         /// TSP problem
-        /// PermutationPlaces is a road
+        /// Places sequence is a road
         /// </summary>
-        public int[] PermutationPlaces { get; set; }
+        public int[] Places { get; set; }
 
         public Individual()
         {
@@ -23,22 +28,127 @@ namespace GeneticAlgorithm
 
         public Individual(int[] road)
         {
-            PermutationPlaces = road;
-            //CreatePermutationItems();
+            Places = road;
+            CreateItems();
             CountFitness();
+        }
+
+        private void CreateItems()
+        {
+            List<AcceptableItem> acceptableItems = new List<AcceptableItem>();
+
+            for (int i = 0; i < GeneticAlgorithmParameters.NumberOfItems; i++)
+            {
+                Item tmpItem = GeneticAlgorithmParameters.GetItem(i);
+                double itemFitnessForCurrentRoad = CountItemFitness(tmpItem);
+                if (itemFitnessForCurrentRoad > 0)
+                {
+                    acceptableItems.Add(new AcceptableItem()
+                    {
+                        Id = i,
+                        FitnessForCurrentRoad = itemFitnessForCurrentRoad
+                    });
+                }
+            }
+
+            acceptableItems.Sort((item1, item2) => item1.FitnessForCurrentRoad.CompareTo(item2.FitnessForCurrentRoad));
+
+            CountWhichItemsToTake(acceptableItems);
+        }
+
+        private class AcceptableItem
+        {
+            public int Id { get; set; }
+            public double FitnessForCurrentRoad { get; set; }
+        }
+
+        private double CountItemFitness(Item item)
+        {
+            double timeDifference = CountTimeDifference(item);
+            double itemFitness = item.Profit - GeneticAlgorithmParameters.RentingRatio * timeDifference;
+
+            return itemFitness;
+        }
+
+        private double CountTimeDifference(Item item)
+        {
+            int lastPlaceId = Places[Places.Length - 1];
+            double road = CountRoad(item.PlaceId, lastPlaceId);
+
+            double timeWithItem = CountTimeWithItem(item, lastPlaceId, road);
+            double timeWithEmptyKnapsack = CountTimeWithEmptyKnapsack(road);
+
+            return timeWithItem - timeWithEmptyKnapsack;
+        }
+
+        private double CountTimeWithEmptyKnapsack(double road)
+        {
+            return road / GeneticAlgorithmParameters.MaxSpeed;
+        }
+
+        private double CountTimeWithItem(Item item, int lastPlaceId, double road)
+        {
+            double speedWithItem = CountSpeedWithItem(item, item.PlaceId, lastPlaceId);
+            return road / speedWithItem;
+        }
+
+        private void CountWhichItemsToTake(List<AcceptableItem> acceptableItems)
+        {
+            int capacityOfKnapsack = 0;
+
+            // while
+            // we have space in the knapsack (capacityOfKnapsack == GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
+            // and
+            // there are acceptable items (acceptableItems.Count > 0)
+            while (acceptableItems.Count > 0 && capacityOfKnapsack == GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
+            {
+                AcceptableItem acceptableItem = acceptableItems.First();
+                int itemId = acceptableItem.Id;
+                int itemWeight = GeneticAlgorithmParameters.GetItem(itemId).Weight;
+                if (capacityOfKnapsack + itemWeight <= GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
+                {
+                    capacityOfKnapsack += itemWeight;
+                    Items[itemId] = true;
+                }
+
+                acceptableItems.Remove(acceptableItem);
+            }
+        }
+
+        private double CountRoad(int start, int end)
+        {
+            double road = 0;
+            for (int i = start; i < end; i++)
+            {
+                road += GeneticAlgorithmParameters.GetDistance(i, i + 1);
+            }
+
+            road += GeneticAlgorithmParameters.GetDistance(end, 0);
+            return road;
+        }
+
+        private double CountSpeedWithItem(Item item, int start, int end)
+        {
+            double minSpeed = GeneticAlgorithmParameters.MinSpeed;
+            double maxSpeed = GeneticAlgorithmParameters.MaxSpeed;
+
+            double currentSpeed = maxSpeed - GeneticAlgorithmParameters.MaxMinusMinDividedByWeight * item.Weight;
+
+            //TODO: useless ? can current speed be lower than min speed?
+            return Math.Max(minSpeed, currentSpeed);
         }
 
         public object Clone()
         {
             Individual clone = new Individual();
-            if (PermutationPlaces != null)
+            if (Places != null)
             {
-                clone.PermutationPlaces = (int[])PermutationPlaces.Clone();
+                clone.Places = (int[])Places.Clone();
             }
 
-            if (PermutationItems != null)
+            if (ShouldTakeItems != null)
             {
-                clone.PermutationItems = (int[])PermutationItems.Clone();
+                clone.ShouldTakeItems = (bool[])ShouldTakeItems.Clone();
             }
 
             return clone;
@@ -48,28 +158,36 @@ namespace GeneticAlgorithm
         {
             // Fitness = Sum(itemValue) - R * ( ti - t0)
             //
-            // ti - czas z przedmiotem
-            // t- czas z pustym plecakiem
+            // ti - czas z przedmiotami
+            // t0 - czas z pustym plecakiem
             Fitness = 0;
 
-            for (int i = 0; i < GeneticAlgorithmParameters.Dimension - 1; i++)
+            double sumProfit = CountSumProfit();
+            double ti = 0;
+            double t0 = 0;
+
+            //for (int i = 0; i < GeneticAlgorithmParameters.Dimension - 1; i++)
+            //{
+            //    Fitness += GeneticAlgorithmParameters.GetDistance(Places[i], Places[i + 1]);
+            //}
+
+            //Fitness += GeneticAlgorithmParameters.GetDistance(Places[0], Places[GeneticAlgorithmParameters.Dimension - 1]);
+
+            //Fitness = 1 / Fitness;
+        }
+
+        private double CountSumProfit()
+        {
+            double sum = 0;
+            for (int i = 0; i < GeneticAlgorithmParameters.NumberOfItems; i++)
             {
-                Fitness += GeneticAlgorithmParameters.GetDistance(PermutationPlaces[i], PermutationPlaces[i + 1]);
+                if (Items[i])
+                {
+                    sum += GeneticAlgorithmParameters.GetItem(i).Profit;
+                }
             }
 
-            Fitness += GeneticAlgorithmParameters.GetDistance(PermutationPlaces[0], PermutationPlaces[GeneticAlgorithmParameters.Dimension - 1]);
-
-            Fitness = 1 / Fitness;
-
-            //for (int i = 0; i < PermutationPlaces.Length; i++)
-            //{
-            //    for (int j = 0; j < PermutationPlaces.Length; j++)
-            //    {
-            //        //result += StaticMatrixObject.GetFlow(array[i], array[j]) * StaticMatrixObject.GetDistance(i, j);
-
-            //        Fitness += GeneticAlgorithmParameters.GetDistance(i, j);
-            //    }
-            //}
+            return sum;
         }
 
         public void Mutate()
@@ -84,14 +202,14 @@ namespace GeneticAlgorithm
                     randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
                 }
                 //MUTATE
-                Permutator.Swap(PermutationPlaces, randomIndex1, randomIndex2);
+                Permutator.Swap(Places, randomIndex1, randomIndex2);
             }
         }
 
-        public int[] GetMutatation()
+        public int[] GetMutation()
         {
             int[] mutation = new int[GeneticAlgorithmParameters.Dimension];
-            Array.Copy(PermutationPlaces, mutation, GeneticAlgorithmParameters.Dimension);
+            Array.Copy(Places, mutation, GeneticAlgorithmParameters.Dimension);
 
             int randomIndex1 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
             int randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);

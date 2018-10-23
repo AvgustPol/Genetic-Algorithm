@@ -28,7 +28,7 @@ namespace GeneticAlgorithm
         {
             int[] res = new int[GeneticAlgorithmParameters.Dimension];
 
-            res = individual.GetMutatation();
+            res = individual.GetMutation();
 
             return res;
         }
@@ -44,7 +44,7 @@ namespace GeneticAlgorithm
 
             for (int i = 0; i < numberOfNeighbors; i++)
             {
-                neighbors.Add(current.GetMutatation());
+                neighbors.Add(current.GetMutation());
             }
 
             return neighbors;
