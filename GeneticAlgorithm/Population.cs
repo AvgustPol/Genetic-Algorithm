@@ -125,7 +125,7 @@ namespace GeneticAlgorithm
             {
                 Individuals.Add(i, new Individual()
                 {
-                    PermutationPlaces = CreateRandomIndividual()
+                    Places = CreateRandomIndividual()
                 });
             }
         }
@@ -156,9 +156,15 @@ namespace GeneticAlgorithm
             Individual child = CrossAndGetChild(firstIndividual, secondIndividual);
 
             //TODO finish
-            //CreateNewItemsPermutation(child);
+            child.CreateItems();
+            child.CountFitness();
 
             return child;
+        }
+
+        private void CreateNewItemsPermutation(Individual child)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>
@@ -188,12 +194,12 @@ namespace GeneticAlgorithm
 
         private Individual CrossAndGetChild(Individual firstIndividual, Individual secondIndividual)
         {
-            int[] firstIndividualCopy = (int[])firstIndividual.PermutationPlaces.Clone();
-            int[] secondIndividualCopy = (int[])secondIndividual.PermutationPlaces.Clone();
+            int[] firstIndividualCopy = (int[])firstIndividual.Places.Clone();
+            int[] secondIndividualCopy = (int[])secondIndividual.Places.Clone();
 
             return new Individual()
             {
-                PermutationPlaces = Permutator.CrossPermutations(firstIndividualCopy, secondIndividualCopy)
+                Places = Permutator.CrossPermutations(firstIndividualCopy, secondIndividualCopy)
             };
         }
     }

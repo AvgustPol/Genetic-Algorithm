@@ -17,6 +17,12 @@ namespace GeneticAlgorithm
         public bool[] Items { get; set; }
 
         /// <summary>
+        /// id - placeId
+        /// value - itemId (int or NotFoundCode)
+        /// </summary>
+        public int[] ItemsLocation { get; set; }
+
+        /// <summary>
         /// TSP problem
         /// Places sequence is a road
         /// </summary>
@@ -33,7 +39,7 @@ namespace GeneticAlgorithm
             CountFitness();
         }
 
-        private void CreateItems()
+        public void CreateItems()
         {
             List<AcceptableItem> acceptableItems = new List<AcceptableItem>();
 
@@ -54,6 +60,30 @@ namespace GeneticAlgorithm
             acceptableItems.Sort((item1, item2) => item1.FitnessForCurrentRoad.CompareTo(item2.FitnessForCurrentRoad));
 
             CountWhichItemsToTake(acceptableItems);
+            CreatePlacesP();
+        }
+
+        private void CreatePlacesP()
+        {
+            //id - id города
+            //value - id предмета, который нужно взять
+            int[] idPlaceValueItemToTake = new int[GeneticAlgorithmParameters.Dimension];
+            for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
+            {
+                idPlaceValueItemToTake[i] = Permutator.NotFoundCode;
+            }
+
+            for (int i = 0; i < Items.Length; i++)
+            {
+                //если я беру предмет
+                if (Items[i])
+                {
+                    Item item = GeneticAlgorithmParameters.GetItem(i);
+                    idPlaceValueItemToTake[item.PlaceId] = item.Id;
+                }
+            }
+
+            ItemsLocation = idPlaceValueItemToTake;
         }
 
         private class AcceptableItem
@@ -94,6 +124,8 @@ namespace GeneticAlgorithm
 
         private void CountWhichItemsToTake(List<AcceptableItem> acceptableItems)
         {
+            Items = new bool[GeneticAlgorithmParameters.NumberOfItems];
+
             int capacityOfKnapsack = 0;
 
             // while
@@ -113,6 +145,12 @@ namespace GeneticAlgorithm
 
                 acceptableItems.Remove(acceptableItem);
             }
+        }
+
+        private double CountFullRoad()
+        {
+            //from start place (0) to end (GeneticAlgorithmParameters.Dimension - 1)
+            return CountRoad(0, GeneticAlgorithmParameters.Dimension - 1);
         }
 
         private double CountRoad(int start, int end)
@@ -138,6 +176,17 @@ namespace GeneticAlgorithm
             return Math.Max(minSpeed, currentSpeed);
         }
 
+        private double CountSpeedWithWeight(int weight, int start, int end)
+        {
+            double minSpeed = GeneticAlgorithmParameters.MinSpeed;
+            double maxSpeed = GeneticAlgorithmParameters.MaxSpeed;
+
+            double currentSpeed = maxSpeed - GeneticAlgorithmParameters.MaxMinusMinDividedByWeight * weight;
+
+            //TODO: useless ? can current speed be lower than min speed?
+            return Math.Max(minSpeed, currentSpeed);
+        }
+
         public object Clone()
         {
             Individual clone = new Individual();
@@ -146,9 +195,9 @@ namespace GeneticAlgorithm
                 clone.Places = (int[])Places.Clone();
             }
 
-            if (ShouldTakeItems != null)
+            if (Items != null)
             {
-                clone.ShouldTakeItems = (bool[])ShouldTakeItems.Clone();
+                clone.Items = (bool[])Items.Clone();
             }
 
             return clone;
@@ -162,9 +211,13 @@ namespace GeneticAlgorithm
             // t0 - czas z pustym plecakiem
             Fitness = 0;
 
+            double fullRoad = CountFullRoad();
+
             double sumProfit = CountSumProfit();
-            double ti = 0;
-            double t0 = 0;
+            double ti = CountTime();
+            double t0 = CountTimeWithEmptyKnapsack(fullRoad);
+
+            Fitness = sumProfit - GeneticAlgorithmParameters.RentingRatio * (ti - t0);
 
             //for (int i = 0; i < GeneticAlgorithmParameters.Dimension - 1; i++)
             //{
@@ -174,6 +227,56 @@ namespace GeneticAlgorithm
             //Fitness += GeneticAlgorithmParameters.GetDistance(Places[0], Places[GeneticAlgorithmParameters.Dimension - 1]);
 
             //Fitness = 1 / Fitness;
+        }
+
+        /// <summary>
+        /// Count time for all road
+        /// просчитывает время всего пути с учетом того, что вор ворует какие-то предметы
+        /// </summary>
+        /// <returns></returns>
+        private double CountTime()
+        {
+            Item item = null;
+            double time = 0;
+            double distance = 0;
+            double speed = 0;
+
+            int knapsack = 0;
+
+            #region Visit all places
+
+            for (int i = 0; i < Places.Length - 1; i++)
+            {
+                distance = GeneticAlgorithmParameters.GetDistance(i, i + 1);
+                int itemId = ItemsLocation[i];
+                if (itemId != Permutator.NotFoundCode)
+                {
+                    item = GeneticAlgorithmParameters.GetItem(itemId);
+                    knapsack += item.Weight;
+                    speed = CountSpeedWithWeight(knapsack, i, i + 1);
+                }
+
+                time += distance / speed;
+            }
+
+            #endregion Visit all places
+
+            #region Returning to first place
+
+            distance = GeneticAlgorithmParameters.GetDistance(0, Places.Length - 1);
+            int lastPlaceItem = ItemsLocation[Places.Length];
+            if (lastPlaceItem != Permutator.NotFoundCode)
+            {
+                item = GeneticAlgorithmParameters.GetItem(lastPlaceItem);
+                knapsack += item.Weight;
+                speed = CountSpeedWithWeight(knapsack, 0, Places.Length - 1);
+            }
+
+            time += distance / speed;
+
+            #endregion Returning to first place
+
+            return time;
         }
 
         private double CountSumProfit()

@@ -9,7 +9,8 @@ namespace GeneticAlgorithm
         static GeneticAlgorithmParameters()
         {
             DataLoader dataLoader = new DataLoader();
-            DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync(GlobalParameters.PathToTestData).Result;
+            //DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync(GlobalParameters.PathToTestData).Result;
+            DataContainer container = dataLoader.GetCreatedDataContainerFromFile(GlobalParameters.PathToTestData);
 
             Dimension = container.Dimension;
             MinSpeed = container.MinSpeed;
@@ -18,7 +19,7 @@ namespace GeneticAlgorithm
             DistanceMatrix = container.DistanceMatrix;
             _items = container.Items;
             NumberOfItems = container.NumberOfItems;
-            CapacityOfKnapsack = container.CapacityOfKnapsack;
+            MaxCapacityOfKnapsack = container.MaxCapacityOfKnapsack;
         }
 
         public static double GetDistance(int i, int j)
@@ -31,13 +32,13 @@ namespace GeneticAlgorithm
         /// </summary>
         public static readonly int Dimension;
 
-        public static readonly double MaxMinusMinDividedByWeight = (MaxSpeed - MinSpeed) / CapacityOfKnapsack;
+        public static readonly double MaxMinusMinDividedByWeight = (MaxSpeed - MinSpeed) / MaxCapacityOfKnapsack;
         public static readonly double MinSpeed;
 
         public static readonly double MaxSpeed;
         public static readonly double RentingRatio;
         public static readonly int NumberOfItems;
-        public static readonly int CapacityOfKnapsack;
+        public static readonly int MaxCapacityOfKnapsack;
 
         /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )
