@@ -120,14 +120,17 @@ namespace GeneticAlgorithm
         private double GetAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
+            int counter = 0;
             foreach (var item in list)
             {
                 if (item.BestFitnessListTS[index] > 0)
                 {
                     sum += item.BestFitnessListTS[index];
+                    counter++;
                 }
             }
-            return sum / list.Count;
+
+            return counter > 0 ? sum / counter : 0;
         }
 
         /// <summary>
@@ -150,7 +153,7 @@ namespace GeneticAlgorithm
                     counter++;
                 }
             }
-            return sum / counter;
+            return counter > 0 ? sum / counter : 0;
         }
 
         /// <summary>
@@ -171,7 +174,7 @@ namespace GeneticAlgorithm
                     counter++;
                 }
             }
-            return sum / counter;
+            return counter > 0 ? sum / counter : 0;
         }
 
         /// <summary>
@@ -192,7 +195,7 @@ namespace GeneticAlgorithm
                     counter++;
                 }
             }
-            return sum / list.Count;
+            return counter > 0 ? sum / counter : 0;
         }
 
         public GenerationsStatistics RunGeneticAlgorithm()
