@@ -28,7 +28,7 @@ namespace GeneticAlgorithm
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
-                //CountFitness();
+
                 foreach (var candidate in neighbors)
                 {
                     Individual tmpCandidate = new Individual(candidate);
