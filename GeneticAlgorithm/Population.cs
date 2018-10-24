@@ -1,4 +1,7 @@
-﻿using DataModel;
+﻿//#define OnlyPositiveFitness
+#undef OnlyPositiveFitness
+
+using DataModel;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
@@ -24,10 +27,13 @@ namespace GeneticAlgorithm
             }
         }
 
+#if OnlyPositiveFitness
         /// <summary>
         /// Only for positive value
         /// </summary>
         /// <returns></returns>
+#endif
+
         public double GetAverageFitness()
         {
             int counter = 0;
@@ -36,11 +42,15 @@ namespace GeneticAlgorithm
             for (int i = 0; i < PopulationSize; i++)
             {
                 itemFitness = Individuals[i].Fitness;
+#if OnlyPositiveFitness
                 if (itemFitness > 0)
                 {
-                    sumCost += itemFitness;
-                    counter++;
+#endif
+                sumCost += itemFitness;
+                counter++;
+#if OnlyPositiveFitness
                 }
+#endif
             }
             return sumCost / counter;
         }

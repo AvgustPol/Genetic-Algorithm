@@ -24,15 +24,6 @@ namespace GeneticAlgorithm
             }
         }
 
-        public int[] GetNeighbour(Individual individual)
-        {
-            int[] res = new int[GeneticAlgorithmParameters.Dimension];
-
-            res = individual.GetMutation();
-
-            return res;
-        }
-
         public bool IsContains(int[] array)
         {
             return TabuList.Contains(array);

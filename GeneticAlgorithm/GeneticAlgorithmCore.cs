@@ -1,4 +1,7 @@
-﻿using DataModel;
+﻿//#define OnlyPositiveFitness
+#undef OnlyPositiveFitness
+
+using DataModel;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
@@ -25,7 +28,7 @@ namespace GeneticAlgorithm
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
-                CountFitness();
+                //CountFitness();
                 foreach (var candidate in neighbors)
                 {
                     Individual tmpCandidate = new Individual(candidate);
@@ -67,15 +70,15 @@ namespace GeneticAlgorithm
             {
                 #region Get GA Data
 
-                double averageBestFitnessGA = GetAverageBestFitnessGA(dataList, _generationsCounter);
-                double averageAverageFitnessGA = GetAverageAverageFitnessGA(dataList, _generationsCounter);
-                double averageWorstFitnessGA = GetAverageWorstFitnessGA(dataList, _generationsCounter);
+                double averageBestFitnessGA = CountAverageBestFitnessGA(dataList, _generationsCounter);
+                double averageAverageFitnessGA = CountAverageAverageFitnessGaGetFitnessGa(dataList, _generationsCounter);
+                double averageWorstFitnessGA = CountAverageWorstFitnessGA(dataList, _generationsCounter);
 
                 #endregion Get GA Data
 
                 #region Get TS data
 
-                double averageBestFitnessTS = GetAverageBestFitnessTS(dataList, _generationsCounter);
+                double averageBestFitnessTS = CountAverageBestFitnessTS(dataList, _generationsCounter);
 
                 #endregion Get TS data
 
@@ -111,35 +114,46 @@ namespace GeneticAlgorithm
             //CountStandardDeviation
         }
 
-        /// <summary>
+#if OnlyPositiveFitness
+         /// <summary>
         /// Only for positive fitness
         /// </summary>
         /// <param name="list"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private double GetAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
+#endif
+
+        private double CountAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             int counter = 0;
             foreach (var item in list)
             {
+#if OnlyPositiveFitness
                 if (item.BestFitnessListTS[index] > 0)
                 {
-                    sum += item.BestFitnessListTS[index];
-                    counter++;
+#endif
+
+                sum += item.BestFitnessListTS[index];
+                counter++;
+#if OnlyPositiveFitness
                 }
+#endif
             }
 
             return counter > 0 ? sum / counter : 0;
         }
 
+#if OnlyPositiveFitness
         /// <summary>
         /// Only for positive fitness
         /// </summary>
         /// <param name="list"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private double GetAverageBestFitnessGA(List<GenerationsStatistics> list, int index)
+#endif
+
+        private double CountAverageBestFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             double itemFitness;
@@ -147,53 +161,73 @@ namespace GeneticAlgorithm
             foreach (var item in list)
             {
                 itemFitness = item.BestFitnessListGA[index];
-                if (itemFitness > 0)
+#if OnlyPositiveFitness
+    if (itemFitness > 0)
                 {
-                    sum += itemFitness;
-                    counter++;
+#endif
+                sum += itemFitness;
+                counter++;
+#if OnlyPositiveFitness
                 }
+#endif
             }
+
             return counter > 0 ? sum / counter : 0;
         }
 
+#if OnlyPositiveFitness
         /// <summary>
         /// Only for positive items
         /// </summary>
         /// <param name="list"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private double GetAverageAverageFitnessGA(List<GenerationsStatistics> list, int index)
+#endif
+
+        private double CountAverageAverageFitnessGaGetFitnessGa(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             int counter = 0;
             foreach (var item in list)
             {
+#if OnlyPositiveFitness
                 if (item.AverageFitnessListGA[index] > 0)
                 {
-                    sum += item.AverageFitnessListGA[index];
-                    counter++;
-                }
+#endif
+
+                sum += item.AverageFitnessListGA[index];
+                counter++;
+#if OnlyPositiveFitness
+             }
+#endif
             }
             return counter > 0 ? sum / counter : 0;
         }
 
-        /// <summary>
+#if OnlyPositiveFitness
+         /// <summary>
         /// Only for positive items
         /// </summary>
         /// <param name="list"></param>
         /// <param name="index"></param>
         /// <returns></returns>
-        private double GetAverageWorstFitnessGA(List<GenerationsStatistics> list, int index)
+#endif
+
+        private double CountAverageWorstFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             int counter = 0;
             foreach (var item in list)
             {
+#if OnlyPositiveFitness
                 if (item.WorstFitnessListGA[index] > 0)
                 {
-                    sum += item.WorstFitnessListGA[index];
-                    counter++;
+#endif
+                sum += item.WorstFitnessListGA[index];
+                counter++;
+#if OnlyPositiveFitness
                 }
+#endif
             }
             return counter > 0 ? sum / counter : 0;
         }

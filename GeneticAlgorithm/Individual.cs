@@ -6,6 +6,12 @@ namespace GeneticAlgorithm
 {
     public class Individual : ICloneable
     {
+        /// <summary>
+        /// TSP problem
+        /// Places sequence is a road
+        /// </summary>
+        public int[] Places { get; set; }
+
         public double Fitness { get; set; }
 
         /// <summary>
@@ -13,12 +19,6 @@ namespace GeneticAlgorithm
         /// value - itemId (int or NotFoundCode)
         /// </summary>
         public int[] ItemsLocation { get; set; }
-
-        /// <summary>
-        /// TSP problem
-        /// Places sequence is a road
-        /// </summary>
-        public int[] Places { get; set; }
 
         /// <summary>
         /// KNP problem
