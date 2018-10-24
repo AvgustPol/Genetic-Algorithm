@@ -24,14 +24,25 @@ namespace GeneticAlgorithm
             }
         }
 
+        /// <summary>
+        /// Only for positive value
+        /// </summary>
+        /// <returns></returns>
         public double GetAverageFitness()
         {
-            double sumCost = Individuals[0].Fitness;
-            for (int i = 1; i < PopulationSize; i++)
+            int counter = 0;
+            double sumCost = 0;
+            double itemFitness;
+            for (int i = 0; i < PopulationSize; i++)
             {
-                sumCost += Individuals[i].Fitness;
+                itemFitness = Individuals[i].Fitness;
+                if (itemFitness > 0)
+                {
+                    sumCost += itemFitness;
+                    counter++;
+                }
             }
-            return sumCost / PopulationSize;
+            return sumCost / counter;
         }
 
         /// <summary>
@@ -41,7 +52,9 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         public double GetWorstFitness()
         {
-            return GetSmallestFitness();
+            double smallestFitness = GetSmallestFitness();
+            return smallestFitness;
+            //return smallestFitness > 0 ? smallestFitness : 0;
         }
 
         private double GetSmallestFitness()
@@ -67,7 +80,9 @@ namespace GeneticAlgorithm
         /// <returns></returns>
         public double GetBestFitness()
         {
-            return GetBiggestFitness();
+            double biggestFitness = GetBiggestFitness();
+            return biggestFitness;
+            //return biggestFitness > 0 ? biggestFitness : 0;
         }
 
         private double GetBiggestFitness()
@@ -123,10 +138,7 @@ namespace GeneticAlgorithm
         {
             for (int i = 0; i < PopulationSize; i++)
             {
-                Individuals.Add(i, new Individual()
-                {
-                    Places = CreateRandomIndividual()
-                });
+                Individuals.Add(i, new Individual(CreateRandomIndividual()));
             }
         }
 

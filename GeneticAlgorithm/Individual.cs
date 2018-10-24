@@ -1,7 +1,6 @@
 ﻿using DataModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace GeneticAlgorithm
 {
@@ -57,6 +56,7 @@ namespace GeneticAlgorithm
                 }
             }
 
+            //sort from smallest fitness to biggest
             acceptableItems.Sort((item1, item2) => item1.FitnessForCurrentRoad.CompareTo(item2.FitnessForCurrentRoad));
 
             CountWhichItemsToTake(acceptableItems);
@@ -132,9 +132,9 @@ namespace GeneticAlgorithm
             // we have space in the knapsack (capacityOfKnapsack == GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
             // and
             // there are acceptable items (acceptableItems.Count > 0)
-            while (acceptableItems.Count > 0 && capacityOfKnapsack == GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
+            for (int i = acceptableItems.Count - 1; i >= 0; i--)
             {
-                AcceptableItem acceptableItem = acceptableItems.First();
+                AcceptableItem acceptableItem = acceptableItems[i];
                 int itemId = acceptableItem.Id;
                 int itemWeight = GeneticAlgorithmParameters.GetItem(itemId).Weight;
                 if (capacityOfKnapsack + itemWeight <= GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
@@ -142,8 +142,6 @@ namespace GeneticAlgorithm
                     capacityOfKnapsack += itemWeight;
                     Items[itemId] = true;
                 }
-
-                acceptableItems.Remove(acceptableItem);
             }
         }
 
@@ -158,10 +156,10 @@ namespace GeneticAlgorithm
             double road = 0;
             for (int i = start; i < end; i++)
             {
-                road += GeneticAlgorithmParameters.GetDistance(i, i + 1);
+                road += GeneticAlgorithmParameters.GetDistance(Places[i], Places[i + 1]);
             }
 
-            road += GeneticAlgorithmParameters.GetDistance(end, 0);
+            road += GeneticAlgorithmParameters.GetDistance(Places[end], Places[0]);
             return road;
         }
 
@@ -247,7 +245,7 @@ namespace GeneticAlgorithm
 
             for (int i = 0; i < Places.Length - 1; i++)
             {
-                distance = GeneticAlgorithmParameters.GetDistance(i, i + 1);
+                distance = GeneticAlgorithmParameters.GetDistance(Places[i], Places[i + 1]);
                 int itemId = ItemsLocation[i];
                 if (itemId != Permutator.NotFoundCode)
                 {
@@ -256,6 +254,7 @@ namespace GeneticAlgorithm
                     speed = CountSpeedWithWeight(knapsack, i, i + 1);
                 }
 
+                speed = Math.Max(GeneticAlgorithmParameters.MinSpeed, speed);
                 time += distance / speed;
             }
 
@@ -263,8 +262,8 @@ namespace GeneticAlgorithm
 
             #region Returning to first place
 
-            distance = GeneticAlgorithmParameters.GetDistance(0, Places.Length - 1);
-            int lastPlaceItem = ItemsLocation[Places.Length];
+            distance = GeneticAlgorithmParameters.GetDistance(Places[0], Places[Places.Length - 1]);
+            int lastPlaceItem = ItemsLocation[Places.Length - 1];
             if (lastPlaceItem != Permutator.NotFoundCode)
             {
                 item = GeneticAlgorithmParameters.GetItem(lastPlaceItem);

@@ -8,7 +8,7 @@ namespace GeneticAlgorithm
         private int _generationsCounter { get; set; }
 
         private bool _algoritmStopCondition => _generationsCounter < GlobalParameters.AlgorithmStopCondition;
-        private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorythmStopCondition;
+        private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
         public Population Population { get; set; }
 
         public GenerationsStatistics StartTabuSearch()
@@ -17,10 +17,7 @@ namespace GeneticAlgorithm
 
             TabuSearch tabuSearch = new TabuSearch();
 
-            Individual best = new Individual()
-            {
-                Places = Population.CreateRandomIndividual()
-            };
+            Individual best = new Individual(Population.CreateRandomIndividual());
             Individual current = best;
 
             tabuSearch.AddToTabuList(current.Places);
@@ -114,42 +111,86 @@ namespace GeneticAlgorithm
             //CountStandardDeviation
         }
 
+        /// <summary>
+        /// Only for positive fitness
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private double GetAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
             foreach (var item in list)
             {
-                sum += item.BestFitnessListTS[index];
+                if (item.BestFitnessListTS[index] > 0)
+                {
+                    sum += item.BestFitnessListTS[index];
+                }
             }
             return sum / list.Count;
         }
 
+        /// <summary>
+        /// Only for positive fitness
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private double GetAverageBestFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
+            double itemFitness;
+            int counter = 0;
             foreach (var item in list)
             {
-                sum += item.BestFitnessListGA[index];
+                itemFitness = item.BestFitnessListGA[index];
+                if (itemFitness > 0)
+                {
+                    sum += itemFitness;
+                    counter++;
+                }
             }
-            return sum / list.Count;
+            return sum / counter;
         }
 
+        /// <summary>
+        /// Only for positive items
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private double GetAverageAverageFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
+            int counter = 0;
             foreach (var item in list)
             {
-                sum += item.AverageFitnessListGA[index];
+                if (item.AverageFitnessListGA[index] > 0)
+                {
+                    sum += item.AverageFitnessListGA[index];
+                    counter++;
+                }
             }
-            return sum / list.Count;
+            return sum / counter;
         }
 
+        /// <summary>
+        /// Only for positive items
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private double GetAverageWorstFitnessGA(List<GenerationsStatistics> list, int index)
         {
             double sum = 0;
+            int counter = 0;
             foreach (var item in list)
             {
-                sum += item.WorstFitnessListGA[index];
+                if (item.WorstFitnessListGA[index] > 0)
+                {
+                    sum += item.WorstFitnessListGA[index];
+                    counter++;
+                }
             }
             return sum / list.Count;
         }

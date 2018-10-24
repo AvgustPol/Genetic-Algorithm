@@ -9,7 +9,6 @@ namespace GeneticAlgorithm
         static GeneticAlgorithmParameters()
         {
             DataLoader dataLoader = new DataLoader();
-            //DataContainer container = dataLoader.GetCreatedDataContainerFromFileAsync(GlobalParameters.PathToTestData).Result;
             DataContainer container = dataLoader.GetCreatedDataContainerFromFile(GlobalParameters.PathToTestData);
 
             Dimension = container.Dimension;
@@ -20,6 +19,7 @@ namespace GeneticAlgorithm
             _items = container.Items;
             NumberOfItems = container.NumberOfItems;
             MaxCapacityOfKnapsack = container.MaxCapacityOfKnapsack;
+            MaxMinusMinDividedByWeight = (MaxSpeed - MinSpeed) / MaxCapacityOfKnapsack;
         }
 
         public static double GetDistance(int i, int j)
@@ -32,7 +32,7 @@ namespace GeneticAlgorithm
         /// </summary>
         public static readonly int Dimension;
 
-        public static readonly double MaxMinusMinDividedByWeight = (MaxSpeed - MinSpeed) / MaxCapacityOfKnapsack;
+        public static readonly double MaxMinusMinDividedByWeight;
         public static readonly double MinSpeed;
 
         public static readonly double MaxSpeed;

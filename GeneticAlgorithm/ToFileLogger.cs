@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using System;
 using System.IO;
 
 namespace GeneticAlgorithm
@@ -26,7 +27,7 @@ namespace GeneticAlgorithm
                     new[] {
                         $"Problem {GlobalParameters.FileName}" ,
                         $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" ,
-                        $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorythmStopCondition}," ,
+                        $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition}," ,
                         $"Tabu Search" ,
                         $"Rozmiar  listy tabu {GlobalParameters.SameSize}" ,
                         $"Ilość sąsiedzi w jednej generacji {GlobalParameters.SameNumber}" ,
@@ -49,12 +50,23 @@ namespace GeneticAlgorithm
             for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
             {
                 File.AppendAllLines(Path,
-                    new[] { $"{i + 1},{averageCounter.BestFitnessListGA[i]}," +
-                            $"{averageCounter.AverageFitnessListGA[i]}," +
-                            $"{averageCounter.WorstFitnessListGA[i]}," +
+                    new[] { $"{i + 1},{ SaveValue(averageCounter.BestFitnessListGA[i])}," +
+                            $"{SaveValue(averageCounter.AverageFitnessListGA[i])}," +
+                            $"{SaveValue(averageCounter.WorstFitnessListGA[i])}," +
 
-                            $"{averageCounter.BestFitnessListTS[i]}"});
+                            $"{SaveValue(averageCounter.BestFitnessListTS[i])}"});
             }
+        }
+
+        private string SaveValue(double value)
+        {
+            //ignore negative values
+            if (value == 0)
+            {
+                return string.Empty;
+            }
+
+            return Convert.ToString(value);
         }
     }
 }
