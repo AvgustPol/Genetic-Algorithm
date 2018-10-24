@@ -22,11 +22,6 @@ namespace GeneticAlgorithm
             MaxMinusMinDividedByWeight = (MaxSpeed - MinSpeed) / MaxCapacityOfKnapsack;
         }
 
-        public static double GetDistance(int i, int j)
-        {
-            return DistanceMatrix[i, j];
-        }
-
         /// <summary>
         /// number of places at TSP problem
         /// </summary>
@@ -58,9 +53,9 @@ namespace GeneticAlgorithm
         /// </summary>
         public static readonly int MutationProbability = 5;
 
-        public static readonly int MaxProbability = 100;
-
         public static readonly int NumberOfTournamentParticipants = GlobalParameters.SameNumber;
+
+        public static readonly int MaxProbability = 100;
 
         public static double[,] DistanceMatrix;
         private static Dictionary<int, Item> _items;
@@ -69,6 +64,11 @@ namespace GeneticAlgorithm
         {
             _items.TryGetValue(itemId, out Item item);
             return item;
+        }
+
+        public static double GetDistance(int i, int j)
+        {
+            return DistanceMatrix[i, j];
         }
     }
 }

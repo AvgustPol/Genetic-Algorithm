@@ -34,7 +34,7 @@ namespace GeneticAlgorithm
                         $"Poziom sąsiedztwa 1" ,
                         $"Genetic Algorithm" ,
                         $"Ilość osobników w populacji {GlobalParameters.SameSize}" ,
-                        $"Ilość uczęstników w turnieju {GlobalParameters.SameNumber}" ,
+                        $"Ilość uczestników  w turnieju {GlobalParameters.SameNumber}" ,
                         $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
                         $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%"
                             });

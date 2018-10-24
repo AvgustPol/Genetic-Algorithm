@@ -9,13 +9,6 @@ namespace GeneticAlgorithm
         public double Fitness { get; set; }
 
         /// <summary>
-        /// KNP problem
-        /// index: item id
-        /// value: if true then thief takes item
-        /// </summary
-        public bool[] Items { get; set; }
-
-        /// <summary>
         /// id - placeId
         /// value - itemId (int or NotFoundCode)
         /// </summary>
@@ -26,6 +19,13 @@ namespace GeneticAlgorithm
         /// Places sequence is a road
         /// </summary>
         public int[] Places { get; set; }
+
+        /// <summary>
+        /// KNP problem
+        /// index: item id
+        /// value: if true then thief takes item
+        /// </summary
+        public bool[] Items { get; set; }
 
         public Individual()
         {

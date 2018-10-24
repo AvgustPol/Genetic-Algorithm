@@ -167,16 +167,10 @@ namespace GeneticAlgorithm
         {
             Individual child = CrossAndGetChild(firstIndividual, secondIndividual);
 
-            //TODO finish
             child.CreateItems();
             child.CountFitness();
 
             return child;
-        }
-
-        private void CreateNewItemsPermutation(Individual child)
-        {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>
