@@ -203,28 +203,15 @@ namespace GeneticAlgorithm
 
         public void CountFitness()
         {
-            // Fitness = Sum(itemValue) - R * ( ti - t0)
+            // Fitness = Sum(allItemsValue) - R * ti
             //
             // ti - czas z przedmiotami
-            // t0 - czas z pustym plecakiem
             Fitness = 0;
-
-            double fullRoad = CountFullRoad();
 
             double sumProfit = CountSumProfit();
             double ti = CountTime();
-            double t0 = CountTimeWithEmptyKnapsack(fullRoad);
 
-            Fitness = sumProfit - GeneticAlgorithmParameters.RentingRatio * (ti - t0);
-
-            //for (int i = 0; i < GeneticAlgorithmParameters.Dimension - 1; i++)
-            //{
-            //    Fitness += GeneticAlgorithmParameters.GetDistance(Places[i], Places[i + 1]);
-            //}
-
-            //Fitness += GeneticAlgorithmParameters.GetDistance(Places[0], Places[GeneticAlgorithmParameters.Dimension - 1]);
-
-            //Fitness = 1 / Fitness;
+            Fitness = sumProfit - GeneticAlgorithmParameters.RentingRatio * ti;
         }
 
         /// <summary>
