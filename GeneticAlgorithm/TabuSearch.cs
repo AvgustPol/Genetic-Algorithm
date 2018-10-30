@@ -28,17 +28,5 @@ namespace GeneticAlgorithm
         {
             return TabuList.Contains(array);
         }
-
-        public List<int[]> GetNeighbors(Individual current, int numberOfNeighbors)
-        {
-            List<int[]> neighbors = new List<int[]>(numberOfNeighbors);
-
-            for (int i = 0; i < numberOfNeighbors; i++)
-            {
-                neighbors.Add(current.GetMutation());
-            }
-
-            return neighbors;
-        }
     }
 }

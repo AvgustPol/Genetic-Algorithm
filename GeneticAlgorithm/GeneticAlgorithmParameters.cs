@@ -53,12 +53,17 @@ namespace GeneticAlgorithm
         /// </summary>
         public static readonly int MutationProbability = 5;
 
-        public static readonly int NumberOfTournamentParticipants = GlobalParameters.SameNumber;
+        public static readonly int NumberOfTournamentParticipants = 3;
 
         public static readonly int MaxProbability = 100;
 
         public static double[,] DistanceMatrix;
         private static Dictionary<int, Item> _items;
+
+        /// <summary>
+        /// Number of population individuals
+        /// </summary>
+        public static int PopulationSize = 100;
 
         public static Item GetItem(int itemId)
         {

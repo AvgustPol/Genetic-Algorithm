@@ -20,6 +20,13 @@ namespace GeneticAlgorithm
 
         #endregion Tabu Search
 
+        #region SimulatedAnnealing
+
+        public List<double> BestFitnessListSA { get; set; }
+        public List<double> BestNeighborFitnessListSA { get; set; }
+
+        #endregion SimulatedAnnealing
+
         public GenerationsStatistics()
         {
             GenerationCounterList = new List<double>();
@@ -28,6 +35,9 @@ namespace GeneticAlgorithm
             WorstFitnessListGA = new List<double>();
 
             BestFitnessListTS = new List<double>();
+
+            BestFitnessListSA = new List<double>();
+            BestNeighborFitnessListSA = new List<double>();
         }
 
         public void AddGAData(GenerationsStatistics generationsStatistics)
@@ -40,6 +50,12 @@ namespace GeneticAlgorithm
         public void AddTabuSearchData(GenerationsStatistics generationsStatistics)
         {
             BestFitnessListTS = generationsStatistics.BestFitnessListTS;
+        }
+
+        public void AddSimulatedAnnealingData(GenerationsStatistics generationsStatistics)
+        {
+            BestFitnessListSA = generationsStatistics.BestFitnessListSA;
+            BestNeighborFitnessListSA = generationsStatistics.BestNeighborFitnessListSA;
         }
 
         /// <summary>
@@ -85,6 +101,24 @@ namespace GeneticAlgorithm
         public void SaveBestFitnessForTS(double bestFitness)
         {
             BestFitnessListTS.Add(bestFitness);
+        }
+
+        /// <summary>
+        /// Saves best fitness for current generation for Simulated Annealing
+        /// </summary>
+        /// <param name="bestFitness"></param>
+        public void SaveBestFitnessForSA(double bestFitness)
+        {
+            BestFitnessListSA.Add(bestFitness);
+        }
+
+        /// <summary>
+        /// Saves best fitness for current generation for Simulated Annealing
+        /// </summary>
+        /// <param name="bestFitness"></param>
+        public void SaveBestNeighborFitnessListSAForSA(double bestFitness)
+        {
+            BestNeighborFitnessListSA.Add(bestFitness);
         }
     }
 }

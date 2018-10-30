@@ -14,20 +14,55 @@ namespace GeneticAlgorithm
         private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
         public Population Population { get; set; }
 
+        public GenerationsStatistics StartSimulatedAnnealing()
+        {
+            _generationsCounter = 0;
+
+            GenerationsStatistics generationsStatistics = new GenerationsStatistics();
+
+            double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
+            Individual best = new Individual(Population.CreateRandomIndividual());
+            List<int[]> neighbors;
+
+            do
+            {
+                neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
+
+                foreach (var candidate in neighbors)
+                {
+                    Individual tmpCandidate = new Individual(candidate);
+                    if (tmpCandidate.Fitness > best.Fitness)
+                        best = tmpCandidate;
+                    else
+                        //тут понижаем лушего!
+                        SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref tmpCandidate, currentTemperature);
+                }
+
+                generationsStatistics.SaveBestFitnessForSA(best.Fitness);
+
+                SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
+            } while (_algoritmStopCondition);
+
+            return generationsStatistics;
+        }
+
         public GenerationsStatistics StartTabuSearch()
         {
             GenerationsStatistics generationsStatistics = new GenerationsStatistics();
-
+            List<int[]> neighbors;
             TabuSearch tabuSearch = new TabuSearch();
 
             Individual best = new Individual(Population.CreateRandomIndividual());
             Individual current = best;
 
+            //best fount
+            //current -> best Neighbor
+
             tabuSearch.AddToTabuList(current.Places);
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
-                List<int[]> neighbors = tabuSearch.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+                neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
 
                 foreach (var candidate in neighbors)
                 {
@@ -46,7 +81,7 @@ namespace GeneticAlgorithm
             return generationsStatistics;
         }
 
-        private List<GenerationsStatistics> RunAllAlgorithms()
+        private List<GenerationsStatistics> RunAllAlgorithmsAndGetResult()
         {
             List<GenerationsStatistics> allAlgorithmsResults = new List<GenerationsStatistics>();
 
@@ -55,6 +90,7 @@ namespace GeneticAlgorithm
                 GenerationsStatistics generationsStatistics = new GenerationsStatistics();
                 generationsStatistics.AddGAData(RunGeneticAlgorithm());
                 generationsStatistics.AddTabuSearchData(StartTabuSearch());
+                generationsStatistics.AddSimulatedAnnealingData(StartSimulatedAnnealing());
 
                 allAlgorithmsResults.Add(generationsStatistics);
             }
@@ -82,6 +118,12 @@ namespace GeneticAlgorithm
 
                 #endregion Get TS data
 
+                #region Get SA data
+
+                double averageBestFitnessSA = CountAverageBestFitnessSA(dataList, _generationsCounter);
+
+                #endregion Get SA data
+
                 #region Save GA
 
                 allAlgorithmsAverage.SaveGenerationCounter(_generationsCounter + 1);
@@ -96,16 +138,22 @@ namespace GeneticAlgorithm
                 allAlgorithmsAverage.SaveBestFitnessForTS(averageBestFitnessTS);
 
                 #endregion Save TS
+
+                #region Save SA
+
+                allAlgorithmsAverage.SaveBestFitnessForSA(averageBestFitnessSA);
+
+                #endregion Save SA
             }
 
             return allAlgorithmsAverage;
         }
 
-        public void Explore()
+        public void RunAllAlgorithms()
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} TS and GA result.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} all algorithms result.csv");
 
-            List<GenerationsStatistics> allAlgorithmsResults = RunAllAlgorithms();
+            List<GenerationsStatistics> allAlgorithmsResults = RunAllAlgorithmsAndGetResult();
             GenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
 
             toFileLogger.LogToFile(allAlgorithmsAverage);
@@ -135,6 +183,36 @@ namespace GeneticAlgorithm
 #endif
 
                 sum += item.BestFitnessListTS[index];
+                counter++;
+#if OnlyPositiveFitness
+                }
+#endif
+            }
+
+            return counter > 0 ? sum / counter : 0;
+        }
+
+#if OnlyPositiveFitness
+/// <summary>
+/// Only for positive fitness
+/// </summary>
+/// <param name="list"></param>
+/// <param name="index"></param>
+/// <returns></returns>
+#endif
+
+        private double CountAverageBestFitnessSA(List<GenerationsStatistics> list, int index)
+        {
+            double sum = 0;
+            int counter = 0;
+            foreach (var item in list)
+            {
+#if OnlyPositiveFitness
+                if (item.BestFitnessListSA[index] > 0)
+                {
+#endif
+
+                sum += item.BestFitnessListSA[index];
                 counter++;
 #if OnlyPositiveFitness
                 }

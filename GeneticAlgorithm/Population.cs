@@ -1,22 +1,19 @@
 ﻿//#define OnlyPositiveFitness
 #undef OnlyPositiveFitness
 
-using DataModel;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
     public class Population
     {
-        /// <summary>
-        /// Number of population individuals
-        /// </summary>
-        public readonly int PopulationSize = GlobalParameters.SameSize;
+        public readonly int PopulationSize;
 
         public Dictionary<int, Individual> Individuals { get; set; }
 
         public Population()
         {
+            PopulationSize = GeneticAlgorithmParameters.PopulationSize;
         }
 
         public void CountFitnessForTheEntirePopulation()
@@ -152,7 +149,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        public int[] CreateRandomIndividual()
+        public static int[] CreateRandomIndividual()
         {
             #region Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 

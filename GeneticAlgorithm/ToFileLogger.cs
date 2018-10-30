@@ -1,5 +1,6 @@
 ﻿using DataModel;
 using System;
+using System.Globalization;
 using System.IO;
 
 namespace GeneticAlgorithm
@@ -28,45 +29,54 @@ namespace GeneticAlgorithm
                         $"Problem {GlobalParameters.FileName}" ,
                         $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" ,
                         $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition}," ,
-                        $"Tabu Search" ,
-                        $"Rozmiar  listy tabu {GlobalParameters.SameSize}" ,
-                        $"Ilość sąsiedzi w jednej generacji {GlobalParameters.SameNumber}" ,
+
+                        "Tabu Search" ,
+                        $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
+                        $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
                         $"Poziom sąsiedztwa 1" ,
-                        $"Genetic Algorithm" ,
-                        $"Ilość osobników w populacji {GlobalParameters.SameSize}" ,
-                        $"Ilość uczestników  w turnieju {GlobalParameters.SameNumber}" ,
+
+                        "Genetic Algorithm" ,
+                        $"Ilość osobników w populacji {GeneticAlgorithmParameters.PopulationSize}" ,
+                        $"Ilość uczestników  w turnieju {GeneticAlgorithmParameters.NumberOfTournamentParticipants}" ,
                         $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
-                        $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%"
+                        $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%" ,
+
+                        "Simulated Annealing" ,
+                        $"Początkowa temperatura T {SimulatedAnnealingParameters.InitializeTemperature }"
                             });
 
             File.AppendAllLines(Path,
-                new[] { $"Generation Number," +
-                        $"Best Fitness GA ," +
-                        $"Average Fitness GA," +
-                        $"Worst Fitness GA, " +
+                new[] {
+                    $"Generation Number" + "," +
 
-                        $"Best Fitness TS", });
+                    $"Best Fitness GA" + "," +
+                    $"Average Fitness GA" + "," +
+                    $"Worst Fitness GA" + "," +
+
+                    $"Best Fitness TS" + "," +
+
+                    $"Best Fitness SA"
+                });
 
             for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
             {
                 File.AppendAllLines(Path,
-                    new[] { $"{i + 1},{ SaveValue(averageCounter.BestFitnessListGA[i])}," +
-                            $"{SaveValue(averageCounter.AverageFitnessListGA[i])}," +
-                            $"{SaveValue(averageCounter.WorstFitnessListGA[i])}," +
+                    new[] {
+                            $"{i + 1}," +
+                            $"{ SaveValue(averageCounter.BestFitnessListGA[i])}" + "," +
+                            $"{SaveValue(averageCounter.AverageFitnessListGA[i])}" + "," +
+                            $"{SaveValue(averageCounter.WorstFitnessListGA[i])}" + "," +
 
-                            $"{SaveValue(averageCounter.BestFitnessListTS[i])}"});
+                            $"{SaveValue(averageCounter.BestFitnessListTS[i])}" + "," +
+
+                            $"{SaveValue(averageCounter.BestFitnessListSA[i])}"
+                    });
             }
         }
 
         private string SaveValue(double value)
         {
-            //ignore negative values
-            if (value == 0)
-            {
-                return string.Empty;
-            }
-
-            return Convert.ToString(value);
+            return Convert.ToString(value, CultureInfo.CurrentCulture);
         }
     }
 }
