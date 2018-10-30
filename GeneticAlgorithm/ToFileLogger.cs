@@ -7,13 +7,13 @@ namespace GeneticAlgorithm
 {
     public class ToFileLogger
     {
-        private string Path => _folderPath + _fileNameName;
-        private readonly string _fileNameName;
+        private string Path => _folderPath + _fileName;
+        private readonly string _fileName;
         private readonly string _folderPath = GlobalParameters.PathToResultFolder;
 
         public ToFileLogger(string fileName)
         {
-            _fileNameName = fileName;
+            _fileName = fileName;
 
             //delete old data if exists
             if (File.Exists(Path))
@@ -22,28 +22,33 @@ namespace GeneticAlgorithm
             }
         }
 
-        public void LogToFile(GenerationsStatistics averageCounter)
+        private void AddParametersData()
         {
             File.AppendAllLines(Path,
-                    new[] {
-                        $"Problem {GlobalParameters.FileName}" ,
-                        $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" ,
-                        $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition}," ,
+                new[] {
+                    $"Problem {GlobalParameters.FileName}" ,
+                    $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" ,
+                    $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition}," ,
 
-                        "Tabu Search" ,
-                        $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
-                        $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
-                        $"Poziom sąsiedztwa 1" ,
+                    "Tabu Search" ,
+                    $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
+                    $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
+                    $"Poziom sąsiedztwa 1" ,
 
-                        "Genetic Algorithm" ,
-                        $"Ilość osobników w populacji {GeneticAlgorithmParameters.PopulationSize}" ,
-                        $"Ilość uczestników  w turnieju {GeneticAlgorithmParameters.NumberOfTournamentParticipants}" ,
-                        $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
-                        $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%" ,
+                    "Genetic Algorithm" ,
+                    $"Ilość osobników w populacji {GeneticAlgorithmParameters.PopulationSize}" ,
+                    $"Ilość uczestników  w turnieju {GeneticAlgorithmParameters.NumberOfTournamentParticipants}" ,
+                    $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
+                    $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%" ,
 
-                        "Simulated Annealing" ,
-                        $"Początkowa temperatura T {SimulatedAnnealingParameters.InitializeTemperature }"
-                            });
+                    "Simulated Annealing" ,
+                    $"Początkowa temperatura T {SimulatedAnnealingParameters.InitializeTemperature }"
+                });
+        }
+
+        public void LogToFile(GenerationsStatistics averageCounter)
+        {
+            //AddParametersData();
 
             File.AppendAllLines(Path,
                 new[] {
@@ -63,7 +68,7 @@ namespace GeneticAlgorithm
                 File.AppendAllLines(Path,
                     new[] {
                             $"{i + 1}," +
-                            $"{ SaveValue(averageCounter.BestFitnessListGA[i])}" + "," +
+                            $"{SaveValue(averageCounter.BestFitnessListGA[i])}" + "," +
                             $"{SaveValue(averageCounter.AverageFitnessListGA[i])}" + "," +
                             $"{SaveValue(averageCounter.WorstFitnessListGA[i])}" + "," +
 

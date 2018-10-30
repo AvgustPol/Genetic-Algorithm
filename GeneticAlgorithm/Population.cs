@@ -1,7 +1,4 @@
-﻿//#define OnlyPositiveFitness
-#undef OnlyPositiveFitness
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
@@ -24,34 +21,6 @@ namespace GeneticAlgorithm
             }
         }
 
-#if OnlyPositiveFitness
-        /// <summary>
-        /// Only for positive value
-        /// </summary>
-        /// <returns></returns>
-#endif
-
-        public double GetAverageFitness()
-        {
-            int counter = 0;
-            double sumCost = 0;
-            double itemFitness;
-            for (int i = 0; i < PopulationSize; i++)
-            {
-                itemFitness = Individuals[i].Fitness;
-#if OnlyPositiveFitness
-                if (itemFitness > 0)
-                {
-#endif
-                sumCost += itemFitness;
-                counter++;
-#if OnlyPositiveFitness
-                }
-#endif
-            }
-            return sumCost / counter;
-        }
-
         /// <summary>
         /// For this problem
         /// Worst = smallest fitness
@@ -61,7 +30,6 @@ namespace GeneticAlgorithm
         {
             double smallestFitness = GetSmallestFitness();
             return smallestFitness;
-            //return smallestFitness > 0 ? smallestFitness : 0;
         }
 
         private double GetSmallestFitness()
@@ -89,7 +57,6 @@ namespace GeneticAlgorithm
         {
             double biggestFitness = GetBiggestFitness();
             return biggestFitness;
-            //return biggestFitness > 0 ? biggestFitness : 0;
         }
 
         private double GetBiggestFitness()
@@ -214,6 +181,25 @@ namespace GeneticAlgorithm
             {
                 Places = Permutator.CrossPermutations(firstIndividualCopy, secondIndividualCopy)
             };
+        }
+
+        /// <summary>
+        /// Get average fitness from all population at current generation
+        /// </summary>
+        /// <param name="individuals">population individuals</param>
+        /// <returns>double - average fitness from all population at current generation </returns>
+        public double GetAverageFitness()
+        {
+            int counter = 0;
+            double sumCost = 0;
+            double itemFitness;
+            for (int i = 0; i < Individuals.Count; i++)
+            {
+                itemFitness = Individuals[i].Fitness;
+                sumCost += itemFitness;
+                counter++;
+            }
+            return sumCost / counter;
         }
     }
 }
