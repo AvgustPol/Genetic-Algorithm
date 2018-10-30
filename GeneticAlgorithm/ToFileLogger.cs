@@ -46,7 +46,7 @@ namespace GeneticAlgorithm
                 });
         }
 
-        public void LogToFile(GenerationsStatistics averageCounter)
+        public void LogToFile(AllGenerationsStatistics averageCounter)
         {
             //AddParametersData();
 

@@ -2,7 +2,7 @@
 
 namespace GeneticAlgorithm
 {
-    public class GenerationsStatistics
+    public class AllGenerationsStatistics
     {
         public List<double> GenerationCounterList;
 
@@ -27,7 +27,7 @@ namespace GeneticAlgorithm
 
         #endregion SimulatedAnnealing
 
-        public GenerationsStatistics()
+        public AllGenerationsStatistics()
         {
             GenerationCounterList = new List<double>();
             BestFitnessListGA = new List<double>();
@@ -40,22 +40,22 @@ namespace GeneticAlgorithm
             BestNeighborFitnessListSA = new List<double>();
         }
 
-        public void AddGAData(GenerationsStatistics generationsStatistics)
+        public void AddGAData(AllGenerationsStatistics allGenerationsStatistics)
         {
-            BestFitnessListGA = generationsStatistics.BestFitnessListGA;
-            WorstFitnessListGA = generationsStatistics.WorstFitnessListGA;
-            AverageFitnessListGA = generationsStatistics.AverageFitnessListGA;
+            BestFitnessListGA = allGenerationsStatistics.BestFitnessListGA;
+            WorstFitnessListGA = allGenerationsStatistics.WorstFitnessListGA;
+            AverageFitnessListGA = allGenerationsStatistics.AverageFitnessListGA;
         }
 
-        public void AddTabuSearchData(GenerationsStatistics generationsStatistics)
+        public void AddTabuSearchData(AllGenerationsStatistics allGenerationsStatistics)
         {
-            BestFitnessListTS = generationsStatistics.BestFitnessListTS;
+            BestFitnessListTS = allGenerationsStatistics.BestFitnessListTS;
         }
 
-        public void AddSimulatedAnnealingData(GenerationsStatistics generationsStatistics)
+        public void AddSimulatedAnnealingData(AllGenerationsStatistics allGenerationsStatistics)
         {
-            BestFitnessListSA = generationsStatistics.BestFitnessListSA;
-            BestNeighborFitnessListSA = generationsStatistics.BestNeighborFitnessListSA;
+            BestFitnessListSA = allGenerationsStatistics.BestFitnessListSA;
+            BestNeighborFitnessListSA = allGenerationsStatistics.BestNeighborFitnessListSA;
         }
 
         /// <summary>

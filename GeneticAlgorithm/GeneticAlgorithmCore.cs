@@ -1,7 +1,4 @@
-﻿//#define OnlyPositiveFitness
-#undef OnlyPositiveFitness
-
-using DataModel;
+﻿using DataModel;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
@@ -14,11 +11,11 @@ namespace GeneticAlgorithm
         private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
         public Population Population { get; set; }
 
-        public GenerationsStatistics StartSimulatedAnnealing()
+        public AllGenerationsStatistics StartSimulatedAnnealing()
         {
             _generationsCounter = 0;
 
-            GenerationsStatistics generationsStatistics = new GenerationsStatistics();
+            AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
 
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
             Individual best = new Individual(Population.CreateRandomIndividual());
@@ -38,17 +35,17 @@ namespace GeneticAlgorithm
                         SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref tmpCandidate, currentTemperature);
                 }
 
-                generationsStatistics.SaveBestFitnessForSA(best.Fitness);
+                allGenerationsStatistics.SaveBestFitnessForSA(best.Fitness);
 
                 SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
             } while (_algoritmStopCondition);
 
-            return generationsStatistics;
+            return allGenerationsStatistics;
         }
 
-        public GenerationsStatistics StartTabuSearch()
+        public AllGenerationsStatistics StartTabuSearch()
         {
-            GenerationsStatistics generationsStatistics = new GenerationsStatistics();
+            AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
             List<int[]> neighbors;
             TabuSearch tabuSearch = new TabuSearch();
 
@@ -75,58 +72,60 @@ namespace GeneticAlgorithm
 
                 tabuSearch.AddToTabuList(current.Places);
 
-                generationsStatistics.SaveBestFitnessForTS(best.Fitness);
+                allGenerationsStatistics.SaveBestFitnessForTS(best.Fitness);
             }
 
-            return generationsStatistics;
+            return allGenerationsStatistics;
         }
 
-        private List<GenerationsStatistics> RunAllAlgorithmsAndGetResult()
+        private List<AllGenerationsStatistics> RunAllAlgorithmsAndGetResult()
         {
-            List<GenerationsStatistics> allAlgorithmsResults = new List<GenerationsStatistics>();
+            List<AllGenerationsStatistics> allAlgorithmsResults = new List<AllGenerationsStatistics>();
 
             for (_generationsCounter = 0; _exploringStopCondition; _generationsCounter++)
             {
-                GenerationsStatistics generationsStatistics = new GenerationsStatistics();
-                generationsStatistics.AddGAData(RunGeneticAlgorithm());
-                generationsStatistics.AddTabuSearchData(StartTabuSearch());
-                generationsStatistics.AddSimulatedAnnealingData(StartSimulatedAnnealing());
+                AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
 
-                allAlgorithmsResults.Add(generationsStatistics);
+                allGenerationsStatistics.AddGAData(RunGeneticAlgorithm());
+                allGenerationsStatistics.AddTabuSearchData(StartTabuSearch());
+                allGenerationsStatistics.AddSimulatedAnnealingData(StartSimulatedAnnealing());
+
+                allAlgorithmsResults.Add(allGenerationsStatistics);
             }
 
             return allAlgorithmsResults;
         }
 
-        private GenerationsStatistics CalculateAllAlgorithmsAverage(List<GenerationsStatistics> dataList)
+        private AllGenerationsStatistics CalculateAllAlgorithmsAverage(List<AllGenerationsStatistics> dataList)
         {
-            GenerationsStatistics allAlgorithmsAverage = new GenerationsStatistics();
+            AllGenerationsStatistics allAlgorithmsAverage = new AllGenerationsStatistics();
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 #region Get GA Data
 
-                double averageBestFitnessGA = CountAverageBestFitnessGA(dataList, _generationsCounter);
-                double averageAverageFitnessGA = 0; //CountAverageAverageFitnessGaGetFitnessGa(dataList, _generationsCounter);
-                double averageWorstFitnessGA = CountAverageWorstFitnessGA(dataList, _generationsCounter);
+                double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
+                double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
+                double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
 
                 #endregion Get GA Data
 
                 #region Get TS data
 
-                double averageBestFitnessTS = CountAverageBestFitnessTS(dataList, _generationsCounter);
+                double averageBestFitnessTS = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListTS);
 
                 #endregion Get TS data
 
                 #region Get SA data
 
-                double averageBestFitnessSA = CountAverageBestFitnessSA(dataList, _generationsCounter);
+                double averageBestFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
 
                 #endregion Get SA data
 
                 #region Save GA
 
                 allAlgorithmsAverage.SaveGenerationCounter(_generationsCounter + 1);
+
                 allAlgorithmsAverage.SaveBestFitnessForGA(averageBestFitnessGA);
                 allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
                 allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
@@ -153,8 +152,8 @@ namespace GeneticAlgorithm
         {
             ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} all algorithms result.csv");
 
-            List<GenerationsStatistics> allAlgorithmsResults = RunAllAlgorithmsAndGetResult();
-            GenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+            List<AllGenerationsStatistics> allAlgorithmsResults = RunAllAlgorithmsAndGetResult();
+            AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
 
             toFileLogger.LogToFile(allAlgorithmsAverage);
 
@@ -162,37 +161,7 @@ namespace GeneticAlgorithm
             //CountStandardDeviation
         }
 
-#if OnlyPositiveFitness
-         /// <summary>
-        /// Only for positive fitness
-        /// </summary>
-        /// <param name="list"></param>
-        /// <param name="index"></param>
-        /// <returns></returns>
-#endif
-
-        private double CountAverageBestFitnessTS(List<GenerationsStatistics> list, int index)
-        {
-            double sum = 0;
-            int counter = 0;
-            foreach (var item in list)
-            {
-#if OnlyPositiveFitness
-                if (item.BestFitnessListTS[index] > 0)
-                {
-#endif
-
-                sum += item.BestFitnessListTS[index];
-                counter++;
-#if OnlyPositiveFitness
-                }
-#endif
-            }
-
-            return counter > 0 ? sum / counter : 0;
-        }
-
-        private double CountAverageBestFitnessSA(List<GenerationsStatistics> list, int index)
+        private double CountAverageBestFitnessSA(List<AllGenerationsStatistics> list, int index)
         {
             double sum = 0;
             int counter = 0;
@@ -205,43 +174,48 @@ namespace GeneticAlgorithm
             return counter > 0 ? sum / counter : 0;
         }
 
-        private double CountAverageBestFitnessGA(List<GenerationsStatistics> list, int index)
+        //private double CountAverageBestFitnessGA(List<AllGenerationsStatistics> list, int index)
+        //{
+        //    double sum = 0;
+        //    double itemFitness;
+        //    int counter = 0;
+        //    foreach (var item in list)
+        //    {
+        //        itemFitness = item.BestFitnessListGA[index];
+        //        sum += itemFitness;
+        //        counter++;
+        //    }
+
+        //    return counter > 0 ? sum / counter : 0;
+        //}
+
+        private double Blablabla(List<AllGenerationsStatistics> list, int index)
         {
             double sum = 0;
-            double itemFitness;
             int counter = 0;
             foreach (var item in list)
             {
-                itemFitness = item.BestFitnessListGA[index];
-                sum += itemFitness;
-                counter++;
-            }
-
-            return counter > 0 ? sum / counter : 0;
-        }
-
-        private double CountAverageWorstFitnessGA(List<GenerationsStatistics> list, int index)
-        {
-            double sum = 0;
-            int counter = 0;
-            foreach (var item in list)
-            {
-#if OnlyPositiveFitness
-                if (item.WorstFitnessListGA[index] > 0)
-                {
-#endif
                 sum += item.WorstFitnessListGA[index];
                 counter++;
-#if OnlyPositiveFitness
-                }
-#endif
             }
             return counter > 0 ? sum / counter : 0;
         }
 
-        public GenerationsStatistics RunGeneticAlgorithm()
+        private double CountAverageWorstFitnessGA(List<AllGenerationsStatistics> list, int index)
         {
-            GenerationsStatistics generationsStatistics = new GenerationsStatistics();
+            double sum = 0;
+            int counter = 0;
+            foreach (var item in list)
+            {
+                sum += item.WorstFitnessListGA[index];
+                counter++;
+            }
+            return counter > 0 ? sum / counter : 0;
+        }
+
+        public AllGenerationsStatistics RunGeneticAlgorithm()
+        {
+            AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
 
             CreatePopulation();
             CountFitness();
@@ -251,19 +225,19 @@ namespace GeneticAlgorithm
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                SaveDataForGA(_generationsCounter + 1, generationsStatistics);
+                SaveDataForGA(_generationsCounter + 1, allGenerationsStatistics);
             }
 
-            return generationsStatistics;
+            return allGenerationsStatistics;
         }
 
-        private void SaveDataForGA(int generationsCounter, GenerationsStatistics generationsStatistics)
+        private void SaveDataForGA(int generationsCounter, AllGenerationsStatistics allGenerationsStatistics)
         {
-            generationsStatistics.SaveGenerationCounter(generationsCounter);
+            allGenerationsStatistics.SaveGenerationCounter(generationsCounter);
 
-            generationsStatistics.SaveBestFitnessForGA(Population.GetBestFitness());
-            generationsStatistics.SaveAverageFitnessForGA(Population.GetAverageFitness());
-            generationsStatistics.SaveWorstFitnessForGA(Population.GetWorstFitness());
+            allGenerationsStatistics.SaveBestFitnessForGA(Population.GetBestFitness());
+            allGenerationsStatistics.SaveAverageFitnessForGA(Population.GetAverageFitness());
+            allGenerationsStatistics.SaveWorstFitnessForGA(Population.GetWorstFitness());
         }
 
         /// <summary>
