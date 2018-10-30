@@ -54,13 +54,13 @@ namespace GeneticAlgorithm
                 new[] {
                     $"Generation Number" + "," +
 
-                    $"Best Fitness GA" + "," +
-                    $"Average Fitness GA" + "," +
-                    $"Worst Fitness GA" + "," +
+                    $"GA Best Fitness" + "," +
+                    $"GA Average Fitness" + "," +
+                    $"GA Worst Fitness" + "," +
 
-                    $"Best Fitness TS" + "," +
+                    $"TS Best Fitness" + "," +
 
-                    $"Best Fitness SA"
+                    $"SA Best Fitness"
                 });
 
             for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
