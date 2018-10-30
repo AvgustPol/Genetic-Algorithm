@@ -46,6 +46,27 @@ namespace GeneticAlgorithm
                 });
         }
 
+        public void LogSaToFile(AllGenerationsStatistics averageCounter)
+        {
+            //AddParametersData();
+
+            File.AppendAllLines(Path,
+                new[] {
+                    $"SA Best Fitness" + "," +
+
+                    $"SA Best neighbor Fitness"
+                });
+
+            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
+            {
+                File.AppendAllLines(Path,
+                    new[] {
+                        $"{SaveValue(averageCounter.BestFitnessListSA[i])}" + ","
+                        //$"{SaveValue(averageCounter.BestNeighborFitnessListSA[i])}"
+                    });
+            }
+        }
+
         public void LogToFile(AllGenerationsStatistics averageCounter)
         {
             //AddParametersData();

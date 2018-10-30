@@ -11,7 +11,7 @@ namespace GeneticAlgorithm
         private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
         public Population Population { get; set; }
 
-        public AllGenerationsStatistics StartSimulatedAnnealing()
+        public AllGenerationsStatistics RunSimulatedAnnealing()
         {
             _generationsCounter = 0;
 
@@ -43,7 +43,7 @@ namespace GeneticAlgorithm
             return allGenerationsStatistics;
         }
 
-        public AllGenerationsStatistics StartTabuSearch()
+        public AllGenerationsStatistics RunTabuSearch()
         {
             AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
             List<int[]> neighbors;
@@ -87,8 +87,8 @@ namespace GeneticAlgorithm
                 AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
 
                 allGenerationsStatistics.AddGAData(RunGeneticAlgorithm());
-                allGenerationsStatistics.AddTabuSearchData(StartTabuSearch());
-                allGenerationsStatistics.AddSimulatedAnnealingData(StartSimulatedAnnealing());
+                allGenerationsStatistics.AddTabuSearchData(RunTabuSearch());
+                allGenerationsStatistics.AddSimulatedAnnealingData(RunSimulatedAnnealing());
 
                 allAlgorithmsResults.Add(allGenerationsStatistics);
             }
@@ -146,6 +146,32 @@ namespace GeneticAlgorithm
             }
 
             return allAlgorithmsAverage;
+        }
+
+        /// <summary>
+        /// Runs Only simulated annealing
+        /// </summary>
+        public void RunOnlySA()
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} Simulated annealing result.csv");
+
+            AllGenerationsStatistics simulatedAnnealingResult = RunSimulatedAnnealing();
+            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogSaToFile(simulatedAnnealingResult);
+        }
+
+        /// <summary>
+        /// Runs Only Tabu Search
+        /// </summary>
+        public void RunOnlyTS()
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} all algorithms result.csv");
+
+            AllGenerationsStatistics tabuSearchResult = RunTabuSearch();
+            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogToFile(tabuSearchResult);
         }
 
         public void RunAllAlgorithms()
