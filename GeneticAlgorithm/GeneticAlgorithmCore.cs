@@ -161,58 +161,6 @@ namespace GeneticAlgorithm
             //CountStandardDeviation
         }
 
-        private double CountAverageBestFitnessSA(List<AllGenerationsStatistics> list, int index)
-        {
-            double sum = 0;
-            int counter = 0;
-            foreach (var item in list)
-            {
-                sum += item.BestFitnessListSA[index];
-                counter++;
-            }
-
-            return counter > 0 ? sum / counter : 0;
-        }
-
-        //private double CountAverageBestFitnessGA(List<AllGenerationsStatistics> list, int index)
-        //{
-        //    double sum = 0;
-        //    double itemFitness;
-        //    int counter = 0;
-        //    foreach (var item in list)
-        //    {
-        //        itemFitness = item.BestFitnessListGA[index];
-        //        sum += itemFitness;
-        //        counter++;
-        //    }
-
-        //    return counter > 0 ? sum / counter : 0;
-        //}
-
-        private double Blablabla(List<AllGenerationsStatistics> list, int index)
-        {
-            double sum = 0;
-            int counter = 0;
-            foreach (var item in list)
-            {
-                sum += item.WorstFitnessListGA[index];
-                counter++;
-            }
-            return counter > 0 ? sum / counter : 0;
-        }
-
-        private double CountAverageWorstFitnessGA(List<AllGenerationsStatistics> list, int index)
-        {
-            double sum = 0;
-            int counter = 0;
-            foreach (var item in list)
-            {
-                sum += item.WorstFitnessListGA[index];
-                counter++;
-            }
-            return counter > 0 ? sum / counter : 0;
-        }
-
         public AllGenerationsStatistics RunGeneticAlgorithm()
         {
             AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
