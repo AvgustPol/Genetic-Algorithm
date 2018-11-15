@@ -46,6 +46,49 @@ namespace GeneticAlgorithm
                 });
         }
 
+        public void LogTSToFile(AllGenerationsStatistics averageCounter)
+        {
+            //AddParametersData();
+
+            File.AppendAllLines(Path,
+                new[] {
+                    $"TS Best Fitness" + "," +
+
+                    $"TS Best neighbor Fitness"
+                });
+
+            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
+            {
+                File.AppendAllLines(Path,
+                    new[] {
+                        $"{SaveValue(averageCounter.BestFitnessListTS[i])}" + "," +
+                        $"{SaveValue(averageCounter.BestNeighborFitnessListTS[i])}"
+                    });
+            }
+        }
+
+        internal void LogGAToFile(AllGenerationsStatistics averageCounter)
+        {
+            AddParametersData();
+
+            File.AppendAllLines(Path,
+                new[] {
+                    $"GA Best Fitness" + "," +
+                    $"GA Average Fitness" + "," +
+                    $"GA Worst Fitness"
+                });
+
+            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
+            {
+                File.AppendAllLines(Path,
+                    new[] {
+                        $"{SaveValue(averageCounter.BestFitnessListGA[i])}" + "," +
+                        $"{SaveValue(averageCounter.AverageFitnessListGA[i])}" + "," +
+                        $"{SaveValue(averageCounter.WorstFitnessListGA[i])}"
+                    });
+            }
+        }
+
         public void LogSaToFile(AllGenerationsStatistics averageCounter)
         {
             //AddParametersData();
@@ -69,7 +112,7 @@ namespace GeneticAlgorithm
 
         public void LogToFile(AllGenerationsStatistics averageCounter)
         {
-            //AddParametersData();
+            AddParametersData();
 
             File.AppendAllLines(Path,
                 new[] {

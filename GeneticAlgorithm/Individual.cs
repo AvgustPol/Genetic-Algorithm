@@ -199,10 +199,10 @@ namespace GeneticAlgorithm
             }
             //TODO : точно ли тебе нужно клонировать все таблицы?
 
-            if (ItemsLocation != null)
-            {
-                clone.ItemsLocation = (int[])ItemsLocation.Clone();
-            }
+            //if (ItemsLocation != null)
+            //{
+            //    clone.ItemsLocation = (int[])ItemsLocation.Clone();
+            //}
 
             clone.Fitness = Fitness;
 

@@ -5,11 +5,84 @@ namespace GeneticAlgorithm
 {
     public class GeneticAlgorithmCore
     {
-        private int _generationsCounter { get; set; }
-
+        public Population Population { get; set; }
         private bool _algoritmStopCondition => _generationsCounter < GlobalParameters.AlgorithmStopCondition;
         private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
-        public Population Population { get; set; }
+        private int _generationsCounter { get; set; }
+
+        public void RunAllAlgorithms()
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} all algorithms result.csv");
+
+            List<AllGenerationsStatistics> allAlgorithmsResults = RunAllAlgorithmsAndGetResult();
+            AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogToFile(allAlgorithmsAverage);
+
+            //TODO:
+            //CountStandardDeviation
+        }
+
+        /// <summary>
+        /// Run genetic algorithm
+        /// </summary>
+        /// <returns></returns>
+        public AllGenerationsStatistics RunGA()
+        {
+            AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
+
+            CreatePopulation();
+            CountFitness();
+
+            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
+            {
+                SelectAndCross();
+                Mutate();
+                CountFitness();
+                SaveDataForGA(_generationsCounter + 1, allGenerationsStatistics);
+            }
+
+            return allGenerationsStatistics;
+        }
+
+        /// <summary>
+        /// Runs Only GA
+        /// </summary>
+        public void RunOnlyGA()
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} GA result.csv");
+
+            AllGenerationsStatistics simulatedAnnealingResult = RunGA();
+            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogGAToFile(simulatedAnnealingResult);
+        }
+
+        /// <summary>
+        /// Runs Only simulated annealing
+        /// </summary>
+        public void RunOnlySA()
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} Simulated annealing result.csv");
+
+            AllGenerationsStatistics simulatedAnnealingResult = RunSA();
+            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogSaToFile(simulatedAnnealingResult);
+        }
+
+        /// <summary>
+        /// Runs Only Tabu Search
+        /// </summary>
+        public void RunOnlyTS()
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} Tabu search result.csv");
+
+            AllGenerationsStatistics tabuSearchResult = RunTS();
+            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            toFileLogger.LogTSToFile(tabuSearchResult);
+        }
 
         /// <summary>
         /// Run Simulated Annealing
@@ -27,10 +100,10 @@ namespace GeneticAlgorithm
             List<int[]> neighbors;
 
             double bestAlgorithmFitness = best.Fitness;
+            double bestNeighborFitness = best.Fitness;
 
             do
             {
-                double bestNeighborFitness = best.Fitness;
                 neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
 
                 foreach (var neighborsRoad in neighbors)
@@ -76,6 +149,9 @@ namespace GeneticAlgorithm
             //best fount
             //current -> best Neighbor
 
+            double bestNeighborFitness = best.Fitness;
+            double bestAlgorithmFitness = best.Fitness;
+
             tabuSearch.AddToTabuList(current.Places);
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
@@ -84,37 +160,31 @@ namespace GeneticAlgorithm
 
                 foreach (var candidate in neighbors)
                 {
-                    Individual tmpCandidate = new Individual(candidate);
-                    if ((!tabuSearch.IsContains(candidate)) && (tmpCandidate.Fitness > current.Fitness))
-                        current = tmpCandidate;
+                    if (!tabuSearch.IsContains(candidate))
+                    {
+                        Individual tmpCandidate = new Individual(candidate);
+                        if (tmpCandidate.Fitness > current.Fitness)
+                            current = tmpCandidate;
+                    }
                 }
-                if (current.Fitness > best.Fitness)
-                    best = current;
+                bestNeighborFitness = current.Fitness;
+                //if (current.Fitness > best.Fitness)
+                //{
+                //    best = current;
+                //}
+
+                if (bestNeighborFitness > bestAlgorithmFitness)
+                {
+                    bestAlgorithmFitness = bestNeighborFitness;
+                }
 
                 tabuSearch.AddToTabuList(current.Places);
 
-                allGenerationsStatistics.SaveBestFitnessForTS(best.Fitness);
+                allGenerationsStatistics.SaveBestNeighborFitnessForTS(bestNeighborFitness);
+                allGenerationsStatistics.SaveBestFitnessForTS(bestAlgorithmFitness);
             }
 
             return allGenerationsStatistics;
-        }
-
-        private List<AllGenerationsStatistics> RunAllAlgorithmsAndGetResult()
-        {
-            List<AllGenerationsStatistics> allAlgorithmsResults = new List<AllGenerationsStatistics>();
-
-            for (_generationsCounter = 0; _exploringStopCondition; _generationsCounter++)
-            {
-                AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
-
-                allGenerationsStatistics.AddGAData(RunGA());
-                allGenerationsStatistics.AddTabuSearchData(RunTS());
-                allGenerationsStatistics.AddSimulatedAnnealingData(RunSA());
-
-                allAlgorithmsResults.Add(allGenerationsStatistics);
-            }
-
-            return allAlgorithmsResults;
         }
 
         private AllGenerationsStatistics CalculateAllAlgorithmsAverage(List<AllGenerationsStatistics> dataList)
@@ -170,76 +240,6 @@ namespace GeneticAlgorithm
         }
 
         /// <summary>
-        /// Runs Only simulated annealing
-        /// </summary>
-        public void RunOnlySA()
-        {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} Simulated annealing result.csv");
-
-            AllGenerationsStatistics simulatedAnnealingResult = RunSA();
-            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
-
-            toFileLogger.LogSaToFile(simulatedAnnealingResult);
-        }
-
-        /// <summary>
-        /// Runs Only Tabu Search
-        /// </summary>
-        public void RunOnlyTS()
-        {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} all algorithms result.csv");
-
-            AllGenerationsStatistics tabuSearchResult = RunTS();
-            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
-
-            toFileLogger.LogToFile(tabuSearchResult);
-        }
-
-        public void RunAllAlgorithms()
-        {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} all algorithms result.csv");
-
-            List<AllGenerationsStatistics> allAlgorithmsResults = RunAllAlgorithmsAndGetResult();
-            AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
-
-            toFileLogger.LogToFile(allAlgorithmsAverage);
-
-            //TODO:
-            //CountStandardDeviation
-        }
-
-        /// <summary>
-        /// Run genetic algorithm
-        /// </summary>
-        /// <returns></returns>
-        public AllGenerationsStatistics RunGA()
-        {
-            AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
-
-            CreatePopulation();
-            CountFitness();
-
-            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
-            {
-                SelectAndCross();
-                Mutate();
-                CountFitness();
-                SaveDataForGA(_generationsCounter + 1, allGenerationsStatistics);
-            }
-
-            return allGenerationsStatistics;
-        }
-
-        private void SaveDataForGA(int generationsCounter, AllGenerationsStatistics allGenerationsStatistics)
-        {
-            allGenerationsStatistics.SaveGenerationCounter(generationsCounter);
-
-            allGenerationsStatistics.SaveBestFitnessForGA(Population.GetBestFitness());
-            allGenerationsStatistics.SaveAverageFitnessForGA(Population.GetAverageFitness());
-            allGenerationsStatistics.SaveWorstFitnessForGA(Population.GetWorstFitness());
-        }
-
-        /// <summary>
         /// Counts fitness for each element in a population
         /// </summary>
         /// <param name="population"></param>
@@ -254,14 +254,41 @@ namespace GeneticAlgorithm
             Population.CreatePopulationIndividuals();
         }
 
-        private void SelectAndCross()
-        {
-            Population.SelectAndCross();
-        }
-
         private void Mutate()
         {
             Population.Mutate();
+        }
+
+        private List<AllGenerationsStatistics> RunAllAlgorithmsAndGetResult()
+        {
+            List<AllGenerationsStatistics> allAlgorithmsResults = new List<AllGenerationsStatistics>();
+
+            for (_generationsCounter = 0; _exploringStopCondition; _generationsCounter++)
+            {
+                AllGenerationsStatistics allGenerationsStatistics = new AllGenerationsStatistics();
+
+                allGenerationsStatistics.AddGAData(RunGA());
+                allGenerationsStatistics.AddTabuSearchData(RunTS());
+                allGenerationsStatistics.AddSimulatedAnnealingData(RunSA());
+
+                allAlgorithmsResults.Add(allGenerationsStatistics);
+            }
+
+            return allAlgorithmsResults;
+        }
+
+        private void SaveDataForGA(int generationsCounter, AllGenerationsStatistics allGenerationsStatistics)
+        {
+            allGenerationsStatistics.SaveGenerationCounter(generationsCounter);
+
+            allGenerationsStatistics.SaveBestFitnessForGA(Population.GetBestFitness());
+            allGenerationsStatistics.SaveAverageFitnessForGA(Population.GetAverageFitness());
+            allGenerationsStatistics.SaveWorstFitnessForGA(Population.GetWorstFitness());
+        }
+
+        private void SelectAndCross()
+        {
+            Population.SelectAndCross();
         }
     }
 }

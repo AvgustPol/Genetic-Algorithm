@@ -17,6 +17,7 @@ namespace GeneticAlgorithm
         #region Tabu Search
 
         public List<double> BestFitnessListTS { get; set; }
+        public List<double> BestNeighborFitnessListTS { get; set; }
 
         #endregion Tabu Search
 
@@ -35,6 +36,7 @@ namespace GeneticAlgorithm
             WorstFitnessListGA = new List<double>();
 
             BestFitnessListTS = new List<double>();
+            BestNeighborFitnessListTS = new List<double>();
 
             BestFitnessListSA = new List<double>();
             BestNeighborFitnessListSA = new List<double>();
@@ -50,6 +52,7 @@ namespace GeneticAlgorithm
         public void AddTabuSearchData(AllGenerationsStatistics allGenerationsStatistics)
         {
             BestFitnessListTS = allGenerationsStatistics.BestFitnessListTS;
+            BestNeighborFitnessListTS = allGenerationsStatistics.BestNeighborFitnessListTS;
         }
 
         public void AddSimulatedAnnealingData(AllGenerationsStatistics allGenerationsStatistics)
@@ -110,6 +113,11 @@ namespace GeneticAlgorithm
         public void SaveBestFitnessForSA(double bestFitness)
         {
             BestFitnessListSA.Add(bestFitness);
+        }
+
+        public void SaveBestNeighborFitnessForTS(double bestNeighborFitness)
+        {
+            BestNeighborFitnessListTS.Add(bestNeighborFitness);
         }
 
         /// <summary>
