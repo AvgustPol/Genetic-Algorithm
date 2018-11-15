@@ -116,7 +116,7 @@ namespace GeneticAlgorithm
         /// Saves best fitness for current generation for Simulated Annealing
         /// </summary>
         /// <param name="bestFitness"></param>
-        public void SaveBestNeighborFitnessListSAForSA(double bestFitness)
+        public void SaveBestNeighborFitnessForSA(double bestFitness)
         {
             BestNeighborFitnessListSA.Add(bestFitness);
         }

@@ -61,8 +61,8 @@ namespace GeneticAlgorithm
             {
                 File.AppendAllLines(Path,
                     new[] {
-                        $"{SaveValue(averageCounter.BestFitnessListSA[i])}" + ","
-                        //$"{SaveValue(averageCounter.BestNeighborFitnessListSA[i])}"
+                        $"{SaveValue(averageCounter.BestFitnessListSA[i])}" + "," +
+                        $"{SaveValue(averageCounter.BestNeighborFitnessListSA[i])}"
                     });
             }
         }

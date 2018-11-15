@@ -51,7 +51,7 @@ namespace GeneticAlgorithm
                     bestAlgorithmFitness = bestNeighborFitness;
                 }
 
-                //allGenerationsStatistics.SaveBestFitnessForSA(bestNeighborFitness);
+                allGenerationsStatistics.SaveBestNeighborFitnessForSA(bestNeighborFitness);
                 allGenerationsStatistics.SaveBestFitnessForSA(bestAlgorithmFitness);
 
                 SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);

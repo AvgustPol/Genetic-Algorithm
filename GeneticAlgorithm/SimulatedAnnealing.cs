@@ -4,6 +4,8 @@ namespace GeneticAlgorithm
 {
     public class SimulatedAnnealing
     {
+        public static int LowTemperatureCounter { get; set; }
+
         public static void TryAvoidLocalOptimum(ref Individual best, ref Individual tmpCandidate, double temperature)
         {
             //отнимаем tmpCandidate - best, потому что для данной проблемы best = biggest
@@ -22,11 +24,17 @@ namespace GeneticAlgorithm
             //golden ratio
             //temperature *= 0.61803398875;
 
-            temperature *= 0.99;
-            if (temperature < 0.5)
-            {
-                temperature = Int64.MaxValue;
-            }
+            temperature *= 0.95;
+            //if (temperature < 0.5)
+            //{
+            //    if (LowTemperatureCounter > 100)
+            //    {
+            //        temperature = SimulatedAnnealingParameters.InitializeTemperature;
+            //        LowTemperatureCounter = 0;
+            //    }
+
+            //    LowTemperatureCounter++;
+            //}
         }
     }
 }
