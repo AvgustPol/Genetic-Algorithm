@@ -4,6 +4,6 @@ namespace GeneticAlgorithm
 {
     internal class SimulatedAnnealingParameters
     {
-        public const double InitializeTemperature = Int16.MaxValue;
+        public const double InitializeTemperature = Int64.MaxValue;
     }
 }

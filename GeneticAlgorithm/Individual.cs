@@ -197,6 +197,14 @@ namespace GeneticAlgorithm
             {
                 clone.Items = (bool[])Items.Clone();
             }
+            //TODO : точно ли тебе нужно клонировать все таблицы?
+
+            if (ItemsLocation != null)
+            {
+                clone.ItemsLocation = (int[])ItemsLocation.Clone();
+            }
+
+            clone.Fitness = Fitness;
 
             return clone;
         }
