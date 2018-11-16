@@ -91,7 +91,7 @@ namespace GeneticAlgorithm
 
         public void LogSaToFile(AllGenerationsStatistics averageCounter)
         {
-            //AddParametersData();
+            AddParametersData();
 
             File.AppendAllLines(Path,
                 new[] {
@@ -104,6 +104,7 @@ namespace GeneticAlgorithm
             {
                 File.AppendAllLines(Path,
                     new[] {
+                        $"{SaveValue(averageCounter.SATemperature[i])}" + "," +
                         $"{SaveValue(averageCounter.BestFitnessListSA[i])}" + "," +
                         $"{SaveValue(averageCounter.BestNeighborFitnessListSA[i])}"
                     });

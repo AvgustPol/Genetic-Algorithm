@@ -25,6 +25,7 @@ namespace GeneticAlgorithm
 
         public List<double> BestFitnessListSA { get; set; }
         public List<double> BestNeighborFitnessListSA { get; set; }
+        public List<double> SATemperature { get; set; }
 
         #endregion SimulatedAnnealing
 
@@ -40,6 +41,7 @@ namespace GeneticAlgorithm
 
             BestFitnessListSA = new List<double>();
             BestNeighborFitnessListSA = new List<double>();
+            SATemperature = new List<double>();
         }
 
         public void AddGAData(AllGenerationsStatistics allGenerationsStatistics)
@@ -59,6 +61,7 @@ namespace GeneticAlgorithm
         {
             BestFitnessListSA = allGenerationsStatistics.BestFitnessListSA;
             BestNeighborFitnessListSA = allGenerationsStatistics.BestNeighborFitnessListSA;
+            SATemperature = allGenerationsStatistics.SATemperature;
         }
 
         /// <summary>
@@ -127,6 +130,15 @@ namespace GeneticAlgorithm
         public void SaveBestNeighborFitnessForSA(double bestFitness)
         {
             BestNeighborFitnessListSA.Add(bestFitness);
+        }
+
+        /// <summary>
+        /// Saves temperature for current generation for Simulated Annealing
+        /// </summary>
+        /// <param name="bestFitness"></param>
+        public void SaveTemperatureForSA(double temp)
+        {
+            SATemperature.Add(temp);
         }
     }
 }

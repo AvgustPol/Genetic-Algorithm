@@ -63,12 +63,25 @@ namespace GeneticAlgorithm
         /// </summary>
         public void RunOnlySA()
         {
+            #region 1 запуск
+
             ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} Simulated annealing result.csv");
 
             AllGenerationsStatistics simulatedAnnealingResult = RunSA();
-            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
 
             toFileLogger.LogSaToFile(simulatedAnnealingResult);
+
+            #endregion 1 запуск
+
+            //ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} Simulated annealing result.csv");
+            //var allAlgorithmsResults = new List<AllGenerationsStatistics>();
+            //for (int i = 0; i < GlobalParameters.ExploringAlgorithmStopCondition; i++)
+            //{
+            //    allAlgorithmsResults.Add(RunSA());
+            //}
+            //AllGenerationsStatistics allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allAlgorithmsResults);
+
+            //toFileLogger.LogSaToFile(allAlgorithmsAverage);
         }
 
         /// <summary>
@@ -126,8 +139,11 @@ namespace GeneticAlgorithm
 
                 allGenerationsStatistics.SaveBestNeighborFitnessForSA(bestNeighborFitness);
                 allGenerationsStatistics.SaveBestFitnessForSA(bestAlgorithmFitness);
+                allGenerationsStatistics.SaveTemperatureForSA(currentTemperature);
 
                 SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
+                //if (currentTemperature < 0.5)
+                //    break;
             } while (_algoritmStopCondition);
 
             return allGenerationsStatistics;
@@ -210,6 +226,7 @@ namespace GeneticAlgorithm
                 #region Get SA data
 
                 double averageBestFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
+                double averageBestNeighborFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
 
                 #endregion Get SA data
 
@@ -232,6 +249,7 @@ namespace GeneticAlgorithm
                 #region Save SA
 
                 allAlgorithmsAverage.SaveBestFitnessForSA(averageBestFitnessSA);
+                allAlgorithmsAverage.SaveBestNeighborFitnessForSA(averageBestFitnessSA);
 
                 #endregion Save SA
             }

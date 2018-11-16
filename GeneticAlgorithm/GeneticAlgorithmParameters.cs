@@ -53,7 +53,7 @@ namespace GeneticAlgorithm
         /// </summary>
         public static readonly int MutationProbability = 5;
 
-        public static readonly int NumberOfTournamentParticipants = 20;
+        public static readonly int NumberOfTournamentParticipants = 5;
 
         public static readonly int MaxProbability = 100;
 

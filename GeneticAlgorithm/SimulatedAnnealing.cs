@@ -21,18 +21,19 @@ namespace GeneticAlgorithm
 
         public static void DecreaseTemperature(ref double temperature, int generationsCounter)
         {
+            temperature *= 0.95;
+
             //golden ratio
             //temperature *= 0.61803398875;
 
-            temperature *= 0.95;
             //if (temperature < 0.5)
             //{
-            //    if (LowTemperatureCounter > 100)
+            //    if (LowTemperatureCounter > 500)
             //    {
             //        temperature = SimulatedAnnealingParameters.InitializeTemperature;
             //        LowTemperatureCounter = 0;
             //    }
-
+            //    temperature *= 0.99;
             //    LowTemperatureCounter++;
             //}
         }
