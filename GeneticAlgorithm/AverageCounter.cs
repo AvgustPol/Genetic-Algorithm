@@ -16,7 +16,7 @@ namespace GeneticAlgorithm
         /// <param name="generationNumber"></param>
         /// <param name="algorithmAndValueParameter"></param>
         /// <returns></returns>
-        public static double CountAverageFitnessFor(List<AllGenerationsStatistics> list, int generationNumber, string algorithmAndValueParameter)
+        public static double CountAverageFitnessFor(List<LoopData> list, int generationNumber, string algorithmAndValueParameter)
         {
             double sum = 0;
             int counter = 0;
@@ -25,15 +25,15 @@ namespace GeneticAlgorithm
                 switch (algorithmAndValueParameter)
                 {
                     case GlobalParameters.BestFitnessListGA:
-                        sum += item.BestFitnessListGA[generationNumber];
+                        sum += item.ListBest[generationNumber];
                         break;
 
                     case GlobalParameters.WorstFitnessListGA:
-                        sum += item.WorstFitnessListGA[generationNumber];
+                        sum += item.ListAvg[generationNumber];
                         break;
 
                     case GlobalParameters.AverageFitnessListGA:
-                        sum += item.AverageFitnessListGA[generationNumber];
+                        sum += item.ListOther[generationNumber];
                         break;
 
                     case GlobalParameters.BestFitnessListTS:

@@ -22,37 +22,64 @@ namespace GeneticAlgorithm
             }
         }
 
-        private void AddParametersData()
+        private void AddParametersData(GlobalParameters.AlgorithmType algorithmType)
         {
             File.AppendAllLines(Path,
-                new[] {
-                    $"Problem {GlobalParameters.FileName}" ,
-                    $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" ,
-                    $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition}," ,
-
-                    "Tabu Search" ,
-                    $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
-                    $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
-                    $"Poziom sąsiedztwa 1" ,
-
-                    "Genetic Algorithm" ,
-                    $"Ilość osobników w populacji {GeneticAlgorithmParameters.PopulationSize}" ,
-                    $"Ilość uczestników  w turnieju {GeneticAlgorithmParameters.NumberOfTournamentParticipants}" ,
-                    $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
-                    $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%" ,
-
-                    "Simulated Annealing" ,
-                    $"Początkowa temperatura T {SimulatedAnnealingParameters.InitializeTemperature }"
+                new[]
+                {
+                    $"Problem {GlobalParameters.FileName}",
+                    $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}",
+                    $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition},"
                 });
+
+            switch (algorithmType)
+            {
+                case GlobalParameters.AlgorithmType.GA:
+                    File.AppendAllLines(Path,
+                        new[]
+                        {
+                            $"Genetic Algorithm" ,
+                            $"Ilość osobników w populacji {GeneticAlgorithmParameters.PopulationSize}" ,
+                            $"Ilość uczestników  w turnieju {GeneticAlgorithmParameters.NumberOfTournamentParticipants}" ,
+                            $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
+                            $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%" ,
+                        });
+                    break;
+
+                case GlobalParameters.AlgorithmType.TS:
+                    File.AppendAllLines(Path,
+                        new[]
+                        {
+                            $"Tabu Search" ,
+                            $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
+                            $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
+                            $"Poziom sąsiedztwa 1" ,
+                        });
+                    break;
+
+                case GlobalParameters.AlgorithmType.SA:
+                    File.AppendAllLines(Path,
+                        new[]
+                        {
+                            "Simulated Annealing" ,
+                            $"Początkowa temperatura T {SimulatedAnnealingParameters.InitializeTemperature }"
+                        });
+                    break;
+
+                default:
+
+                    break;
+            }
         }
 
-        public void LogTSToFile(AllGenerationsStatistics averageCounter)
+        public void LogTSToFile(LoopData<double> averageCounter)
         {
-            //AddParametersData();
-
             File.AppendAllLines(Path,
                 new[] {
-                    $"TS Best Fitness" + "," +
+                    //TODO #42
+                    //сделать так, чтобы можно было написать
+                    //
+                    $"TS {LoopData<double>.TsDataType.Best} Fitness" + "," +
 
                     $"TS Best neighbor Fitness"
                 });
@@ -67,7 +94,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        internal void LogGAToFile(AllGenerationsStatistics averageCounter)
+        internal void LogGAToFile(LoopData averageCounter)
         {
             AddParametersData();
 
@@ -82,14 +109,14 @@ namespace GeneticAlgorithm
             {
                 File.AppendAllLines(Path,
                     new[] {
-                        $"{SaveValue(averageCounter.BestFitnessListGA[i])}" + "," +
-                        $"{SaveValue(averageCounter.AverageFitnessListGA[i])}" + "," +
-                        $"{SaveValue(averageCounter.WorstFitnessListGA[i])}"
+                        $"{SaveValue(averageCounter.ListBest[i])}" + "," +
+                        $"{SaveValue(averageCounter.ListOther[i])}" + "," +
+                        $"{SaveValue(averageCounter.ListAvg[i])}"
                     });
             }
         }
 
-        public void LogSaToFile(AllGenerationsStatistics averageCounter)
+        public void LogSaToFile(LoopData averageCounter)
         {
             AddParametersData();
 
@@ -111,9 +138,28 @@ namespace GeneticAlgorithm
             }
         }
 
-        public void LogToFile(AllGenerationsStatistics averageCounter)
+        public void LogToFile(GlobalParameters.AlgorithmType algorithmType, LoopData averageCounter)
         {
-            AddParametersData();
+            AddParametersData(algorithmType);
+
+            switch (algorithmType)
+            {
+                case GlobalParameters.AlgorithmType.GA:
+                    algorithmResult = RunGA();
+                    break;
+
+                case GlobalParameters.AlgorithmType.SA:
+                    algorithmResult = RunSA();
+                    break;
+
+                case GlobalParameters.AlgorithmType.TS:
+                    algorithmResult = RunTS();
+                    break;
+
+                default:
+
+                    break;
+            }
 
             File.AppendAllLines(Path,
                 new[] {
@@ -133,9 +179,9 @@ namespace GeneticAlgorithm
                 File.AppendAllLines(Path,
                     new[] {
                             $"{i + 1}," +
-                            $"{SaveValue(averageCounter.BestFitnessListGA[i])}" + "," +
-                            $"{SaveValue(averageCounter.AverageFitnessListGA[i])}" + "," +
-                            $"{SaveValue(averageCounter.WorstFitnessListGA[i])}" + "," +
+                            $"{SaveValue(averageCounter.ListBest[i])}" + "," +
+                            $"{SaveValue(averageCounter.ListOther[i])}" + "," +
+                            $"{SaveValue(averageCounter.ListAvg[i])}" + "," +
 
                             $"{SaveValue(averageCounter.BestFitnessListTS[i])}" + "," +
 
