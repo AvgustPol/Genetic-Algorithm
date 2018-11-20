@@ -169,8 +169,7 @@ namespace GeneticAlgorithm
             double maxSpeed = GeneticAlgorithmParameters.MaxSpeed;
 
             double currentSpeed = maxSpeed - GeneticAlgorithmParameters.MaxMinusMinDividedByWeight * item.Weight;
-
-            //TODO: useless ? can current speed be lower than min speed?
+            
             return Math.Max(minSpeed, currentSpeed);
         }
 
@@ -180,8 +179,7 @@ namespace GeneticAlgorithm
             double maxSpeed = GeneticAlgorithmParameters.MaxSpeed;
 
             double currentSpeed = maxSpeed - GeneticAlgorithmParameters.MaxMinusMinDividedByWeight * weight;
-
-            //TODO: useless ? can current speed be lower than min speed?
+            
             return Math.Max(minSpeed, currentSpeed);
         }
 
@@ -232,7 +230,7 @@ namespace GeneticAlgorithm
             Item item = null;
             double time = 0;
             double distance = 0;
-            double speed = 0;
+            double speed = GeneticAlgorithmParameters.MaxSpeed;
 
             int knapsack = 0;
 
