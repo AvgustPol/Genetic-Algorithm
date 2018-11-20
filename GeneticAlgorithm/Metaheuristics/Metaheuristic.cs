@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithm.Metaheuristics
 {
@@ -16,10 +17,33 @@ namespace GeneticAlgorithm.Metaheuristics
 
         /// <summary>
         /// Starts algorithm
-        /// запускает алгоритм с параметрами</summary>
+        /// запускает алгоритм с параметрами </summary>
         /// и возразщает результат в<param name="algorithmParameters"></param>
         /// <returns></returns>
-        public abstract object Run(object algorithmParameters);
+        public abstract MetaheuristicResult Run(MetaheuristicParameters algorithmParameters);
+
+        /// <summary>
+        /// запускает N раз алгоритм
+        /// считает и возращает средний результат для каждой генерации
+        ///
+        /// "средний результат" - является поводом, чтобы судить о алгоритме (Efektywność/Skuteczność)
+        /// </summary>
+        /// <param name="algorithmParameters"></param>
+        /// <returns></returns>
+        public MetaheuristicResult RunNTimes(MetaheuristicParameters algorithmParameters)
+        {
+            List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
+            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
+            {
+                MetaheuristicResult metaheuristicResult = Run(algorithmParameters);
+                allLoopsData.Add(metaheuristicResult);
+            }
+
+            MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
+
+            //TODO:
+            //CountStandardDeviation
+        }
 
         /// <summary>
         /// TODO

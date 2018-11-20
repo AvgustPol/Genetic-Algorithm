@@ -28,5 +28,55 @@ namespace GeneticAlgorithm.Metaheuristics.TabuSearch
         {
             return TabuList.Contains(array);
         }
+
+        ///// <summary>
+        ///// Run Tabu Search
+        ///// </summary>
+        ///// <returns></returns>
+        //private MetaheuristicResult RunTS()
+        //{
+        //    MetaheuristicResult<double> metaheuristicResult = new MetaheuristicResult<double>();
+        //    List<int[]> neighbors;
+        //    TabuSearch tabuSearch = new TabuSearch();
+
+        //    Individual best = new Individual(Population.CreateRandomIndividual());
+        //    Individual current = best;
+
+        //    //best fount
+        //    //current -> best Neighbor
+
+        //    double bestNeighborFitness = best.Fitness;
+        //    double bestAlgorithmFitness = best.Fitness;
+
+        //    tabuSearch.AddToTabuList(current.Places);
+
+        //    for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
+        //    {
+        //        neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+
+        //        foreach (var candidate in neighbors)
+        //        {
+        //            if (!tabuSearch.IsContains(candidate))
+        //            {
+        //                Individual tmpCandidate = new Individual(candidate);
+        //                if (tmpCandidate.Fitness > current.Fitness)
+        //                    current = tmpCandidate;
+        //            }
+        //        }
+        //        bestNeighborFitness = current.Fitness;
+
+        //        if (bestNeighborFitness > bestAlgorithmFitness)
+        //        {
+        //            bestAlgorithmFitness = bestNeighborFitness;
+        //        }
+
+        //        tabuSearch.AddToTabuList(current.Places);
+
+        //        metaheuristicResult.SaveBestNeighborFitnessForTS(bestNeighborFitness);
+        //        metaheuristicResult.SaveBestFitnessForTS(bestAlgorithmFitness);
+        //    }
+
+        //    return metaheuristicResult;
+        //}
     }
 }

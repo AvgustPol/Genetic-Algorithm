@@ -4,9 +4,9 @@
     {
         public Population Population { get; set; }
 
-        public override object Run(object algorithmParameters)
+        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
         {
-            LoopData<double> loopData = new LoopData<double>();
+            MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             CreatePopulation();
             CountFitness();
@@ -16,10 +16,17 @@
                 SelectAndCross();
                 Mutate();
                 CountFitness();
-                SaveDataForGA(_generationsCounter + 1, loopData);
+                SaveFitnessData(metaheuristicResult);
             }
 
-            return loopData;
+            return metaheuristicResult;
+        }
+
+        private void SaveFitnessData(MetaheuristicResult metaheuristicResult)
+        {
+            metaheuristicResult.SaveBestFitnessForCurrentGeneration(Population.GetBestFitness());
+            metaheuristicResult.SaveAverageFitnessForCurrentGeneration(Population.GetAverageFitness());
+            metaheuristicResult.SaveWorstFitnessForCurrentGeneration(Population.GetWorstFitness());
         }
 
         private void CreatePopulation()
@@ -47,35 +54,27 @@
             Population.SelectAndCross();
         }
 
-        private void SaveDataForGA(int generationsCounter, LoopData<double> allGenerationsStatistics)
-        {
-            //log ("GA", "BestInd", ResultList)
-            allGenerationsStatistics.SaveData(Population.GetBestFitness(), LoopData<double>.GaDataType.Best, allGenerationsStatistics.ListBest);
-            allGenerationsStatistics.SaveData(Population.GetAverageFitness(), LoopData<double>.GaDataType.Avg, allGenerationsStatistics.ListAvg);
-            allGenerationsStatistics.SaveData(Population.GetWorstFitness(), LoopData<double>.GaDataType.Worst, allGenerationsStatistics.ListOther);
-        }
-
         protected override object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult)
         {
-            LoopData<double> allAlgorithmsAverage = new LoopData<double>();
+            MetaheuristicResult<double> allMetaheuristicsAverage = new MetaheuristicResult<double>();
 
-            #region Get GA LoopData
+            #region Get GA MetaheuristicResult
 
             double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
             double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
             double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
 
-            #endregion Get GA LoopData
+            #endregion Get GA MetaheuristicResult
 
             #region Save GA
 
-            allAlgorithmsAverage.SaveData(averageBestFitnessGA);
-            allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
-            allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
+            allMetaheuristicsAverage.SaveData(averageBestFitnessGA);
+            allMetaheuristicsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
+            allMetaheuristicsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
 
             #endregion Save GA
 
-            return allAlgorithmsAverage;
+            return allMetaheuristicsAverage;
         }
     }
 }

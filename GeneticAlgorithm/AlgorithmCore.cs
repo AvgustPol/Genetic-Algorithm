@@ -1,166 +1,65 @@
-﻿using DataModel;
+using DataModel;
 using GeneticAlgorithm.Metaheuristics;
 using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
-using GeneticAlgorithm.Metaheuristics.SimulatedAnnealing;
-using GeneticAlgorithm.Metaheuristics.TabuSearch;
 using System.Collections.Generic;
+using static GeneticAlgorithm.Metaheuristics.MetaheuristicParameters;
 
 namespace GeneticAlgorithm
 {
     public class AlgorithmCore
     {
         public Metaheuristic Metaheuristic { get; set; }
+        public MetaheuristicType MetaheuristicType { get; set; }
 
-        public void RunAnyAlgorithm(GlobalParameters.AlgorithmType algorithmType)
+        public AlgorithmCore(MetaheuristicType metaheuristicType)
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {algorithmType} result.csv");
+            MetaheuristicType = metaheuristicType;
+            Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
+        }
 
-            List<LoopData<double>> allLoopsData = new List<LoopData<double>>(GlobalParameters.NumberOfRuns);
+        public void Run()
+        {
+            MetaheuristicParameters parameters = new GeneticAlgorithmParameters()
+            {
+                MutationProbability = 5,
+                CrossProbability = 60,
+                NumberOfTournamentParticipants = 5,
+                PopulationSize = 100
+            };
+
+            RunAlgorithm(parameters);
+        }
+
+        public void RunAlgorithm(MetaheuristicParameters parameters)
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result.csv");
+
+            List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
             for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
             {
-                LoopData<double> algorithmResult = null;
-                switch (algorithmType)
-                {
-                    case GlobalParameters.AlgorithmType.GA:
-                        algorithmResult = RunGA();
-                        break;
-
-                    case GlobalParameters.AlgorithmType.SA:
-                        algorithmResult = RunSA();
-                        break;
-
-                    case GlobalParameters.AlgorithmType.TS:
-                        algorithmResult = RunTS();
-                        break;
-
-                    default:
-
-                        break;
-                }
-                allLoopsData.Add(algorithmResult);
+                MetaheuristicResult metaheuristicResult = Metaheuristic.Run(parameters);
+                allLoopsData.Add(metaheuristicResult);
             }
 
-            LoopData<double> allAlgorithmsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
+            MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
 
             //TODO:
             //CountStandardDeviation
 
-            toFileLogger.LogToFile(algorithmType, allAlgorithmsAverage);
+            toFileLogger.LogToFile(metaheuristicType, allMetaheuristicsAverage);
         }
 
-        /// <summary>
-        /// Run Simulated Annealing
-        /// </summary>
-        /// <returns></returns>
-        private LoopData<double> RunSA()
-        {
-            _generationsCounter = 0;
-
-            LoopData<double> loopData = new LoopData<double>();
-
-            double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
-            Individual best = new Individual(Population.CreateRandomIndividual());
-
-            List<int[]> neighbors;
-
-            double bestAlgorithmFitness = best.Fitness;
-            double bestNeighborFitness = best.Fitness;
-
-            do
-            {
-                neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
-
-                foreach (var neighborsRoad in neighbors)
-                {
-                    Individual neighbor = new Individual(neighborsRoad);
-                    if (neighbor.Fitness > best.Fitness)
-                    {
-                        best = neighbor;
-                        bestNeighborFitness = neighbor.Fitness;
-                    }
-                    else
-                        //тут понижаем лушего!
-                        SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
-                }
-
-                if (bestNeighborFitness > bestAlgorithmFitness)
-                {
-                    bestAlgorithmFitness = bestNeighborFitness;
-                }
-
-                loopData.SaveBestNeighborFitnessForSA(bestNeighborFitness);
-                loopData.SaveBestFitnessForSA(bestAlgorithmFitness);
-                loopData.SaveTemperatureForSA(currentTemperature);
-
-                SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
-                //if (currentTemperature < 0.5)
-                //    break;
-            } while (_algoritmStopCondition);
-
-            return loopData;
-        }
-
-        /// <summary>
-        /// Run Tabu Search
-        /// </summary>
-        /// <returns></returns>
-        private LoopData<double> RunTS()
-        {
-            LoopData<double> loopData = new LoopData<double>();
-            List<int[]> neighbors;
-            TabuSearch tabuSearch = new TabuSearch();
-
-            Individual best = new Individual(Population.CreateRandomIndividual());
-            Individual current = best;
-
-            //best fount
-            //current -> best Neighbor
-
-            double bestNeighborFitness = best.Fitness;
-            double bestAlgorithmFitness = best.Fitness;
-
-            tabuSearch.AddToTabuList(current.Places);
-
-            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
-            {
-                neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
-
-                foreach (var candidate in neighbors)
-                {
-                    if (!tabuSearch.IsContains(candidate))
-                    {
-                        Individual tmpCandidate = new Individual(candidate);
-                        if (tmpCandidate.Fitness > current.Fitness)
-                            current = tmpCandidate;
-                    }
-                }
-                bestNeighborFitness = current.Fitness;
-
-                if (bestNeighborFitness > bestAlgorithmFitness)
-                {
-                    bestAlgorithmFitness = bestNeighborFitness;
-                }
-
-                tabuSearch.AddToTabuList(current.Places);
-
-                loopData.SaveBestNeighborFitnessForTS(bestNeighborFitness);
-                loopData.SaveBestFitnessForTS(bestAlgorithmFitness);
-            }
-
-            return loopData;
-        }
-
-        private LoopData<double> CalculateAverageForAllRunsOfTheAlgorithm(List<LoopData<double>> dataList)
+        private MetaheuristicResult CalculateAverageForAllRunsOfTheAlgorithm(List<MetaheuristicResult> dataList)
         {
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
-                #region Get GA LoopData
+                #region Get GA MetaheuristicResult
 
                 double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
                 double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
                 double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
 
-                #endregion Get GA LoopData
+                #endregion Get GA MetaheuristicResult
 
                 #region Get TS data
 

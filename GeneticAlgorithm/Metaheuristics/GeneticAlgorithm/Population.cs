@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
 {
@@ -195,11 +196,13 @@ namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
             double itemFitness;
             for (int i = 0; i < Individuals.Count; i++)
             {
-                itemFitness = Individuals[i].Fitness;
-                sumCost += itemFitness;
+                itemFitness = Convert.ToDouble(Individuals[i].Fitness);
+                sumCost = sumCost + itemFitness;
                 counter++;
             }
-            return sumCost / counter;
+
+            double result = sumCost / counter;
+            return result;
         }
     }
 }

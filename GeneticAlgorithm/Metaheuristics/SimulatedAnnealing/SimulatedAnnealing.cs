@@ -37,5 +37,57 @@ namespace GeneticAlgorithm.Metaheuristics.SimulatedAnnealing
             //    LowTemperatureCounter++;
             //}
         }
+
+        ///// <summary>
+        ///// Run Simulated Annealing
+        ///// </summary>
+        ///// <returns></returns>
+        //private MetaheuristicResult RunSA()
+        //{
+        //    _generationsCounter = 0;
+
+        //    MetaheuristicResult<double> metaheuristicResult = new MetaheuristicResult<double>();
+
+        //    double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
+        //    Individual best = new Individual(Population.CreateRandomIndividual());
+
+        //    List<int[]> neighbors;
+
+        //    double bestAlgorithmFitness = best.Fitness;
+        //    double bestNeighborFitness = best.Fitness;
+
+        //    do
+        //    {
+        //        neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
+
+        //        foreach (var neighborsRoad in neighbors)
+        //        {
+        //            Individual neighbor = new Individual(neighborsRoad);
+        //            if (neighbor.Fitness > best.Fitness)
+        //            {
+        //                best = neighbor;
+        //                bestNeighborFitness = neighbor.Fitness;
+        //            }
+        //            else
+        //                //тут понижаем лушего!
+        //                SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
+        //        }
+
+        //        if (bestNeighborFitness > bestAlgorithmFitness)
+        //        {
+        //            bestAlgorithmFitness = bestNeighborFitness;
+        //        }
+
+        //        metaheuristicResult.SaveBestNeighborFitnessForSA(bestNeighborFitness);
+        //        metaheuristicResult.SaveBestFitnessForSA(bestAlgorithmFitness);
+        //        metaheuristicResult.SaveTemperatureForSA(currentTemperature);
+
+        //        SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
+        //        //if (currentTemperature < 0.5)
+        //        //    break;
+        //    } while (_algoritmStopCondition);
+
+        //    return metaheuristicResult;
+        //}
     }
 }

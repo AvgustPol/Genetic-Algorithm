@@ -1,10 +1,10 @@
 ﻿using DataModel;
+using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithm.Metaheuristics.SimulatedAnnealing;
+using GeneticAlgorithm.Metaheuristics.TabuSearch;
 using System;
 using System.Globalization;
 using System.IO;
-using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
-using GeneticAlgorithm.Metaheuristics.TabuSearch;
 
 namespace GeneticAlgorithm
 {
@@ -25,7 +25,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        private void AddParametersData(GlobalParameters.AlgorithmType algorithmType)
+        private void AddParametersData(MetaheuristicType metaheuristicType)
         {
             File.AppendAllLines(Path,
                 new[]
@@ -35,9 +35,9 @@ namespace GeneticAlgorithm
                     $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.NumberOfRuns},"
                 });
 
-            switch (algorithmType)
+            switch (metaheuristicType)
             {
-                case GlobalParameters.AlgorithmType.GA:
+                case GlobalParameters.MetaheuristicType.GA:
                     File.AppendAllLines(Path,
                         new[]
                         {
@@ -49,7 +49,7 @@ namespace GeneticAlgorithm
                         });
                     break;
 
-                case GlobalParameters.AlgorithmType.TS:
+                case GlobalParameters.MetaheuristicType.TS:
                     File.AppendAllLines(Path,
                         new[]
                         {
@@ -60,7 +60,7 @@ namespace GeneticAlgorithm
                         });
                     break;
 
-                case GlobalParameters.AlgorithmType.SA:
+                case GlobalParameters.MetaheuristicType.SA:
                     File.AppendAllLines(Path,
                         new[]
                         {
@@ -75,14 +75,14 @@ namespace GeneticAlgorithm
             }
         }
 
-        public void LogTSToFile(LoopData<double> averageCounter)
+        public void LogTSToFile(MetaheuristicResult<double> averageCounter)
         {
             File.AppendAllLines(Path,
                 new[] {
                     //TODO #42
                     //сделать так, чтобы можно было написать
                     //
-                    $"TS {LoopData<double>.TsDataType.Best} Fitness" + "," +
+                    $"TS {MetaheuristicResult<double>.TsDataType.Best} Fitness" + "," +
 
                     $"TS Best neighbor Fitness"
                 });
@@ -97,7 +97,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        internal void LogGAToFile(LoopData averageCounter)
+        internal void LogGAToFile(MetaheuristicResult<> averageCounter)
         {
             AddParametersData();
 
@@ -119,7 +119,7 @@ namespace GeneticAlgorithm
             }
         }
 
-        public void LogSaToFile(LoopData averageCounter)
+        public void LogSaToFile(MetaheuristicResult<> averageCounter)
         {
             AddParametersData();
 
@@ -141,21 +141,21 @@ namespace GeneticAlgorithm
             }
         }
 
-        public void LogToFile(GlobalParameters.AlgorithmType algorithmType, LoopData averageCounter)
+        public void LogToFile(GlobalParameters.MetaheuristicType metaheuristicType, MetaheuristicResult<> averageCounter)
         {
-            AddParametersData(algorithmType);
+            AddParametersData(metaheuristicType);
 
-            switch (algorithmType)
+            switch (metaheuristicType)
             {
-                case GlobalParameters.AlgorithmType.GA:
+                case GlobalParameters.MetaheuristicType.GA:
                     algorithmResult = RunGA();
                     break;
 
-                case GlobalParameters.AlgorithmType.SA:
+                case GlobalParameters.MetaheuristicType.SA:
                     algorithmResult = RunSA();
                     break;
 
-                case GlobalParameters.AlgorithmType.TS:
+                case GlobalParameters.MetaheuristicType.TS:
                     algorithmResult = RunTS();
                     break;
 

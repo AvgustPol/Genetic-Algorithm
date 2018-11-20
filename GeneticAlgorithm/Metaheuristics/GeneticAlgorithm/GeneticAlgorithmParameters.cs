@@ -1,11 +1,38 @@
-﻿using System.Collections.Generic;
-using DataModel;
+﻿using DataModel;
 using Loader;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
 {
-    public class GeneticAlgorithmParameters
+    public class GeneticAlgorithmParameters : MetaheuristicParameters
     {
+        /// <summary>
+        /// The mutations probability of an individual gene  (e. g. 1% )
+        /// Example :
+        /// Genome (permutation) looks like {1 2 3 4 5} and it is successfully mutated
+        /// If it mutated in a position 2 we must swap value at position 2 (permutation[2]) with a Random gene
+        ///     For example Random gene = 4
+        /// So we must swap 2 and 4 positions in an array.
+        ///
+        /// Result:
+        /// Genome (permutation) looks like {1 2 5 4 3} after mutation
+        /// </summary>
+        public int MutationProbability;
+
+        public static readonly int MaxProbability = 100;
+
+        public int NumberOfTournamentParticipants;
+
+        /// <summary>
+        /// Number of population individuals
+        /// </summary>
+        public int PopulationSize;
+
+        /// <summary>
+        /// The probability of crossing two individuals. (e. g. 1% )
+        /// </summary>
+        public int CrossProbability;
+
         static GeneticAlgorithmParameters()
         {
             DataLoader dataLoader = new DataLoader();
@@ -35,35 +62,8 @@ namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
         public static readonly int NumberOfItems;
         public static readonly int MaxCapacityOfKnapsack;
 
-        /// <summary>
-        /// The probability of crossing two individuals. (e. g. 1% )
-        /// </summary>
-        public const int CrossProbability = 60;
-
-        /// <summary>
-        /// The mutations probability of an individual gene  (e. g. 1% )
-        /// Example :
-        /// Genome (permutation) looks like {1 2 3 4 5} and it is successfully mutated
-        /// If it mutated in a position 2 we must swap value at position 2 (permutation[2]) with a Random gene
-        ///     For example Random gene = 4
-        /// So we must swap 2 and 4 positions in an array.
-        ///
-        /// Result:
-        /// Genome (permutation) looks like {1 2 5 4 3} after mutation
-        /// </summary>
-        public static readonly int MutationProbability = 5;
-
-        public static readonly int NumberOfTournamentParticipants = 5;
-
-        public static readonly int MaxProbability = 100;
-
         public static double[,] DistanceMatrix;
         private static Dictionary<int, Item> _items;
-
-        /// <summary>
-        /// Number of population individuals
-        /// </summary>
-        public static int PopulationSize = 200;
 
         public static Item GetItem(int itemId)
         {
