@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using GeneticAlgorithm.Metaheuristics;
 using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithm.Metaheuristics.SimulatedAnnealing;
 using GeneticAlgorithm.Metaheuristics.TabuSearch;
@@ -6,43 +7,16 @@ using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
-    /// <summary>
-    /// Metaheuristic
-    /// </summary>
     public class AlgorithmCore
     {
-        private bool _algoritmStopCondition => _generationsCounter < GlobalParameters.AlgorithmStopCondition;
-        private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
-        private int _generationsCounter { get; set; }
-
-        /// <summary>
-        /// Run genetic algorithm
-        /// </summary>
-        /// <returns></returns>
-        public LoopData<double> RunGA()
-        {
-            LoopData<double> loopData = new LoopData<double>();
-
-            CreatePopulation();
-            CountFitness();
-
-            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
-            {
-                SelectAndCross();
-                Mutate();
-                CountFitness();
-                SaveDataForGA(_generationsCounter + 1, loopData);
-            }
-
-            return loopData;
-        }
+        public Metaheuristic Metaheuristic { get; set; }
 
         public void RunAnyAlgorithm(GlobalParameters.AlgorithmType algorithmType)
         {
             ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {algorithmType} result.csv");
 
-            List<LoopData<double>> allLoopsData = new List<LoopData<double>>(GlobalParameters.ExploringAlgorithmStopCondition);
-            for (int i = 0; i < GlobalParameters.ExploringAlgorithmStopCondition; i++)
+            List<LoopData<double>> allLoopsData = new List<LoopData<double>>(GlobalParameters.NumberOfRuns);
+            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
             {
                 LoopData<double> algorithmResult = null;
                 switch (algorithmType)
@@ -66,7 +40,7 @@ namespace GeneticAlgorithm
                 allLoopsData.Add(algorithmResult);
             }
 
-            LoopData<double> allAlgorithmsAverage = CalculateAllAlgorithmsAverage(allLoopsData);
+            LoopData<double> allAlgorithmsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
 
             //TODO:
             //CountStandardDeviation
@@ -176,10 +150,8 @@ namespace GeneticAlgorithm
             return loopData;
         }
 
-        private LoopData<double> CalculateAllAlgorithmsAverage(List<LoopData<double>> dataList)
+        private LoopData<double> CalculateAverageForAllRunsOfTheAlgorithm(List<LoopData<double>> dataList)
         {
-            LoopData<double> allAlgorithmsAverage = new LoopData<double>();
-
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 #region Get GA LoopData
@@ -204,8 +176,6 @@ namespace GeneticAlgorithm
                 #endregion Get SA data
 
                 #region Save GA
-
-                allAlgorithmsAverage.SaveGenerationCounter(_generationsCounter + 1);
 
                 allAlgorithmsAverage.SaveData(averageBestFitnessGA);
                 allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);

@@ -10,7 +10,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// высчитывает среднее среди всех сохраненных финальных популяций
         /// для генерации номер generationNumber
-        /// количество финальных популяций равно GlobalParameters.ExploringAlgorithmStopCondition
+        /// количество финальных популяций равно GlobalParameters.NumberOfRuns
         /// </summary>
         /// <param name="list">All </param>
         /// <param name="generationNumber"></param>

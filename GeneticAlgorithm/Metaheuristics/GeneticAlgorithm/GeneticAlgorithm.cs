@@ -2,15 +2,7 @@
 {
     public class GeneticAlgorithm : Metaheuristic
     {
-        public class AlgorithmRunParam
-        {
-        }
-
         public Population Population { get; set; }
-
-        public GeneticAlgorithm()
-        {
-        }
 
         public override object Run(object algorithmParameters)
         {
@@ -19,7 +11,7 @@
             CreatePopulation();
             CountFitness();
 
-            for (_generation = 0; _algoritmStopCondition; _generation++)
+            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
                 SelectAndCross();
                 Mutate();
@@ -61,6 +53,29 @@
             allGenerationsStatistics.SaveData(Population.GetBestFitness(), LoopData<double>.GaDataType.Best, allGenerationsStatistics.ListBest);
             allGenerationsStatistics.SaveData(Population.GetAverageFitness(), LoopData<double>.GaDataType.Avg, allGenerationsStatistics.ListAvg);
             allGenerationsStatistics.SaveData(Population.GetWorstFitness(), LoopData<double>.GaDataType.Worst, allGenerationsStatistics.ListOther);
+        }
+
+        protected override object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult)
+        {
+            LoopData<double> allAlgorithmsAverage = new LoopData<double>();
+
+            #region Get GA LoopData
+
+            double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
+            double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
+            double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
+
+            #endregion Get GA LoopData
+
+            #region Save GA
+
+            allAlgorithmsAverage.SaveData(averageBestFitnessGA);
+            allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
+            allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
+
+            #endregion Save GA
+
+            return allAlgorithmsAverage;
         }
     }
 }
