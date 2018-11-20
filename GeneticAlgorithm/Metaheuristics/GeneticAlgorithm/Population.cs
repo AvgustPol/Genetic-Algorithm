@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
 {
     public class Population
     {

@@ -1,11 +1,16 @@
 ﻿using DataModel;
+using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithm.Metaheuristics.SimulatedAnnealing;
+using GeneticAlgorithm.Metaheuristics.TabuSearch;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithm
 {
+    /// <summary>
+    /// Metaheuristic
+    /// </summary>
     public class AlgorithmCore
     {
-        public Population Population { get; set; }
         private bool _algoritmStopCondition => _generationsCounter < GlobalParameters.AlgorithmStopCondition;
         private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
         private int _generationsCounter { get; set; }

@@ -1,8 +1,8 @@
-﻿using DataModel;
+﻿using System.Collections.Generic;
+using DataModel;
 using Loader;
-using System.Collections.Generic;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithmParameters
     {

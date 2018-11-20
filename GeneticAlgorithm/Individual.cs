@@ -1,6 +1,7 @@
 ﻿using DataModel;
 using System;
 using System.Collections.Generic;
+using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
 
 namespace GeneticAlgorithm
 {

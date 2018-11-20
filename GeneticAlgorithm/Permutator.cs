@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
 
 namespace GeneticAlgorithm
 {

@@ -1,7 +1,10 @@
 ﻿using DataModel;
+using GeneticAlgorithm.Metaheuristics.SimulatedAnnealing;
 using System;
 using System.Globalization;
 using System.IO;
+using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithm.Metaheuristics.TabuSearch;
 
 namespace GeneticAlgorithm
 {

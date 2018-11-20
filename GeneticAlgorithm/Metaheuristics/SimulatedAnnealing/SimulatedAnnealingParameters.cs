@@ -1,4 +1,4 @@
-﻿namespace GeneticAlgorithm
+﻿namespace GeneticAlgorithm.Metaheuristics.SimulatedAnnealing
 {
     internal class SimulatedAnnealingParameters
     {
