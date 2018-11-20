@@ -44,6 +44,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
         public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
         {
+            SimulatedAnnealingParameters = (SimulatedAnnealingParameters)algorithmParameters;
             _generationsCounter = 0;
 
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
@@ -58,7 +59,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
             do
             {
-                neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
+                neighbors = NeighborsGenerator.GetNeighbors(best, SimulatedAnnealingParameters.NumberOfNeighbors);
 
                 foreach (var neighborsRoad in neighbors)
                 {
@@ -70,7 +71,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
                     }
                     else
                         //тут понижаем лушего!
-                        SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
+                        TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
                 }
 
                 if (bestNeighborFitness > bestAlgorithmFitness)
@@ -78,11 +79,13 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
                     bestAlgorithmFitness = bestNeighborFitness;
                 }
 
-                metaheuristicResult.SaveBestNeighborFitnessForSA(bestNeighborFitness);
-                metaheuristicResult.SaveBestFitnessForSA(bestAlgorithmFitness);
-                metaheuristicResult.SaveTemperatureForSA(currentTemperature);
+                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestNeighborFitness);
+                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(bestAlgorithmFitness);
 
-                SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
+                //TODO - change to separate method .
+                metaheuristicResult.SaveWorstFitnessForCurrentGeneration(currentTemperature);
+
+                DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
                 //if (currentTemperature < 0.5)
                 //    break;
             } while (_algoritmStopCondition);

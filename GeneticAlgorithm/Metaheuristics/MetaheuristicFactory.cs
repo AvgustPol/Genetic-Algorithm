@@ -11,9 +11,9 @@
                     metaheuristic = new GeneticAlgorithm.GeneticAlgorithm();
                     break;
 
-                //case MetaheuristicType.SA:
-                //    metaheuristic = new SimulatedAnnealing();
-                //    break;
+                case MetaheuristicParameters.MetaheuristicType.SA:
+                    metaheuristic = new SimulatedAnnealing.SimulatedAnnealing();
+                    break;
 
                 case MetaheuristicParameters.MetaheuristicType.TS:
                     metaheuristic = new TabuSearch.TabuSearch();

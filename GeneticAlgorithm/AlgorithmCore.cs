@@ -1,6 +1,7 @@
 using DataModel;
 using GeneticAlgorithmLogic.Metaheuristics;
 using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
 using GeneticAlgorithmLogic.Metaheuristics.TabuSearch;
 using System.Collections.Generic;
 
@@ -19,21 +20,42 @@ namespace GeneticAlgorithmLogic
 
         public void Run()
         {
-            MetaheuristicParameters parametersGa = new GeneticAlgorithmParameters()
-            {
-                MutationProbability = 5,
-                CrossProbability = 60,
-                NumberOfTournamentParticipants = 5,
-                PopulationSize = 100
-            };
+            MetaheuristicParameters parameters;
 
-            MetaheuristicParameters parametersTs = new TabuSearchParameters()
+            switch (MetaheuristicType)
             {
-                TabuListSize = 100,
-                NumberOfNeighbors = 25
-            };
+                case MetaheuristicParameters.MetaheuristicType.GA:
+                    parameters = new GeneticAlgorithmParameters()
+                    {
+                        MutationProbability = 5,
+                        CrossProbability = 60,
+                        NumberOfTournamentParticipants = 5,
+                        PopulationSize = 100
+                    };
+                    break;
 
-            RunAlgorithm(parametersTs);
+                case MetaheuristicParameters.MetaheuristicType.SA:
+                    parameters = new SimulatedAnnealingParameters()
+                    {
+                        InitializeTemperature = 100000,
+                        NumberOfNeighbors = 20
+                    };
+                    break;
+
+                case MetaheuristicParameters.MetaheuristicType.TS:
+                    parameters = new TabuSearchParameters()
+                    {
+                        TabuListSize = 100,
+                        NumberOfNeighbors = 25
+                    };
+                    break;
+
+                default:
+                    parameters = null;
+                    break;
+            }
+
+            RunAlgorithm(parameters);
         }
 
         public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
@@ -63,9 +85,9 @@ namespace GeneticAlgorithmLogic
                 double averageAverageFitness = AverageCounter.CountAverageFitnessFor(allLoopsData, i, GlobalParameters.AverageFitness);
                 double averageWorstFitness = AverageCounter.CountAverageFitnessFor(allLoopsData, i, GlobalParameters.WorstFitness);
 
-                allAlgorithmsAverage._fitnessResult.ListWorst.Add(averageBestFitness);
+                allAlgorithmsAverage._fitnessResult.ListBest.Add(averageBestFitness);
                 allAlgorithmsAverage._fitnessResult.ListAverage.Add(averageAverageFitness);
-                allAlgorithmsAverage._fitnessResult.ListBest.Add(averageWorstFitness);
+                allAlgorithmsAverage._fitnessResult.ListWorst.Add(averageWorstFitness);
             }
 
             return allAlgorithmsAverage;
