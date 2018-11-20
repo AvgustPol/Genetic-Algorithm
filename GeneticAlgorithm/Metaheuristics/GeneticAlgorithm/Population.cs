@@ -11,7 +11,7 @@ namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
 
         public Population()
         {
-            PopulationSize = GeneticAlgorithmParameters.PopulationSize;
+            PopulationSize = GeneticAlgorithm.GeneticAlgorithmParameters.PopulationSize;
         }
 
         public void CountFitnessForTheEntirePopulation()
@@ -91,17 +91,17 @@ namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
             while (nextPopulation.Count != PopulationSize)
             {
                 int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
-                if (GeneticAlgorithmParameters.CrossProbability > randomNumber)
+                if (GeneticAlgorithm.GeneticAlgorithmParameters.CrossProbability > randomNumber)
                 {
-                    Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-                    Individual parent2 = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    Individual parent2 = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
                     Individual child = Cross(parent1, parent2);
                     nextPopulation.Add(nextPopulation.Count, child);
                 }
                 else
                 {
-                    Individual winner = GetTournamentSelectionWinner(GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    Individual winner = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
                     nextPopulation.Add(nextPopulation.Count, winner);
                 }

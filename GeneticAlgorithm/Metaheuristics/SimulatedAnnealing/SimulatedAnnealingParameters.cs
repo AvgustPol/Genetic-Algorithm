@@ -1,6 +1,6 @@
 ﻿namespace GeneticAlgorithm.Metaheuristics.SimulatedAnnealing
 {
-    internal class SimulatedAnnealingParameters
+    internal class SimulatedAnnealingParameters : MetaheuristicParameters
     {
         //public const double InitializeTemperature = double.MaxValue;
         public const double InitializeTemperature = 100000;

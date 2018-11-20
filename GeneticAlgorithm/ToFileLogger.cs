@@ -1,16 +1,15 @@
 ﻿using DataModel;
+using GeneticAlgorithm.Metaheuristics;
 using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
-using GeneticAlgorithm.Metaheuristics.SimulatedAnnealing;
-using GeneticAlgorithm.Metaheuristics.TabuSearch;
 using System;
 using System.Globalization;
 using System.IO;
+using static GeneticAlgorithm.Metaheuristics.MetaheuristicParameters;
 
 namespace GeneticAlgorithm
 {
     public class ToFileLogger
     {
-        private string Path => _folderPath + _fileName;
         private readonly string _fileName;
         private readonly string _folderPath = GlobalParameters.PathToResultFolder;
 
@@ -25,7 +24,16 @@ namespace GeneticAlgorithm
             }
         }
 
-        private void AddParametersData(MetaheuristicType metaheuristicType)
+        private string Path => _folderPath + _fileName;
+
+        public void LogMetaheuristicToFile(MetaheuristicType metaheuristicType, MetaheuristicParameters metaheuristicParameters, MetaheuristicResult metaheuristicResult)
+        {
+            AddGlobalParameters();
+            LogMetaheuristicParameters(metaheuristicParameters);
+            LogData(metaheuristicResult);
+        }
+
+        private void AddGlobalParameters()
         {
             File.AppendAllLines(Path,
                 new[]
@@ -34,73 +42,10 @@ namespace GeneticAlgorithm
                     $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}",
                     $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.NumberOfRuns},"
                 });
-
-            switch (metaheuristicType)
-            {
-                case GlobalParameters.MetaheuristicType.GA:
-                    File.AppendAllLines(Path,
-                        new[]
-                        {
-                            $"Genetic Algorithm" ,
-                            $"Ilość osobników w populacji {GeneticAlgorithmParameters.PopulationSize}" ,
-                            $"Ilość uczestników  w turnieju {GeneticAlgorithmParameters.NumberOfTournamentParticipants}" ,
-                            $"Krzyżowanie  {GeneticAlgorithmParameters.CrossProbability}%" ,
-                            $"Mutacja {GeneticAlgorithmParameters.MutationProbability}%" ,
-                        });
-                    break;
-
-                case GlobalParameters.MetaheuristicType.TS:
-                    File.AppendAllLines(Path,
-                        new[]
-                        {
-                            $"Tabu Search" ,
-                            $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
-                            $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
-                            $"Poziom sąsiedztwa 1" ,
-                        });
-                    break;
-
-                case GlobalParameters.MetaheuristicType.SA:
-                    File.AppendAllLines(Path,
-                        new[]
-                        {
-                            "Simulated Annealing" ,
-                            $"Początkowa temperatura T {SimulatedAnnealingParameters.InitializeTemperature }"
-                        });
-                    break;
-
-                default:
-
-                    break;
-            }
         }
 
-        public void LogTSToFile(MetaheuristicResult<double> averageCounter)
+        private void LogData(MetaheuristicResult metaheuristicResult)
         {
-            File.AppendAllLines(Path,
-                new[] {
-                    //TODO #42
-                    //сделать так, чтобы можно было написать
-                    //
-                    $"TS {MetaheuristicResult<double>.TsDataType.Best} Fitness" + "," +
-
-                    $"TS Best neighbor Fitness"
-                });
-
-            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
-            {
-                File.AppendAllLines(Path,
-                    new[] {
-                        $"{SaveValue(averageCounter.BestFitnessListTS[i])}" + "," +
-                        $"{SaveValue(averageCounter.BestNeighborFitnessListTS[i])}"
-                    });
-            }
-        }
-
-        internal void LogGAToFile(MetaheuristicResult<> averageCounter)
-        {
-            AddParametersData();
-
             File.AppendAllLines(Path,
                 new[] {
                     $"GA Best Fitness" + "," +
@@ -112,85 +57,50 @@ namespace GeneticAlgorithm
             {
                 File.AppendAllLines(Path,
                     new[] {
-                        $"{SaveValue(averageCounter.ListBest[i])}" + "," +
-                        $"{SaveValue(averageCounter.ListOther[i])}" + "," +
-                        $"{SaveValue(averageCounter.ListAvg[i])}"
+                        $"{SaveValue(metaheuristicResult._fitnessResult.ListBest[i])}" + "," +
+                        $"{SaveValue(metaheuristicResult._fitnessResult.ListAverage[i])}" + "," +
+                        $"{SaveValue(metaheuristicResult._fitnessResult.ListWorst[i])}"
                     });
             }
         }
 
-        public void LogSaToFile(MetaheuristicResult<> averageCounter)
+        private void LogMetaheuristicParameters(MetaheuristicParameters metaheuristicParameters)
         {
-            AddParametersData();
-
-            File.AppendAllLines(Path,
-                new[] {
-                    $"SA Best Fitness" + "," +
-
-                    $"SA Best neighbor Fitness"
-                });
-
-            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
+            if (metaheuristicParameters is GeneticAlgorithmParameters parameters)
             {
                 File.AppendAllLines(Path,
-                    new[] {
-                        $"{SaveValue(averageCounter.SATemperature[i])}" + "," +
-                        $"{SaveValue(averageCounter.BestFitnessListSA[i])}" + "," +
-                        $"{SaveValue(averageCounter.BestNeighborFitnessListSA[i])}"
+                    new[]
+                    {
+                        $"Genetic Algorithm " ,
+                        $"Ilość osobników w populacji: {parameters.PopulationSize}" ,
+                        $"Ilość uczestników  w turnieju: {parameters.NumberOfTournamentParticipants}" ,
+                        $"Krzyżowanie: {parameters.CrossProbability}%" ,
+                        $"Mutacja: {parameters.MutationProbability}%" ,
                     });
             }
-        }
 
-        public void LogToFile(GlobalParameters.MetaheuristicType metaheuristicType, MetaheuristicResult<> averageCounter)
-        {
-            AddParametersData(metaheuristicType);
+            //if (metaheuristicParameters is SimulatedAnnealingParameters simulatedAnnealingParameters)
+            //{
+            //    File.AppendAllLines(Path,
+            //        new[]
+            //        {
+            //            "Simulated Annealing" ,
+            //            $"Początkowa temperatura T {simulatedAnnealingParameters.InitializeTemperature }" ,
+            //            $"Początkowa temperatura T {simulatedAnnealingParameters.NumberOfNeighbors }"
+            //        });
+            //}
 
-            switch (metaheuristicType)
-            {
-                case GlobalParameters.MetaheuristicType.GA:
-                    algorithmResult = RunGA();
-                    break;
-
-                case GlobalParameters.MetaheuristicType.SA:
-                    algorithmResult = RunSA();
-                    break;
-
-                case GlobalParameters.MetaheuristicType.TS:
-                    algorithmResult = RunTS();
-                    break;
-
-                default:
-
-                    break;
-            }
-
-            File.AppendAllLines(Path,
-                new[] {
-                    $"Generation Number" + "," +
-
-                    $"GA Best Fitness" + "," +
-                    $"GA Average Fitness" + "," +
-                    $"GA Worst Fitness" + "," +
-
-                    $"TS Best Fitness" + "," +
-
-                    $"SA Best Fitness"
-                });
-
-            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
-            {
-                File.AppendAllLines(Path,
-                    new[] {
-                            $"{i + 1}," +
-                            $"{SaveValue(averageCounter.ListBest[i])}" + "," +
-                            $"{SaveValue(averageCounter.ListOther[i])}" + "," +
-                            $"{SaveValue(averageCounter.ListAvg[i])}" + "," +
-
-                            $"{SaveValue(averageCounter.BestFitnessListTS[i])}" + "," +
-
-                            $"{SaveValue(averageCounter.BestFitnessListSA[i])}"
-                    });
-            }
+            //if (metaheuristicParameters is TabuSearchParameters tabuSearchParameters)
+            //{
+            //    //File.AppendAllLines(Path,
+            //    //    new[]
+            //    //    {
+            //    //        $"Tabu Search" ,
+            //    //        $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
+            //    //        $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
+            //    //        $"Poziom sąsiedztwa 1" ,
+            //    //    });
+            //}
         }
 
         private string SaveValue(double value)

@@ -4,9 +4,9 @@ namespace GeneticAlgorithm.Metaheuristics
 {
     public class MetaheuristicFactory
     {
-        public static Metaheuristic<T> CreateMetaheuristic(MetaheuristicType type)
+        public static Metaheuristic CreateMetaheuristic(MetaheuristicType type)
         {
-            Metaheuristic<T> metaheuristic = null;
+            Metaheuristic metaheuristic = null;
             switch (type)
             {
                 case MetaheuristicType.GA:

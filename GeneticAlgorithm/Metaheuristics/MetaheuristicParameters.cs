@@ -4,7 +4,7 @@
     {
         public enum MetaheuristicType
         {
-            ,
+            GA,
             SA,
             TS
         }

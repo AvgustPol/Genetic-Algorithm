@@ -30,73 +30,74 @@ namespace GeneticAlgorithm
             RunAlgorithm(parameters);
         }
 
-        public void RunAlgorithm(MetaheuristicParameters parameters)
+        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
         {
             ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result.csv");
 
             List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
             for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
             {
-                MetaheuristicResult metaheuristicResult = Metaheuristic.Run(parameters);
+                MetaheuristicResult metaheuristicResult = Metaheuristic.Run(metaheuristicParameters);
                 allLoopsData.Add(metaheuristicResult);
             }
 
-            MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
-
             //TODO:
             //CountStandardDeviation
+            //MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
+            //toFileLogger.LogMetaheuristicToFile(MetaheuristicType, metaheuristicParameters, allMetaheuristicsAverage);
 
-            toFileLogger.LogToFile(metaheuristicType, allMetaheuristicsAverage);
+            //TODO : change allLoopsData[0] to allMetaheuristicsAverage
+            toFileLogger.LogMetaheuristicToFile(MetaheuristicType, metaheuristicParameters, allLoopsData[0]);
         }
 
-        private MetaheuristicResult CalculateAverageForAllRunsOfTheAlgorithm(List<MetaheuristicResult> dataList)
-        {
-            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
-            {
-                #region Get GA MetaheuristicResult
+        //private MetaheuristicResult CalculateAverageForAllRunsOfTheAlgorithm(List<MetaheuristicResult> dataList)
+        //{
+        //    for (int _generationsCounter = 0; _; _generationsCounter++)
+        //    {
+        //        #region Get GA MetaheuristicResult
 
-                double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
-                double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
-                double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
+        //        double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
+        //        double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
+        //        double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
 
-                #endregion Get GA MetaheuristicResult
+        //        #endregion Get GA MetaheuristicResult
 
-                #region Get TS data
+        //        #region Get TS data
 
-                double averageBestFitnessTS = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListTS);
+        //        double averageBestFitnessTS = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListTS);
 
-                #endregion Get TS data
+        //        #endregion Get TS data
 
-                #region Get SA data
+        //        #region Get SA data
 
-                double averageBestFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
-                double averageBestNeighborFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
+        //        double averageBestFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
+        //        double averageBestNeighborFitnessSA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListSA);
 
-                #endregion Get SA data
+        //        #endregion Get SA data
 
-                #region Save GA
+        //        #region Save GA
 
-                allAlgorithmsAverage.SaveData(averageBestFitnessGA);
-                allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
-                allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
+        //        allAlgorithmsAverage.SaveData(averageBestFitnessGA);
+        //        allAlgorithmsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
+        //        allAlgorithmsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
 
-                #endregion Save GA
+        //        #endregion Save GA
 
-                #region Save TS
+        //        #region Save TS
 
-                allAlgorithmsAverage.SaveBestFitnessForTS(averageBestFitnessTS);
+        //        allAlgorithmsAverage.SaveBestFitnessForTS(averageBestFitnessTS);
 
-                #endregion Save TS
+        //        #endregion Save TS
 
-                #region Save SA
+        //        #region Save SA
 
-                allAlgorithmsAverage.SaveBestFitnessForSA(averageBestFitnessSA);
-                allAlgorithmsAverage.SaveBestNeighborFitnessForSA(averageBestFitnessSA);
+        //        allAlgorithmsAverage.SaveBestFitnessForSA(averageBestFitnessSA);
+        //        allAlgorithmsAverage.SaveBestNeighborFitnessForSA(averageBestFitnessSA);
 
-                #endregion Save SA
-            }
+        //        #endregion Save SA
+        //    }
 
-            return allAlgorithmsAverage;
-        }
+        //    return allAlgorithmsAverage;
+        //}
     }
 }

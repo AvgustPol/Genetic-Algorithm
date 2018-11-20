@@ -1,15 +1,10 @@
 ﻿using DataModel;
-using System.Collections.Generic;
 
 namespace GeneticAlgorithm.Metaheuristics
 {
     public abstract class Metaheuristic
     {
-        //public class AlgorithmRunParam
-        //{
-        //    public int AlgorithmStopCondition { get; set; }
-        //    public int ExploringAlgorithmStopCondition { get; set; }
-        //}
+        public MetaheuristicParameters MetaheuristicParameters { get; set; }
 
         protected bool _algoritmStopCondition => _generationsCounter < GlobalParameters.AlgorithmStopCondition;
         protected bool _totalStopCondition => _generationsCounter < GlobalParameters.NumberOfRuns;
@@ -30,26 +25,26 @@ namespace GeneticAlgorithm.Metaheuristics
         /// </summary>
         /// <param name="algorithmParameters"></param>
         /// <returns></returns>
-        public MetaheuristicResult RunNTimes(MetaheuristicParameters algorithmParameters)
-        {
-            List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
-            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
-            {
-                MetaheuristicResult metaheuristicResult = Run(algorithmParameters);
-                allLoopsData.Add(metaheuristicResult);
-            }
+        //public MetaheuristicResult RunNTimes(MetaheuristicParameters algorithmParameters)
+        //{
+        //    List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
+        //    for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
+        //    {
+        //        MetaheuristicResult metaheuristicResult = Run(algorithmParameters);
+        //        allLoopsData.Add(metaheuristicResult);
+        //    }
 
-            MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
+        //    MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
 
-            //TODO:
-            //CountStandardDeviation
-        }
+        //    //TODO:
+        //    //CountStandardDeviation
+        //}
 
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="allAlgorithmsResult"></param>
-        /// <returns></returns>
-        protected abstract object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult);
+        ///// <summary>
+        ///// TODO
+        ///// </summary>
+        ///// <param name="allAlgorithmsResult"></param>
+        ///// <returns></returns>
+        //protected abstract object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult);
     }
 }

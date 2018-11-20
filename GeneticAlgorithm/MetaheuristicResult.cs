@@ -10,14 +10,14 @@ namespace GeneticAlgorithm
     /// <typeparam name="T">fitness datatype e.g. double</typeparam>
     public class MetaheuristicResult
     {
-        private class FitnessResult
+        public class FitnessResult
         {
             public List<double> ListBest { get; set; } = new List<double>();
             public List<double> ListAverage { get; set; } = new List<double>();
             public List<double> ListWorst { get; set; } = new List<double>();
         }
 
-        private class MetaheuristicIndicators
+        public class MetaheuristicIndicators
         {
             /// <summary>
             /// Effectiveness (pl. Efektywność ) - best global fitness
@@ -70,8 +70,11 @@ namespace GeneticAlgorithm
             }
         }
 
-        private readonly FitnessResult _fitnessResult = new FitnessResult();
-        private readonly MetaheuristicIndicators _metaheuristicIndicators = new MetaheuristicIndicators();
+        //TODO : _fitnessResult should be private ?
+        public readonly FitnessResult _fitnessResult = new FitnessResult();
+
+        //TODO : _metaheuristicIndicators should be private ?
+        public readonly MetaheuristicIndicators _metaheuristicIndicators = new MetaheuristicIndicators();
 
         /// <summary>
         /// Saves Best fitness for current generation

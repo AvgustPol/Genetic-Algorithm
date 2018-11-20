@@ -2,10 +2,13 @@
 {
     public class GeneticAlgorithm : Metaheuristic
     {
+        public static GeneticAlgorithmParameters GeneticAlgorithmParameters;
+
         public Population Population { get; set; }
 
         public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
         {
+            GeneticAlgorithmParameters = (GeneticAlgorithmParameters)algorithmParameters;
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             CreatePopulation();
@@ -54,27 +57,27 @@
             Population.SelectAndCross();
         }
 
-        protected override object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult)
-        {
-            MetaheuristicResult<double> allMetaheuristicsAverage = new MetaheuristicResult<double>();
+        //protected override object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult)
+        //{
+        //    MetaheuristicResult allMetaheuristicsAverage = new MetaheuristicResult();
 
-            #region Get GA MetaheuristicResult
+        //    #region Get GA MetaheuristicResult
 
-            double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
-            double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
-            double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
+        //    double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
+        //    double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
+        //    double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
 
-            #endregion Get GA MetaheuristicResult
+        //    #endregion Get GA MetaheuristicResult
 
-            #region Save GA
+        //    #region Save GA
 
-            allMetaheuristicsAverage.SaveData(averageBestFitnessGA);
-            allMetaheuristicsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
-            allMetaheuristicsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
+        //    allMetaheuristicsAverage.SaveData(averageBestFitnessGA);
+        //    allMetaheuristicsAverage.SaveAverageFitnessForGA(averageAverageFitnessGA);
+        //    allMetaheuristicsAverage.SaveWorstFitnessForGA(averageWorstFitnessGA);
 
-            #endregion Save GA
+        //    #endregion Save GA
 
-            return allMetaheuristicsAverage;
-        }
+        //    return allMetaheuristicsAverage;
+        //}
     }
 }
