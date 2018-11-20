@@ -2,6 +2,10 @@
 {
     public class GeneticAlgorithm : Metaheuristic
     {
+        public class AlgorithmRunParam
+        {
+        }
+
         public Population Population { get; set; }
 
         public GeneticAlgorithm()
@@ -15,7 +19,7 @@
             CreatePopulation();
             CountFitness();
 
-            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
+            for (_generation = 0; _algoritmStopCondition; _generation++)
             {
                 SelectAndCross();
                 Mutate();
