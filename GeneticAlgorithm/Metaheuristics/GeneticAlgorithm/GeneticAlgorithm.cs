@@ -25,7 +25,7 @@
             return metaheuristicResult;
         }
 
-        private void SaveFitnessData(MetaheuristicResult metaheuristicResult)
+        public void SaveFitnessData(MetaheuristicResult metaheuristicResult)
         {
             metaheuristicResult.SaveBestFitnessForCurrentGeneration(Population.GetBestFitness());
             metaheuristicResult.SaveAverageFitnessForCurrentGeneration(Population.GetAverageFitness());
@@ -63,9 +63,9 @@
 
         //    #region Get GA MetaheuristicResult
 
-        //    double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitnessListGA);
-        //    double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitnessListGA);
-        //    double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitnessListGA);
+        //    double averageBestFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.BestFitness);
+        //    double averageAverageFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.AverageFitness);
+        //    double averageWorstFitnessGA = AverageCounter.CountAverageFitnessFor(dataList, _generationsCounter, GlobalParameters.WorstFitness);
 
         //    #endregion Get GA MetaheuristicResult
 

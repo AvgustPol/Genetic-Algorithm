@@ -1,59 +1,47 @@
-﻿namespace GeneticAlgorithmLogic
+﻿using DataModel;
+using System.Collections.Generic;
+
+namespace GeneticAlgorithmLogic
 {
     internal class AverageCounter
     {
         private const double _somethingWentWrongCode = -42.0;
 
-        //        /// <summary>
-        //        /// высчитывает среднее среди всех сохраненных финальных популяций
-        //        /// для генерации номер generationNumber
-        //        /// количество финальных популяций равно GlobalParameters.NumberOfRuns
-        //        /// </summary>
-        //        /// <param name="list">All </param>
-        //        /// <param name="generationNumber"></param>
-        //        /// <param name="algorithmAndValueParameter"></param>
-        //        /// <returns></returns>
-        //        public static double CountAverageFitnessFor(List<MetaheuristicResult> list, int generationNumber, string algorithmAndValueParameter)
-        //        {
-        //            double sum = 0;
-        //            int counter = 0;
+        /// <summary>
+        /// высчитывает среднее среди всех сохраненных финальных популяций
+        /// для генерации номер generationNumber
+        /// количество финальных популяций равно GlobalParameters.NumberOfRuns
+        /// </summary>
+        public static double CountAverageFitnessFor(List<MetaheuristicResult> allLoopsData, int generationNumber,
+            string algorithmAndValueParameter)
+        {
+            double sum = 0;
+            int counter = 0;
 
-        //            foreach (var item in list)
-        //            {
-        //                TODO
-        //                //sum += item;
+            foreach (var item in allLoopsData)
+            {
+                switch (algorithmAndValueParameter)
+                {
+                    case GlobalParameters.BestFitness:
+                        sum += item._fitnessResult.ListBest[generationNumber];
+                        break;
 
-        //                //switch (algorithmAndValueParameter)
-        //                //{
-        //                //    case GlobalParameters.BestFitnessListGA:
-        //                //        sum += item.ListBest[generationNumber];
-        //                //        break;
+                    case GlobalParameters.AverageFitness:
+                        sum += item._fitnessResult.ListAverage[generationNumber];
+                        break;
 
-        //                //    case GlobalParameters.WorstFitnessListGA:
-        //                //        sum += item.ListAvg[generationNumber];
-        //                //        break;
+                    case GlobalParameters.WorstFitness:
+                        sum += item._fitnessResult.ListWorst[generationNumber];
+                        break;
 
-        //                //    case GlobalParameters.AverageFitnessListGA:
-        //                //        sum += item.ListOther[generationNumber];
-        //                //        break;
+                    default:
+                        return _somethingWentWrongCode;
+                }
 
-        //                //    case GlobalParameters.BestFitnessListTS:
-        //                //        sum += item.BestFitnessListTS[generationNumber];
-        //                //        break;
+                counter++;
+            }
 
-        //                //    case GlobalParameters.BestFitnessListSA:
-        //                //        sum += item.BestFitnessListSA[generationNumber];
-        //                //        break;
-
-        //                //    default:
-        //                //        return _somethingWentWrongCode;
-        //                }
-
-        //            counter++;
-        //        }
-
-        //            return counter > 0 ? sum / counter : 0;
-        //        }
-        //}
+            return counter > 0 ? sum / counter : 0;
+        }
     }
 }
