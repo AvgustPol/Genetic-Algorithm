@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithmLogic
 {
     public class Randomizer
     {

@@ -1,12 +1,11 @@
-﻿using DataModel;
-using GeneticAlgorithm.Metaheuristics;
-using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
-using System;
+﻿using System;
 using System.Globalization;
 using System.IO;
-using static GeneticAlgorithm.Metaheuristics.MetaheuristicParameters;
+using DataModel;
+using GeneticAlgorithmLogic.Metaheuristics;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithmLogic
 {
     public class ToFileLogger
     {
@@ -26,7 +25,7 @@ namespace GeneticAlgorithm
 
         private string Path => _folderPath + _fileName;
 
-        public void LogMetaheuristicToFile(MetaheuristicType metaheuristicType, MetaheuristicParameters metaheuristicParameters, MetaheuristicResult metaheuristicResult)
+        public void LogMetaheuristicToFile(MetaheuristicParameters.MetaheuristicType metaheuristicType, MetaheuristicParameters metaheuristicParameters, MetaheuristicResult metaheuristicResult)
         {
             AddGlobalParameters();
             LogMetaheuristicParameters(metaheuristicParameters);

@@ -1,15 +1,13 @@
-﻿using static GeneticAlgorithm.Metaheuristics.MetaheuristicParameters;
-
-namespace GeneticAlgorithm.Metaheuristics
+﻿namespace GeneticAlgorithmLogic.Metaheuristics
 {
     public class MetaheuristicFactory
     {
-        public static Metaheuristic CreateMetaheuristic(MetaheuristicType type)
+        public static Metaheuristic CreateMetaheuristic(MetaheuristicParameters.MetaheuristicType type)
         {
             Metaheuristic metaheuristic = null;
             switch (type)
             {
-                case MetaheuristicType.GA:
+                case MetaheuristicParameters.MetaheuristicType.GA:
                     metaheuristic = new GeneticAlgorithm.GeneticAlgorithm();
                     break;
 

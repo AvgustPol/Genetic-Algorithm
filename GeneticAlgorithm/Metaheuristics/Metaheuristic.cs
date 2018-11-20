@@ -1,6 +1,6 @@
 ﻿using DataModel;
 
-namespace GeneticAlgorithm.Metaheuristics
+namespace GeneticAlgorithmLogic.Metaheuristics
 {
     public abstract class Metaheuristic
     {

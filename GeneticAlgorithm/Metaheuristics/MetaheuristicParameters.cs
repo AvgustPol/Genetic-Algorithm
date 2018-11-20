@@ -1,4 +1,4 @@
-﻿namespace GeneticAlgorithm.Metaheuristics
+﻿namespace GeneticAlgorithmLogic.Metaheuristics
 {
     public class MetaheuristicParameters
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithmLogic
 {
     /// <summary>
     /// Результат работы алгоритма (метахеуристики)

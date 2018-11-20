@@ -1,4 +1,4 @@
-﻿namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
+﻿namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithm : Metaheuristic
     {

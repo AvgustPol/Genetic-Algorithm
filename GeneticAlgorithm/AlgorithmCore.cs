@@ -1,17 +1,16 @@
 using DataModel;
-using GeneticAlgorithm.Metaheuristics;
-using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using System.Collections.Generic;
-using static GeneticAlgorithm.Metaheuristics.MetaheuristicParameters;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithmLogic
 {
     public class AlgorithmCore
     {
         public Metaheuristic Metaheuristic { get; set; }
-        public MetaheuristicType MetaheuristicType { get; set; }
+        public MetaheuristicParameters.MetaheuristicType MetaheuristicType { get; set; }
 
-        public AlgorithmCore(MetaheuristicType metaheuristicType)
+        public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType)
         {
             MetaheuristicType = metaheuristicType;
             Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);

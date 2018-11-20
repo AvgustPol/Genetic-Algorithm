@@ -1,4 +1,4 @@
-﻿namespace GeneticAlgorithm
+﻿namespace GeneticAlgorithmLogic
 {
     internal class AverageCounter
     {

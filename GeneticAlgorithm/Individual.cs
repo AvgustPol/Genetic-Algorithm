@@ -1,9 +1,9 @@
 ﻿using DataModel;
-using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using System;
 using System.Collections.Generic;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithmLogic
 {
     public class Individual : ICloneable
     {
@@ -291,7 +291,7 @@ namespace GeneticAlgorithm
         public void Mutate()
         {
             int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
-            if (GeneticAlgorithmParameters.MutationProbability > randomNumber)
+            if (GeneticAlgorithm.GeneticAlgorithmParameters.MutationProbability > randomNumber)
             {
                 int randomIndex1 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
                 int randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using GeneticAlgorithm.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 
-namespace GeneticAlgorithm
+namespace GeneticAlgorithmLogic
 {
     public class Permutator
     {

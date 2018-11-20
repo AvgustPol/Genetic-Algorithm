@@ -2,7 +2,7 @@
 using Loader;
 using System.Collections.Generic;
 
-namespace GeneticAlgorithm.Metaheuristics.GeneticAlgorithm
+namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithmParameters : MetaheuristicParameters
     {

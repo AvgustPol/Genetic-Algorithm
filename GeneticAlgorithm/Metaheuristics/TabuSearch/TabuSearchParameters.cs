@@ -1,4 +1,4 @@
-﻿namespace GeneticAlgorithm.Metaheuristics.TabuSearch
+﻿namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
     public class TabuSearchParameters : MetaheuristicParameters
     {

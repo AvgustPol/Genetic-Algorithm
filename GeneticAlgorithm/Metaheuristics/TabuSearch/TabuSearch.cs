@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GeneticAlgorithm.Metaheuristics.TabuSearch
+namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
     public class TabuSearch
     {

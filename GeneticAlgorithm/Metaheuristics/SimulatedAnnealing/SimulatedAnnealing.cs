@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GeneticAlgorithm.Metaheuristics.SimulatedAnnealing
+namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 {
     public class SimulatedAnnealing
     {
