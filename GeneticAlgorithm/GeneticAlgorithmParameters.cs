@@ -53,7 +53,7 @@ namespace GeneticAlgorithm
         /// </summary>
         public static readonly int MutationProbability = 5;
 
-        public static readonly int NumberOfTournamentParticipants = 5;
+        public static readonly int NumberOfTournamentParticipants = 3;
 
         public static readonly int MaxProbability = 100;
 
@@ -63,7 +63,7 @@ namespace GeneticAlgorithm
         /// <summary>
         /// Number of population individuals
         /// </summary>
-        public static int PopulationSize = 200;
+        public static int PopulationSize = 50;
 
         public static Item GetItem(int itemId)
         {

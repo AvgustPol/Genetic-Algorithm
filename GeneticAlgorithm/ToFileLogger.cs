@@ -28,7 +28,7 @@ namespace GeneticAlgorithm
                 new[] {
                     $"Problem {GlobalParameters.FileName}" ,
                     $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}" ,
-                    $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.ExploringAlgorithmStopCondition}," ,
+                    $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.NumberOfRuns}," ,
 
                     "Tabu Search" ,
                     $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,

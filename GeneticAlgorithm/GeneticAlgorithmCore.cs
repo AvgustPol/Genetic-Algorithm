@@ -7,7 +7,7 @@ namespace GeneticAlgorithm
     {
         public Population Population { get; set; }
         private bool _algoritmStopCondition => _generationsCounter < GlobalParameters.AlgorithmStopCondition;
-        private bool _exploringStopCondition => _generationsCounter < GlobalParameters.ExploringAlgorithmStopCondition;
+        private bool _exploringStopCondition => _generationsCounter < GlobalParameters.NumberOfRuns;
         private int _generationsCounter { get; set; }
 
         public void RunAllAlgorithms()
