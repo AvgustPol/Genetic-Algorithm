@@ -2,7 +2,7 @@
 {
     public class TabuSearchParameters : MetaheuristicParameters
     {
-        public static int TabuListSize = 1000;
-        public static int NumberOfNeighbors = 25;
+        public int TabuListSize;
+        public int NumberOfNeighbors;
     }
 }

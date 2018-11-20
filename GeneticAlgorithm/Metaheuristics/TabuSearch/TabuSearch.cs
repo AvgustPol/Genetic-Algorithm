@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
-    public class TabuSearch
+    public class TabuSearch : Metaheuristic
     {
+        public static TabuSearchParameters TabuSearchParameters;
         public Queue<int[]> TabuList { get; set; }
-
-        public TabuSearch()
-        {
-            TabuList = new Queue<int[]>(TabuSearchParameters.TabuListSize);
-        }
 
         public void AddToTabuList(int[] array)
         {
@@ -29,54 +26,55 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             return TabuList.Contains(array);
         }
 
-        ///// <summary>
-        ///// Run Tabu Search
-        ///// </summary>
-        ///// <returns></returns>
-        //private MetaheuristicResult RunTS()
-        //{
-        //    MetaheuristicResult<double> metaheuristicResult = new MetaheuristicResult<double>();
-        //    List<int[]> neighbors;
-        //    TabuSearch tabuSearch = new TabuSearch();
+        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
+        {
+            TabuSearchParameters = (TabuSearchParameters)algorithmParameters;
+            TabuList = new Queue<int[]>(TabuSearchParameters.TabuListSize);
 
-        //    Individual best = new Individual(Population.CreateRandomIndividual());
-        //    Individual current = best;
+            MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
+            List<int[]> neighbors;
 
-        //    //best fount
-        //    //current -> best Neighbor
+            Individual best = new Individual(Population.CreateRandomIndividual());
+            Individual current = best;
 
-        //    double bestNeighborFitness = best.Fitness;
-        //    double bestAlgorithmFitness = best.Fitness;
+            //best fount
+            //current -> best Neighbor
 
-        //    tabuSearch.AddToTabuList(current.Places);
+            double bestNeighborFitness = best.Fitness;
+            double bestAlgorithmFitness = best.Fitness;
 
-        //    for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
-        //    {
-        //        neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+            AddToTabuList(current.Places);
 
-        //        foreach (var candidate in neighbors)
-        //        {
-        //            if (!tabuSearch.IsContains(candidate))
-        //            {
-        //                Individual tmpCandidate = new Individual(candidate);
-        //                if (tmpCandidate.Fitness > current.Fitness)
-        //                    current = tmpCandidate;
-        //            }
-        //        }
-        //        bestNeighborFitness = current.Fitness;
+            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
+            {
+                neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
 
-        //        if (bestNeighborFitness > bestAlgorithmFitness)
-        //        {
-        //            bestAlgorithmFitness = bestNeighborFitness;
-        //        }
+                foreach (var candidate in neighbors)
+                {
+                    if (!IsContains(candidate))
+                    {
+                        Individual tmpCandidate = new Individual(candidate);
+                        if (tmpCandidate.Fitness > current.Fitness)
+                            current = tmpCandidate;
+                    }
+                }
+                bestNeighborFitness = current.Fitness;
 
-        //        tabuSearch.AddToTabuList(current.Places);
+                if (bestNeighborFitness > bestAlgorithmFitness)
+                {
+                    bestAlgorithmFitness = bestNeighborFitness;
+                }
 
-        //        metaheuristicResult.SaveBestNeighborFitnessForTS(bestNeighborFitness);
-        //        metaheuristicResult.SaveBestFitnessForTS(bestAlgorithmFitness);
-        //    }
+                AddToTabuList(current.Places);
 
-        //    return metaheuristicResult;
-        //}
+                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestAlgorithmFitness);
+                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(bestNeighborFitness);
+
+                //TODO delete 42 and change to TS list XD
+                metaheuristicResult.SaveWorstFitnessForCurrentGeneration(42);
+            }
+
+            return metaheuristicResult;
+        }
     }
 }

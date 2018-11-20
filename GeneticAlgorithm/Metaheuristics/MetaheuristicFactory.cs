@@ -15,9 +15,9 @@
                 //    metaheuristic = new SimulatedAnnealing();
                 //    break;
 
-                //case MetaheuristicType.TS:
-                //    algorithmResult = RunTS();
-                //    break;
+                case MetaheuristicParameters.MetaheuristicType.TS:
+                    metaheuristic = new TabuSearch.TabuSearch();
+                    break;
 
                 default:
                     break;

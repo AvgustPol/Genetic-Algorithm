@@ -1,6 +1,7 @@
 using DataModel;
 using GeneticAlgorithmLogic.Metaheuristics;
 using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics.TabuSearch;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithmLogic
@@ -18,7 +19,7 @@ namespace GeneticAlgorithmLogic
 
         public void Run()
         {
-            MetaheuristicParameters parameters = new GeneticAlgorithmParameters()
+            MetaheuristicParameters parametersGa = new GeneticAlgorithmParameters()
             {
                 MutationProbability = 5,
                 CrossProbability = 60,
@@ -26,7 +27,13 @@ namespace GeneticAlgorithmLogic
                 PopulationSize = 100
             };
 
-            RunAlgorithm(parameters);
+            MetaheuristicParameters parametersTs = new TabuSearchParameters()
+            {
+                TabuListSize = 100,
+                NumberOfNeighbors = 25
+            };
+
+            RunAlgorithm(parametersTs);
         }
 
         public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)

@@ -1,9 +1,13 @@
-﻿using System;
+﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using System;
+using System.Collections.Generic;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 {
-    public class SimulatedAnnealing
+    public class SimulatedAnnealing : Metaheuristic
     {
+        public static SimulatedAnnealingParameters SimulatedAnnealingParameters;
+
         public static int LowTemperatureCounter { get; set; }
 
         public static void TryAvoidLocalOptimum(ref Individual best, ref Individual tmpCandidate, double temperature)
@@ -38,56 +42,52 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             //}
         }
 
-        ///// <summary>
-        ///// Run Simulated Annealing
-        ///// </summary>
-        ///// <returns></returns>
-        //private MetaheuristicResult RunSA()
-        //{
-        //    _generationsCounter = 0;
+        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
+        {
+            _generationsCounter = 0;
 
-        //    MetaheuristicResult<double> metaheuristicResult = new MetaheuristicResult<double>();
+            MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
-        //    double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
-        //    Individual best = new Individual(Population.CreateRandomIndividual());
+            double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
+            Individual best = new Individual(Population.CreateRandomIndividual());
 
-        //    List<int[]> neighbors;
+            List<int[]> neighbors;
 
-        //    double bestAlgorithmFitness = best.Fitness;
-        //    double bestNeighborFitness = best.Fitness;
+            double bestAlgorithmFitness = best.Fitness;
+            double bestNeighborFitness = best.Fitness;
 
-        //    do
-        //    {
-        //        neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
+            do
+            {
+                neighbors = NeighborsGenerator.GetNeighbors(best, TabuSearchParameters.NumberOfNeighbors);
 
-        //        foreach (var neighborsRoad in neighbors)
-        //        {
-        //            Individual neighbor = new Individual(neighborsRoad);
-        //            if (neighbor.Fitness > best.Fitness)
-        //            {
-        //                best = neighbor;
-        //                bestNeighborFitness = neighbor.Fitness;
-        //            }
-        //            else
-        //                //тут понижаем лушего!
-        //                SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
-        //        }
+                foreach (var neighborsRoad in neighbors)
+                {
+                    Individual neighbor = new Individual(neighborsRoad);
+                    if (neighbor.Fitness > best.Fitness)
+                    {
+                        best = neighbor;
+                        bestNeighborFitness = neighbor.Fitness;
+                    }
+                    else
+                        //тут понижаем лушего!
+                        SimulatedAnnealing.TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
+                }
 
-        //        if (bestNeighborFitness > bestAlgorithmFitness)
-        //        {
-        //            bestAlgorithmFitness = bestNeighborFitness;
-        //        }
+                if (bestNeighborFitness > bestAlgorithmFitness)
+                {
+                    bestAlgorithmFitness = bestNeighborFitness;
+                }
 
-        //        metaheuristicResult.SaveBestNeighborFitnessForSA(bestNeighborFitness);
-        //        metaheuristicResult.SaveBestFitnessForSA(bestAlgorithmFitness);
-        //        metaheuristicResult.SaveTemperatureForSA(currentTemperature);
+                metaheuristicResult.SaveBestNeighborFitnessForSA(bestNeighborFitness);
+                metaheuristicResult.SaveBestFitnessForSA(bestAlgorithmFitness);
+                metaheuristicResult.SaveTemperatureForSA(currentTemperature);
 
-        //        SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
-        //        //if (currentTemperature < 0.5)
-        //        //    break;
-        //    } while (_algoritmStopCondition);
+                SimulatedAnnealing.DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
+                //if (currentTemperature < 0.5)
+                //    break;
+            } while (_algoritmStopCondition);
 
-        //    return metaheuristicResult;
-        //}
+            return metaheuristicResult;
+        }
     }
 }
