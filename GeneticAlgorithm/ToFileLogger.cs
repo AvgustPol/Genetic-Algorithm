@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DataModel;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using System;
 using System.Globalization;
 using System.IO;
-using DataModel;
-using GeneticAlgorithmLogic.Metaheuristics;
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 
 namespace GeneticAlgorithmLogic
 {

@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using Loader;
 using System.Collections.Generic;
 
@@ -6,6 +7,22 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithmParameters : MetaheuristicParameters
     {
+        public enum GeneticAlgorithmParametersType
+        {
+            PopulationSize,
+            NumberOfTournamentParticipants,
+            MutationProbability,
+            CrossProbability
+        }
+
+        public static GeneticAlgorithmParameters GetNeighbor(GeneticAlgorithmParametersType type)
+        {
+            switch (type)
+            {
+            }
+            return null;
+        }
+
         /// <summary>
         /// The mutations probability of an individual gene  (e. g. 1% )
         /// Example :
@@ -19,14 +36,20 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         /// </summary>
         public int MutationProbability;
 
-        public static readonly int MaxProbability = 100;
+        public const int MinProbability = 1;
+        public const int MaxProbability = 100;
 
         public int NumberOfTournamentParticipants;
+        public const int MinNumberOfTournamentParticipants = 2;
+        public static readonly int MaxNumberOfTournamentParticipants = Dimension;
 
         /// <summary>
         /// Number of population individuals
         /// </summary>
         public int PopulationSize;
+
+        public const int MinPopulationSize = 2;
+        public const int MaxPopulationSize = 10000;
 
         /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )

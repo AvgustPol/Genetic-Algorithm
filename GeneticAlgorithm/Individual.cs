@@ -288,8 +288,9 @@ namespace GeneticAlgorithmLogic
             return sum;
         }
 
-        public void Mutate()
+        public bool Mutate()
         {
+            bool didMutate = false;
             int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
             if (GeneticAlgorithm.GeneticAlgorithmParameters.MutationProbability > randomNumber)
             {
@@ -301,7 +302,11 @@ namespace GeneticAlgorithmLogic
                 }
                 //MUTATE
                 Permutator.Swap(Places, randomIndex1, randomIndex2);
+                CountFitness();
+                didMutate = true;
             }
+
+            return didMutate;
         }
 
         public int[] GetMutation()

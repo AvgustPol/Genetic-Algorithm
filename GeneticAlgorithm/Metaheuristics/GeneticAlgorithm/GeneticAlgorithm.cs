@@ -1,4 +1,6 @@
-﻿namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
+﻿using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+
+namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithm : Metaheuristic
     {
@@ -12,17 +14,24 @@
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             CreatePopulation();
-            CountFitness();
+
+            SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
-                SelectAndCross();
-                Mutate();
+                SaveEffectiveness(metaheuristicResult, SelectAndCross());
+                SaveEffectiveness(metaheuristicResult, Mutate());
                 CountFitness();
+                SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
                 SaveFitnessData(metaheuristicResult);
             }
 
             return metaheuristicResult;
+        }
+
+        private static void SaveEffectiveness(MetaheuristicResult metaheuristicResult, int fitnessCounts)
+        {
+            metaheuristicResult._metaheuristicIndicators.Effectiveness = +fitnessCounts;
         }
 
         public void SaveFitnessData(MetaheuristicResult metaheuristicResult)
@@ -47,14 +56,14 @@
             Population.CountFitnessForTheEntirePopulation();
         }
 
-        private void Mutate()
+        private int Mutate()
         {
-            Population.Mutate();
+            return Population.Mutate();
         }
 
-        private void SelectAndCross()
+        private int SelectAndCross()
         {
-            Population.SelectAndCross();
+            return Population.SelectAndCross();
         }
 
         //protected override object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult)

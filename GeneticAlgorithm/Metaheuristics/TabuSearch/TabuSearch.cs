@@ -1,4 +1,5 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch

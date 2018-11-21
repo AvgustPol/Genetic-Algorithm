@@ -1,4 +1,5 @@
 ﻿using DataModel;
+using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 
 namespace GeneticAlgorithmLogic.Metaheuristics
 {

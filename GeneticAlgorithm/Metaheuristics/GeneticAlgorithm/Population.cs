@@ -76,16 +76,22 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
             return biggestFitness;
         }
 
-        public void Mutate()
+        public int Mutate()
         {
+            int mutationCounter = 0;
             for (int i = 0; i < PopulationSize; i++)
             {
-                Individuals[i].Mutate();
+                if (Individuals[i].Mutate())
+                {
+                    mutationCounter++;
+                }
             }
+            return mutationCounter;
         }
 
-        public void SelectAndCross()
+        public int SelectAndCross()
         {
+            int counter = 0;
             Dictionary<int, Individual> nextPopulation = new Dictionary<int, Individual>();
 
             while (nextPopulation.Count != PopulationSize)
@@ -98,6 +104,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 
                     Individual child = Cross(parent1, parent2);
                     nextPopulation.Add(nextPopulation.Count, child);
+                    counter++;
                 }
                 else
                 {
@@ -107,6 +114,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
                 }
             }
             Individuals = nextPopulation;
+            return counter;
         }
 
         private void CreateNewRandomPopulation()

@@ -1,8 +1,6 @@
 using DataModel;
 using GeneticAlgorithmLogic.Metaheuristics;
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
-using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
-using GeneticAlgorithmLogic.Metaheuristics.TabuSearch;
+using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using System.Collections.Generic;
 
 namespace GeneticAlgorithmLogic
@@ -20,40 +18,7 @@ namespace GeneticAlgorithmLogic
 
         public void Run()
         {
-            MetaheuristicParameters parameters;
-
-            switch (MetaheuristicType)
-            {
-                case MetaheuristicParameters.MetaheuristicType.GA:
-                    parameters = new GeneticAlgorithmParameters()
-                    {
-                        MutationProbability = 5,
-                        CrossProbability = 60,
-                        NumberOfTournamentParticipants = 5,
-                        PopulationSize = 100
-                    };
-                    break;
-
-                case MetaheuristicParameters.MetaheuristicType.SA:
-                    parameters = new SimulatedAnnealingParameters()
-                    {
-                        InitializeTemperature = 100000,
-                        NumberOfNeighbors = 20
-                    };
-                    break;
-
-                case MetaheuristicParameters.MetaheuristicType.TS:
-                    parameters = new TabuSearchParameters()
-                    {
-                        TabuListSize = 100,
-                        NumberOfNeighbors = 25
-                    };
-                    break;
-
-                default:
-                    parameters = null;
-                    break;
-            }
+            MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
 
             RunAlgorithm(parameters);
         }
