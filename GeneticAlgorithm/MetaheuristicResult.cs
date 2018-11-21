@@ -38,7 +38,7 @@ namespace GeneticAlgorithmLogic
             ///
             /// Лучшее найденное решение за все время работы алгоритма
             /// </summary>
-            public int Efficiency { get; set; }
+            public double Efficiency { get; set; }
 
             /// <summary>
             /// Процесс сохранения ефективности:

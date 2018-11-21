@@ -1,4 +1,5 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using System.Linq;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
@@ -23,10 +24,17 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
                 SaveEffectiveness(metaheuristicResult, Mutate());
                 CountFitness();
                 SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
+                SaveEfficiency(metaheuristicResult, metaheuristicResult._fitnessResult.ListBest.Last());
+
                 SaveFitnessData(metaheuristicResult);
             }
 
             return metaheuristicResult;
+        }
+
+        private void SaveEfficiency(MetaheuristicResult metaheuristicResult, double fitness)
+        {
+            metaheuristicResult._metaheuristicIndicators.Efficiency = fitness;
         }
 
         private static void SaveEffectiveness(MetaheuristicResult metaheuristicResult, int fitnessCounts)

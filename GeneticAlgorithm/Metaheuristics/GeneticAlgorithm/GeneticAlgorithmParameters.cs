@@ -19,6 +19,25 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         {
             switch (type)
             {
+                case GeneticAlgorithmParametersType.MutationProbability:
+
+                    break;
+
+                case GeneticAlgorithmParametersType.CrossProbability:
+
+                    break;
+
+                case GeneticAlgorithmParametersType.NumberOfTournamentParticipants:
+
+                    break;
+
+                case GeneticAlgorithmParametersType.PopulationSize:
+
+                    break;
+
+                default:
+
+                    break;
             }
             return null;
         }
