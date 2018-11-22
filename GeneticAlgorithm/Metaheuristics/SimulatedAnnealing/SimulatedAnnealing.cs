@@ -83,7 +83,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
                 metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestNeighborFitness);
                 metaheuristicResult.SaveAverageFitnessForCurrentGeneration(bestAlgorithmFitness);
 
-                //TODO - change to separate method .
+                //TODO - change to separate method
+                // because method "SaveWorstFitnessForCurrentGeneration" must save WorstFitness, not currentTemperature
                 metaheuristicResult.SaveWorstFitnessForCurrentGeneration(currentTemperature);
 
                 DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
