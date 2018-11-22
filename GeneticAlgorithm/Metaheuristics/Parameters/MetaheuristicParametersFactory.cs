@@ -37,8 +37,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.Parameters
             return new GeneticAlgorithmParameters()
             {
                 MutationProbability = 15,
-                CrossProbability = 60,
-                NumberOfTournamentParticipants = 5,
+                CrossProbability = 70,
+                NumberOfTournamentParticipants = 10,
                 PopulationSize = 100
             };
         }

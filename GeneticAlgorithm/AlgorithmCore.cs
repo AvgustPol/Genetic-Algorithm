@@ -1,7 +1,10 @@
 using DataModel;
 using GeneticAlgorithmLogic.Metaheuristics;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using StatisticsCounter;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticAlgorithmLogic
 {
@@ -34,11 +37,37 @@ namespace GeneticAlgorithmLogic
                 allLoopsData.Add(metaheuristicResult);
             }
 
-            //TODO:
-            //CountStandardDeviation
             MetaheuristicResult allMetaheuristicsAverage = CalculateAverageFintessForAllRunsOfTheAlgorithm(allLoopsData);
 
+            var analizeResult = Analize(allLoopsData, allMetaheuristicsAverage._fitnessResult.ListBest.Last());
+
+            toFileLogger.LogAnalytic(analizeResult);
             toFileLogger.LogMetaheuristicToFile(MetaheuristicType, metaheuristicParameters, allMetaheuristicsAverage);
+        }
+
+        private Tuple<double, double, double> Analize(List<MetaheuristicResult> allLoopsData, double averageBest)
+        {
+            double max, avg, dev;
+
+            double[] bestArray = GetOnlyBest(allLoopsData);
+            max = bestArray.Max();
+            avg = bestArray.Average();
+            dev = StandardDeviationCounter.CountStandardDeviation(averageBest, bestArray);
+
+            return new Tuple<double, double, double>(max, avg, dev);
+        }
+
+        private double[] GetOnlyBest(List<MetaheuristicResult> allLoopsData)
+        {
+            double[] bestFintess = new double[GlobalParameters.NumberOfRuns];
+            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
+            {
+                var metaheuristicResult = allLoopsData[i];
+                double best = metaheuristicResult._fitnessResult.ListBest.Last();
+                bestFintess[i] = best;
+            }
+
+            return bestFintess;
         }
 
         private MetaheuristicResult CalculateAverageFintessForAllRunsOfTheAlgorithm(List<MetaheuristicResult> allLoopsData)

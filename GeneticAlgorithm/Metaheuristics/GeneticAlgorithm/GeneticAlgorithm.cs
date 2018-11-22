@@ -24,9 +24,10 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
                 SaveEffectiveness(metaheuristicResult, Mutate());
                 CountFitness();
                 SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
-                SaveEfficiency(metaheuristicResult, metaheuristicResult._fitnessResult.ListBest.Last());
 
                 SaveFitnessData(metaheuristicResult);
+
+                SaveEfficiency(metaheuristicResult, metaheuristicResult._fitnessResult.ListBest.Last());
             }
 
             return metaheuristicResult;

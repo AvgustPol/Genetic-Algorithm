@@ -12,29 +12,40 @@ namespace GeneticAlgorithmLogic
         private readonly string _fileName;
         private readonly string _folderPath = GlobalParameters.PathToResultFolder;
 
+        private string Path => _folderPath + _fileName;
+        private string AnaliticPath => _folderPath + "Analitic " + _fileName;
+        private string ParametersPath => _folderPath + "Parameters " + _fileName;
+
         public ToFileLogger(string fileName)
         {
             _fileName = fileName;
 
-            //delete old data if exists
-            if (File.Exists(Path))
+            DeleteOldData(Path);
+            DeleteOldData(AnaliticPath);
+            DeleteOldData(ParametersPath);
+        }
+
+        /// <summary>
+        /// delete old data if exists
+        /// </summary>
+        /// <param name="path"></param>
+        private void DeleteOldData(string path)
+        {
+            if (File.Exists(path))
             {
-                File.Delete(Path);
+                File.Delete(path);
             }
         }
 
-        private string Path => _folderPath + _fileName;
-
         public void LogMetaheuristicToFile(MetaheuristicParameters.MetaheuristicType metaheuristicType, MetaheuristicParameters metaheuristicParameters, MetaheuristicResult metaheuristicResult)
         {
-            AddGlobalParameters();
-            LogMetaheuristicParameters(metaheuristicParameters);
+            LogParameters(metaheuristicParameters);
             LogData(metaheuristicResult);
         }
 
-        private void AddGlobalParameters()
+        private void LogGlobalParameters()
         {
-            File.AppendAllLines(Path,
+            File.AppendAllLines(ParametersPath,
                 new[]
                 {
                     $"Problem {GlobalParameters.FileName}",
@@ -63,11 +74,33 @@ namespace GeneticAlgorithmLogic
             }
         }
 
-        private void LogMetaheuristicParameters(MetaheuristicParameters metaheuristicParameters)
+        internal void LogAnalytic(Tuple<double, double, double> analizeResult)
         {
+            if (analizeResult != null)
+            {
+                File.AppendAllLines(AnaliticPath,
+                new[] {
+                    $"Max" + "," +
+                    $"Avg" + "," +
+                    $"Dev"
+                });
+
+                File.AppendAllLines(AnaliticPath,
+                new[] {
+                    $"{analizeResult.Item1}" + "," +
+                    $"{analizeResult.Item2}" + "," +
+                    $"{analizeResult.Item3}"
+                });
+            }
+        }
+
+        private void LogParameters(MetaheuristicParameters metaheuristicParameters)
+        {
+            LogGlobalParameters();
+
             if (metaheuristicParameters is GeneticAlgorithmParameters parameters)
             {
-                File.AppendAllLines(Path,
+                File.AppendAllLines(ParametersPath,
                     new[]
                     {
                         $"Genetic Algorithm " ,
@@ -80,7 +113,7 @@ namespace GeneticAlgorithmLogic
 
             //if (metaheuristicParameters is SimulatedAnnealingParameters simulatedAnnealingParameters)
             //{
-            //    File.AppendAllLines(Path,
+            //    File.AppendAllLines(ParametersPath,
             //        new[]
             //        {
             //            "Simulated Annealing" ,
@@ -91,7 +124,7 @@ namespace GeneticAlgorithmLogic
 
             //if (metaheuristicParameters is TabuSearchParameters tabuSearchParameters)
             //{
-            //    //File.AppendAllLines(Path,
+            //    //File.AppendAllLines(ParametersPath,
             //    //    new[]
             //    //    {
             //    //        $"Tabu Search" ,
