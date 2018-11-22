@@ -20,7 +20,7 @@ namespace GeneticAlgorithmLogic
         public class MetaheuristicIndicators
         {
             /// <summary>
-            /// Effectiveness (pl. Efektywnosc ) - best global fitness
+            /// Effectiveness (pl. Efektywnosc ) - number of scanned points
             ///
             /// Ефективность можно мерять разными способами (например время работы) .
             /// Чтобы не привязывать себя к возможностям машины (компьюрета)
@@ -34,7 +34,7 @@ namespace GeneticAlgorithmLogic
             public int Effectiveness { get; set; }
 
             /// <summary>
-            /// Efficiency (pl. Skutecznosc ) - number of scanned points
+            /// Efficiency (pl. Skutecznosc ) - best global fitness
             ///
             /// Лучшее найденное решение за все время работы алгоритма
             /// </summary>
@@ -45,7 +45,7 @@ namespace GeneticAlgorithmLogic
             /// Суммируем количество изученых точек в данной генерации
             /// с суммарным количеством для всего алгоритма
             /// </summary>
-            /// <param name="genetarionEfficiency"></param>
+            /// <param name="genetarionEffectiveness"></param>
             public void SaveEffectiveness(int genetarionEffectiveness)
             {
                 Effectiveness += genetarionEffectiveness;
@@ -53,17 +53,18 @@ namespace GeneticAlgorithmLogic
 
             /// <summary>
             /// if new global fitness is better than old one
+            /// save new one 
             /// </summary>
             /// <param name="newEffectiveness"></param>
-            public void TrySaveEfficiency(int newEffectiveness)
+            public void TrySaveEfficiency(double newEffectiveness)
             {
                 if (IsBetter(Efficiency, newEffectiveness))
                 {
-                    Effectiveness = newEffectiveness;
+                    Efficiency = newEffectiveness;
                 }
             }
 
-            private bool IsBetter(int oldEffectiveness, int newEffectiveness)
+            private bool IsBetter(double oldEffectiveness, double newEffectiveness)
             {
                 //For current implementation best fintess = greatest
                 return oldEffectiveness < newEffectiveness;
