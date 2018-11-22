@@ -28,7 +28,7 @@ namespace GeneticAlgorithmLogic
 
         public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result.csv");
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result");
 
             List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
             for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)

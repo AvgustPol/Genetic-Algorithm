@@ -9,12 +9,15 @@ namespace GeneticAlgorithmLogic
 {
     public class ToFileLogger
     {
+        private const string _csvFileType = ".csv";
+        private const string _txtFileType = ".txt";
+
         private readonly string _fileName;
         private readonly string _folderPath = GlobalParameters.PathToResultFolder;
 
-        private string Path => _folderPath + _fileName;
-        private string AnaliticPath => _folderPath + "Analitic " + _fileName;
-        private string ParametersPath => _folderPath + "Parameters " + _fileName;
+        private string Path => _folderPath + _fileName + _csvFileType;
+        private string AnaliticPath => _folderPath + "Analitic " + _fileName + _csvFileType;
+        private string ParametersPath => _folderPath + "Parameters " + _fileName + _txtFileType;
 
         public ToFileLogger(string fileName)
         {
@@ -103,6 +106,7 @@ namespace GeneticAlgorithmLogic
                 File.AppendAllLines(ParametersPath,
                     new[]
                     {
+                        $"" , // empty line
                         $"Genetic Algorithm " ,
                         $"Ilość osobników w populacji: {parameters.PopulationSize}" ,
                         $"Ilość uczestników  w turnieju: {parameters.NumberOfTournamentParticipants}" ,
