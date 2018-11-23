@@ -1,6 +1,7 @@
 ﻿using DataModel;
 using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
 using System;
 using System.Globalization;
 using System.IO;
@@ -40,7 +41,7 @@ namespace GeneticAlgorithmLogic
             }
         }
 
-        public void LogMetaheuristicToFile(MetaheuristicParameters.MetaheuristicType metaheuristicType, MetaheuristicParameters metaheuristicParameters, MetaheuristicResult metaheuristicResult)
+        public void LogMetaheuristicToFile(MetaheuristicParameters metaheuristicParameters, MetaheuristicResult metaheuristicResult)
         {
             LogParameters(metaheuristicParameters);
             LogData(metaheuristicResult);
@@ -101,12 +102,21 @@ namespace GeneticAlgorithmLogic
         {
             LogGlobalParameters();
 
+            #region Add empty line
+
+            File.AppendAllLines(ParametersPath,
+                    new[]
+                    {
+                        "" ,
+                    });
+
+            #endregion Add empty line
+
             if (metaheuristicParameters is GeneticAlgorithmParameters parameters)
             {
                 File.AppendAllLines(ParametersPath,
                     new[]
                     {
-                        $"" , // empty line
                         $"Genetic Algorithm " ,
                         $"Ilość osobników w populacji: {parameters.PopulationSize}" ,
                         $"Ilość uczestników  w turnieju: {parameters.NumberOfTournamentParticipants}" ,
@@ -114,17 +124,16 @@ namespace GeneticAlgorithmLogic
                         $"Mutacja: {parameters.MutationProbability}%" ,
                     });
             }
-
-            //if (metaheuristicParameters is SimulatedAnnealingParameters simulatedAnnealingParameters)
-            //{
-            //    File.AppendAllLines(ParametersPath,
-            //        new[]
-            //        {
-            //            "Simulated Annealing" ,
-            //            $"Początkowa temperatura T {simulatedAnnealingParameters.InitializeTemperature }" ,
-            //            $"Początkowa temperatura T {simulatedAnnealingParameters.NumberOfNeighbors }"
-            //        });
-            //}
+            else if (metaheuristicParameters is SimulatedAnnealingParameters simulatedAnnealingParameters)
+            {
+                File.AppendAllLines(ParametersPath,
+                    new[]
+                    {
+                        "Simulated Annealing" ,
+                        $"Początkowa temperatura T {simulatedAnnealingParameters.InitializeTemperature }" ,
+                        $"Początkowa temperatura T {simulatedAnnealingParameters.NumberOfNeighbors }"
+                    });
+            }
 
             //if (metaheuristicParameters is TabuSearchParameters tabuSearchParameters)
             //{

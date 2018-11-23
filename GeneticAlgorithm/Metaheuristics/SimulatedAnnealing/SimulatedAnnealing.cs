@@ -2,6 +2,7 @@
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 {
@@ -26,7 +27,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
         public static void DecreaseTemperature(ref double temperature, int generationsCounter)
         {
-            temperature *= 0.95;
+            temperature *= 0.995;
 
             //golden ratio
             //temperature *= 0.61803398875;
@@ -56,7 +57,9 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             List<int[]> neighbors;
 
             double bestAlgorithmFitness = best.Fitness;
-            double bestNeighborFitness = best.Fitness;
+            double averageNeighborFitness = best.Fitness;
+
+            List<double> neighborsFitness = new List<double>(SimulatedAnnealingParameters.NumberOfNeighbors);
 
             do
             {
@@ -65,23 +68,29 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
                 foreach (var neighborsRoad in neighbors)
                 {
                     Individual neighbor = new Individual(neighborsRoad);
+
+                    #region Save to neighbors fitness list
+
+                    neighborsFitness.Add(neighbor.Fitness);
+
+                    #endregion Save to neighbors fitness list
+
                     if (neighbor.Fitness > best.Fitness)
                     {
                         best = neighbor;
-                        bestNeighborFitness = neighbor.Fitness;
                     }
                     else
                         //тут понижаем лушего!
                         TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
                 }
 
-                if (bestNeighborFitness > bestAlgorithmFitness)
-                {
-                    bestAlgorithmFitness = bestNeighborFitness;
-                }
+                averageNeighborFitness = neighborsFitness.Average();
+                neighborsFitness.Clear();
 
-                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestNeighborFitness);
-                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(bestAlgorithmFitness);
+                bestAlgorithmFitness = best.Fitness;
+
+                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestAlgorithmFitness);
+                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(averageNeighborFitness);
 
                 //TODO - change to separate method
                 // because method "SaveWorstFitnessForCurrentGeneration" must save WorstFitness, not currentTemperature

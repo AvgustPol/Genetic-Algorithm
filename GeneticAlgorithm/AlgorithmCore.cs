@@ -42,7 +42,7 @@ namespace GeneticAlgorithmLogic
             var analizeResult = Analize(allLoopsData, allMetaheuristicsAverage._fitnessResult.ListBest.Last());
 
             toFileLogger.LogAnalytic(analizeResult);
-            toFileLogger.LogMetaheuristicToFile(MetaheuristicType, metaheuristicParameters, allMetaheuristicsAverage);
+            toFileLogger.LogMetaheuristicToFile(metaheuristicParameters, allMetaheuristicsAverage);
         }
 
         private Tuple<double, double, double> Analize(List<MetaheuristicResult> allLoopsData, double averageBest)

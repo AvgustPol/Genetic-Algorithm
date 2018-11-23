@@ -1,6 +1,7 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
@@ -42,9 +43,11 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             //current -> best Neighbor
 
             double bestNeighborFitness = best.Fitness;
-            double bestAlgorithmFitness = best.Fitness;
+            double averageNeighborFitness = best.Fitness;
 
             AddToTabuList(current.Places);
+
+            List<double> neighborsFitness = new List<double>(TabuSearchParameters.NumberOfNeighbors);
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
@@ -55,21 +58,26 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
                     if (!IsContains(candidate))
                     {
                         Individual tmpCandidate = new Individual(candidate);
+
+                        #region Save to neighbors fitness list
+
+                        neighborsFitness.Add(tmpCandidate.Fitness);
+
+                        #endregion Save to neighbors fitness list
+
                         if (tmpCandidate.Fitness > current.Fitness)
                             current = tmpCandidate;
                     }
                 }
                 bestNeighborFitness = current.Fitness;
 
-                if (bestNeighborFitness > bestAlgorithmFitness)
-                {
-                    bestAlgorithmFitness = bestNeighborFitness;
-                }
+                averageNeighborFitness = neighborsFitness.Average();
+                neighborsFitness.Clear();
 
                 AddToTabuList(current.Places);
 
-                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestAlgorithmFitness);
-                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(bestNeighborFitness);
+                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestNeighborFitness);
+                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(averageNeighborFitness);
 
                 //TODO delete 42 and change to TS list XD
                 metaheuristicResult.SaveWorstFitnessForCurrentGeneration(42);

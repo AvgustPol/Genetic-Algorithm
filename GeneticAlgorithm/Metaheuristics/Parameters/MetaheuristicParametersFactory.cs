@@ -56,8 +56,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.Parameters
         {
             return new SimulatedAnnealingParameters()
             {
-                InitializeTemperature = 100000,
-                NumberOfNeighbors = 20
+                InitializeTemperature = 10000,
+                NumberOfNeighbors = 25
             };
         }
     }
