@@ -23,12 +23,21 @@ namespace GeneticAlgorithmLogic
         {
             MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
 
-            RunAlgorithm(parameters);
+            //RunAlgorithm(parameters);
+            RunAlgorithmNTimes(parameters, 10);
         }
 
-        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
+        public void RunAlgorithmNTimes(MetaheuristicParameters metaheuristicParameters, int numberOfRuns)
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result");
+            for (int i = 0; i < numberOfRuns; i++)
+            {
+                RunAlgorithm(metaheuristicParameters, i);
+            }
+        }
+
+        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters, int counter)
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result ");
 
             List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
             for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)

@@ -24,9 +24,9 @@ namespace GeneticAlgorithmLogic
         {
             _fileName = fileName;
 
-            DeleteOldData(Path);
-            DeleteOldData(AnaliticPath);
-            DeleteOldData(ParametersPath);
+            //DeleteOldData(Path);
+            //DeleteOldData(AnaliticPath);
+            //DeleteOldData(ParametersPath);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace GeneticAlgorithmLogic
             }
         }
 
-        internal void LogAnalytic(Tuple<double, double, double> analizeResult)
+        public void LogAnalytic(Tuple<double, double, double> analizeResult)
         {
             if (analizeResult != null)
             {
