@@ -7,7 +7,6 @@ namespace GeneticAlgorithmLogic
     /// result (best solution ever)
     ///
     /// </summary>
-    /// <typeparam name="T">fitness datatype e.g. double</typeparam>
     public class MetaheuristicResult
     {
         public class FitnessResult

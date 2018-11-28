@@ -52,7 +52,7 @@ namespace GeneticAlgorithmLogic
             File.AppendAllLines(ParametersPath,
                 new[]
                 {
-                    $"Problem {GlobalParameters.FileName}",
+                    $"Problem {GlobalParameters.FileNames}",
                     $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}",
                     $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.NumberOfRuns},"
                 });

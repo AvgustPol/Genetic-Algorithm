@@ -19,25 +19,19 @@ namespace GeneticAlgorithmLogic
             Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
         }
 
-        public void Run()
+        public void RunForAllFiles()
         {
             MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
 
-            //RunAlgorithm(parameters);
-            RunAlgorithmNTimes(parameters, 10);
-        }
-
-        public void RunAlgorithmNTimes(MetaheuristicParameters metaheuristicParameters, int numberOfRuns)
-        {
-            for (int i = 0; i < numberOfRuns; i++)
+            foreach (string fileName in GlobalParameters.FileNames)
             {
-                RunAlgorithm(metaheuristicParameters, i);
+                RunAlgorithm(parameters, fileName);
             }
         }
 
-        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters, int counter)
+        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters, string fileName)
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"{GlobalParameters.FileName} {MetaheuristicType} result ");
+            ToFileLogger toFileLogger = new ToFileLogger($"{fileName} {MetaheuristicType} result ");
 
             List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
             for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
