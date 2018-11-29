@@ -5,10 +5,10 @@ namespace GeneticAlgorithmLogic
 {
     public class AlgorithmCoreParameters
     {
-        static AlgorithmCoreParameters()
+        public static void ReadDataFromFileAndCreateAlgorithmCoreParameters(string fileName)
         {
             DataLoader dataLoader = new DataLoader();
-            DataContainer container = dataLoader.GetCreatedDataContainerFromFile(GlobalParameters.PathToTestData);
+            DataContainer container = dataLoader.GetCreatedDataContainerFromFile(GlobalParameters.PathToTestFolder + fileName);
 
             Dimension = container.Dimension;
             MinSpeed = container.MinSpeed;
@@ -24,15 +24,15 @@ namespace GeneticAlgorithmLogic
         /// <summary>
         /// number of places at TSP problem
         /// </summary>
-        public static readonly int Dimension;
+        public static int Dimension;
 
-        public static readonly double MaxMinusMinDividedByWeight;
-        public static readonly double MinSpeed;
+        public static double MaxMinusMinDividedByWeight;
+        public static double MinSpeed;
 
-        public static readonly double MaxSpeed;
-        public static readonly double RentingRatio;
-        public static readonly int NumberOfItems;
-        public static readonly int MaxCapacityOfKnapsack;
+        public static double MaxSpeed;
+        public static double RentingRatio;
+        public static int NumberOfItems;
+        public static int MaxCapacityOfKnapsack;
 
         public static double[,] DistanceMatrix;
         private static Dictionary<int, Item> _items;

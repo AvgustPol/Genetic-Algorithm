@@ -16,16 +16,12 @@ namespace GeneticAlgorithmLogic
 
         public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType, string sourceDataFile)
         {
+            AlgorithmCoreParameters.ReadDataFromFileAndCreateAlgorithmCoreParameters(sourceDataFile);
+
             SourceDataFile = sourceDataFile;
             MetaheuristicType = metaheuristicType;
             Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
         }
-
-        //public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType)
-        //{
-        //    MetaheuristicType = metaheuristicType;
-        //    Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
-        //}
 
         public void RunForCurrentFile()
         {

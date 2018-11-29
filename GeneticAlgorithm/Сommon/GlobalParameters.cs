@@ -22,12 +22,11 @@ namespace GeneticAlgorithmLogic.Сommon
         /// </summary>
         public const int NumberOfRuns = 10;
 
-        //TODO !!!:FileNames[0] -> change na ->
-        public static string PathToTestData => @"D:\7 semestr\Metaheurystyki\Data\ttp_student\" + FileNames[0];
+        public const string PathToTestFolder = @"D:\7 semestr\Metaheurystyki\Data\ttp_student\";
 
         #region Source data
 
-        public static readonly List<string> FileNames = new List<string>() { "trivial_0.ttp" };
+        public static readonly List<string> FileNames = new List<string>() { "trivial_0.ttp", "easy_0.ttp" };
 
         //public static readonly List<string> FileName = new List<string>() { "easy_2.ttp", "easy_3.ttp" , "medium_2.ttp" , "medium_3.ttp" , "hard_2.ttp"};
 
