@@ -5,10 +5,11 @@ namespace GeneticAlgorithmLogic.Metaheuristics
 {
     public abstract class Metaheuristic
     {
+        protected bool ItIsTimeToStopAlg;
+
         public MetaheuristicParameters MetaheuristicParameters { get; set; }
 
         protected bool _algoritmStopCondition => _generationsCounter < GlobalParameters.IntegerAlgorithmStopCondition;
-        protected bool _totalStopCondition => _generationsCounter < GlobalParameters.NumberOfRuns;
         protected int _generationsCounter;
 
         /// <summary>

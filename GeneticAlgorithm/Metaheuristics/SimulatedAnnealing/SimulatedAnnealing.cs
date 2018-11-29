@@ -1,5 +1,6 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using GeneticAlgorithmLogic.Сommon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,85 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
         }
 
         public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
+        {
+            ItIsTimeToStopAlg = false;
+            int nonChangeFitnessCounter = 0;
+
+            SimulatedAnnealingParameters = (SimulatedAnnealingParameters)algorithmParameters;
+
+            MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
+
+            double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
+            Individual best = new Individual(Population.CreateRandomIndividual());
+
+            List<int[]> neighbors;
+
+            double bestAlgorithmFitness = best.Fitness;
+            double averageNeighborFitness = best.Fitness;
+
+            List<double> neighborsFitness = new List<double>(SimulatedAnnealingParameters.NumberOfNeighbors);
+
+            do
+            {
+                neighbors = NeighborsGenerator.GetNeighbors(best, SimulatedAnnealingParameters.NumberOfNeighbors);
+
+                foreach (var neighborsRoad in neighbors)
+                {
+                    Individual neighbor = new Individual(neighborsRoad);
+
+                    #region Save to neighbors fitness list
+
+                    neighborsFitness.Add(neighbor.Fitness);
+
+                    #endregion Save to neighbors fitness list
+
+                    if (neighbor.Fitness > best.Fitness)
+                    {
+                        best = neighbor;
+                    }
+                    else
+                        //тут понижаем лушего!
+                        TryAvoidLocalOptimum(ref best, ref neighbor, currentTemperature);
+                }
+
+                averageNeighborFitness = neighborsFitness.Average();
+                neighborsFitness.Clear();
+
+                bestAlgorithmFitness = best.Fitness;
+
+                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestAlgorithmFitness);
+                metaheuristicResult.SaveAverageFitnessForCurrentGeneration(averageNeighborFitness);
+
+                //TODO - change to separate method
+                // because method "SaveWorstFitnessForCurrentGeneration" must save WorstFitness, not currentTemperature
+                metaheuristicResult.SaveWorstFitnessForCurrentGeneration(currentTemperature);
+
+                DecreaseTemperature(ref currentTemperature, ++_generationsCounter);
+
+                if (metaheuristicResult.Fitness.ListBest.Count > 1)
+                {
+                    int currentGenerationFitness = metaheuristicResult.Fitness.ListBest.Count - 1;
+                    int previousGenerationFitness = metaheuristicResult.Fitness.ListBest.Count - 2;
+
+                    if (metaheuristicResult.Fitness.ListBest.ElementAt(currentGenerationFitness) == metaheuristicResult.Fitness.ListBest.ElementAt(previousGenerationFitness))
+                    {
+                        nonChangeFitnessCounter++;
+                        if (nonChangeFitnessCounter > GlobalParameters.NumberOfNonchangedFitness)
+                        {
+                            ItIsTimeToStopAlg = true;
+                        }
+                    }
+                    else
+                    {
+                        nonChangeFitnessCounter = 0;
+                    }
+                }
+            } while (!ItIsTimeToStopAlg);
+
+            return metaheuristicResult;
+        }
+
+        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters, int generationsNumber)
         {
             SimulatedAnnealingParameters = (SimulatedAnnealingParameters)algorithmParameters;
             _generationsCounter = 0;
@@ -102,11 +182,6 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             } while (_algoritmStopCondition);
 
             return metaheuristicResult;
-        }
-
-        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters, int generationsNumber)
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -8,7 +8,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// указывает , сколько раз best fitness
         /// может не изменяться перед тем, как алгоритм перестанет работать
         /// </summary>
-        public const int NumberOfNonchangedFitness = 10;
+        public const int NumberOfNonchangedFitness = 20;
 
         /// <summary>
         /// STOP_CONDITION
@@ -26,9 +26,9 @@ namespace GeneticAlgorithmLogic.Сommon
 
         #region Source data
 
-        public static readonly List<string> FileNames = new List<string>() { "trivial_0.ttp", "easy_0.ttp" };
+        public static readonly List<string> FileNames = new List<string>() { "easy_3.ttp", "medium_2.ttp" };
 
-        //public static readonly List<string> FileName = new List<string>() { "easy_2.ttp", "easy_3.ttp" , "medium_2.ttp" , "medium_3.ttp" , "hard_2.ttp"};
+        //public static readonly List<string> FileNames = new List<string>() { "easy_2.ttp", "easy_3.ttp", "medium_2.ttp", "medium_3.ttp", "hard_2.ttp" };
 
         #endregion Source data
 

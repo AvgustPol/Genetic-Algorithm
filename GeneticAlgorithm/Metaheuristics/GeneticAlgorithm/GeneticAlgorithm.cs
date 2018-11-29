@@ -6,8 +6,6 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithm : Metaheuristic
     {
-        public bool ItIsTimeToStopAlg;
-
         public static GeneticAlgorithmParameters GeneticAlgorithmParameters;
 
         public Population Population { get; set; }

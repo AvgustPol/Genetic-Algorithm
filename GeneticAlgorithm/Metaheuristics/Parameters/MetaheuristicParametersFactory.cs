@@ -36,7 +36,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.Parameters
         {
             return new GeneticAlgorithmParameters()
             {
-                MutationProbability = 1,
+                MutationProbability = 5,
                 CrossProbability = 60,
                 NumberOfTournamentParticipants = 5,
                 PopulationSize = 100
@@ -47,7 +47,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.Parameters
         {
             return new TabuSearchParameters()
             {
-                TabuListSize = 100,
+                TabuListSize = 322,
                 NumberOfNeighbors = 25
             };
         }
