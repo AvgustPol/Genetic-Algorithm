@@ -129,8 +129,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         {
             #region Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
 
-            int[] defaultArray = new int[GeneticAlgorithmParameters.Dimension];
-            for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
+            int[] defaultArray = new int[AlgorithmCoreParameters.Dimension];
+            for (int i = 0; i < AlgorithmCoreParameters.Dimension; i++)
             {
                 defaultArray[i] = i;
             }

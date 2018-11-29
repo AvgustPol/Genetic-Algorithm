@@ -1,10 +1,10 @@
-﻿using DataModel;
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
 using System;
 using System.Globalization;
 using System.IO;
+using GeneticAlgorithmLogic.Сommon;
 
 namespace GeneticAlgorithmLogic
 {

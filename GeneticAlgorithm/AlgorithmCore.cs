@@ -1,6 +1,6 @@
-using DataModel;
 using GeneticAlgorithmLogic.Metaheuristics;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using GeneticAlgorithmLogic.Ñommon;
 using StatisticsCounter;
 using System;
 using System.Collections.Generic;
@@ -12,26 +12,31 @@ namespace GeneticAlgorithmLogic
     {
         public Metaheuristic Metaheuristic { get; set; }
         public MetaheuristicParameters.MetaheuristicType MetaheuristicType { get; set; }
+        public string SourceDataFile { get; set; }
 
-        public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType)
+        public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType, string sourceDataFile)
         {
+            SourceDataFile = sourceDataFile;
             MetaheuristicType = metaheuristicType;
             Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
         }
 
-        public void RunForAllFiles()
+        //public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType)
+        //{
+        //    MetaheuristicType = metaheuristicType;
+        //    Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
+        //}
+
+        public void RunForCurrentFile()
         {
             MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
 
-            foreach (string fileName in GlobalParameters.FileNames)
-            {
-                RunAlgorithm(parameters, fileName.ToString());
-            }
+            RunAlgorithm(parameters);
         }
 
-        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters, string fileName)
+        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
         {
-            ToFileLogger toFileLogger = new ToFileLogger($"{fileName} {MetaheuristicType} result ");
+            ToFileLogger toFileLogger = new ToFileLogger($"{SourceDataFile} {MetaheuristicType} result ");
 
             MetaheuristicResult metaheuristicResult = Metaheuristic.Run(metaheuristicParameters);
 

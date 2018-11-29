@@ -1,5 +1,5 @@
-﻿using DataModel;
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+using GeneticAlgorithmLogic.Сommon;
 using System;
 using System.Collections.Generic;
 
@@ -43,9 +43,9 @@ namespace GeneticAlgorithmLogic
         {
             List<AcceptableItem> acceptableItems = new List<AcceptableItem>();
 
-            for (int i = 0; i < GeneticAlgorithmParameters.NumberOfItems; i++)
+            for (int i = 0; i < AlgorithmCoreParameters.NumberOfItems; i++)
             {
-                Item tmpItem = GeneticAlgorithmParameters.GetItem(i);
+                Item tmpItem = AlgorithmCoreParameters.GetItem(i);
                 double itemFitnessForCurrentRoad = CountItemFitness(tmpItem);
                 if (itemFitnessForCurrentRoad > 0)
                 {
@@ -68,8 +68,8 @@ namespace GeneticAlgorithmLogic
         {
             //id - id города
             //value - id предмета, который нужно взять
-            int[] idPlaceValueItemToTake = new int[GeneticAlgorithmParameters.Dimension];
-            for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
+            int[] idPlaceValueItemToTake = new int[AlgorithmCoreParameters.Dimension];
+            for (int i = 0; i < AlgorithmCoreParameters.Dimension; i++)
             {
                 idPlaceValueItemToTake[i] = Permutator.NotFoundCode;
             }
@@ -79,7 +79,7 @@ namespace GeneticAlgorithmLogic
                 //если я беру предмет
                 if (Items[i])
                 {
-                    Item item = GeneticAlgorithmParameters.GetItem(i);
+                    Item item = AlgorithmCoreParameters.GetItem(i);
                     idPlaceValueItemToTake[item.PlaceId] = item.Id;
                 }
             }
@@ -96,7 +96,7 @@ namespace GeneticAlgorithmLogic
         private double CountItemFitness(Item item)
         {
             double timeDifference = CountTimeDifference(item);
-            double itemFitness = item.Profit - GeneticAlgorithmParameters.RentingRatio * timeDifference;
+            double itemFitness = item.Profit - AlgorithmCoreParameters.RentingRatio * timeDifference;
 
             return itemFitness;
         }
@@ -114,7 +114,7 @@ namespace GeneticAlgorithmLogic
 
         private double CountTimeWithEmptyKnapsack(double road)
         {
-            return road / GeneticAlgorithmParameters.MaxSpeed;
+            return road / AlgorithmCoreParameters.MaxSpeed;
         }
 
         private double CountTimeWithItem(Item item, int lastPlaceId, double road)
@@ -125,7 +125,7 @@ namespace GeneticAlgorithmLogic
 
         private void CountWhichItemsToTake(List<AcceptableItem> acceptableItems)
         {
-            Items = new bool[GeneticAlgorithmParameters.NumberOfItems];
+            Items = new bool[AlgorithmCoreParameters.NumberOfItems];
 
             int capacityOfKnapsack = 0;
 
@@ -137,8 +137,8 @@ namespace GeneticAlgorithmLogic
             {
                 AcceptableItem acceptableItem = acceptableItems[i];
                 int itemId = acceptableItem.Id;
-                int itemWeight = GeneticAlgorithmParameters.GetItem(itemId).Weight;
-                if (capacityOfKnapsack + itemWeight <= GeneticAlgorithmParameters.MaxCapacityOfKnapsack)
+                int itemWeight = AlgorithmCoreParameters.GetItem(itemId).Weight;
+                if (capacityOfKnapsack + itemWeight <= AlgorithmCoreParameters.MaxCapacityOfKnapsack)
                 {
                     capacityOfKnapsack += itemWeight;
                     Items[itemId] = true;
@@ -148,8 +148,8 @@ namespace GeneticAlgorithmLogic
 
         private double CountFullRoad()
         {
-            //from start place (0) to end (GeneticAlgorithmParameters.Dimension - 1)
-            return CountRoad(0, GeneticAlgorithmParameters.Dimension - 1);
+            //from start place (0) to end (AlgorithmCoreParameters.Dimension - 1)
+            return CountRoad(0, AlgorithmCoreParameters.Dimension - 1);
         }
 
         private double CountRoad(int start, int end)
@@ -157,19 +157,19 @@ namespace GeneticAlgorithmLogic
             double road = 0;
             for (int i = start; i < end; i++)
             {
-                road += GeneticAlgorithmParameters.GetDistance(Places[i], Places[i + 1]);
+                road += AlgorithmCoreParameters.GetDistance(Places[i], Places[i + 1]);
             }
 
-            road += GeneticAlgorithmParameters.GetDistance(Places[end], Places[0]);
+            road += AlgorithmCoreParameters.GetDistance(Places[end], Places[0]);
             return road;
         }
 
         private double CountSpeedWithItem(Item item, int start, int end)
         {
-            double minSpeed = GeneticAlgorithmParameters.MinSpeed;
-            double maxSpeed = GeneticAlgorithmParameters.MaxSpeed;
+            double minSpeed = AlgorithmCoreParameters.MinSpeed;
+            double maxSpeed = AlgorithmCoreParameters.MaxSpeed;
 
-            double currentSpeed = maxSpeed - GeneticAlgorithmParameters.MaxMinusMinDividedByWeight * item.Weight;
+            double currentSpeed = maxSpeed - AlgorithmCoreParameters.MaxMinusMinDividedByWeight * item.Weight;
 
             //TODO: useless ? can current speed be lower than min speed?
             return Math.Max(minSpeed, currentSpeed);
@@ -177,10 +177,10 @@ namespace GeneticAlgorithmLogic
 
         private double CountSpeedWithWeight(int weight, int start, int end)
         {
-            double minSpeed = GeneticAlgorithmParameters.MinSpeed;
-            double maxSpeed = GeneticAlgorithmParameters.MaxSpeed;
+            double minSpeed = AlgorithmCoreParameters.MinSpeed;
+            double maxSpeed = AlgorithmCoreParameters.MaxSpeed;
 
-            double currentSpeed = maxSpeed - GeneticAlgorithmParameters.MaxMinusMinDividedByWeight * weight;
+            double currentSpeed = maxSpeed - AlgorithmCoreParameters.MaxMinusMinDividedByWeight * weight;
 
             //TODO: useless ? can current speed be lower than min speed?
             return Math.Max(minSpeed, currentSpeed);
@@ -220,7 +220,7 @@ namespace GeneticAlgorithmLogic
             double sumProfit = CountSumProfit();
             double ti = CountTime();
 
-            Fitness = sumProfit - GeneticAlgorithmParameters.RentingRatio * ti;
+            Fitness = sumProfit - AlgorithmCoreParameters.RentingRatio * ti;
         }
 
         /// <summary>
@@ -241,16 +241,16 @@ namespace GeneticAlgorithmLogic
 
             for (int i = 0; i < Places.Length - 1; i++)
             {
-                distance = GeneticAlgorithmParameters.GetDistance(Places[i], Places[i + 1]);
+                distance = AlgorithmCoreParameters.GetDistance(Places[i], Places[i + 1]);
                 int itemId = ItemsLocation[i];
                 if (itemId != Permutator.NotFoundCode)
                 {
-                    item = GeneticAlgorithmParameters.GetItem(itemId);
+                    item = AlgorithmCoreParameters.GetItem(itemId);
                     knapsack += item.Weight;
                     speed = CountSpeedWithWeight(knapsack, i, i + 1);
                 }
 
-                speed = Math.Max(GeneticAlgorithmParameters.MinSpeed, speed);
+                speed = Math.Max(AlgorithmCoreParameters.MinSpeed, speed);
                 time += distance / speed;
             }
 
@@ -258,11 +258,11 @@ namespace GeneticAlgorithmLogic
 
             #region Returning to first place
 
-            distance = GeneticAlgorithmParameters.GetDistance(Places[0], Places[Places.Length - 1]);
+            distance = AlgorithmCoreParameters.GetDistance(Places[0], Places[Places.Length - 1]);
             int lastPlaceItem = ItemsLocation[Places.Length - 1];
             if (lastPlaceItem != Permutator.NotFoundCode)
             {
-                item = GeneticAlgorithmParameters.GetItem(lastPlaceItem);
+                item = AlgorithmCoreParameters.GetItem(lastPlaceItem);
                 knapsack += item.Weight;
                 speed = CountSpeedWithWeight(knapsack, 0, Places.Length - 1);
             }
@@ -277,11 +277,11 @@ namespace GeneticAlgorithmLogic
         private double CountSumProfit()
         {
             double sum = 0;
-            for (int i = 0; i < GeneticAlgorithmParameters.NumberOfItems; i++)
+            for (int i = 0; i < AlgorithmCoreParameters.NumberOfItems; i++)
             {
                 if (Items[i])
                 {
-                    sum += GeneticAlgorithmParameters.GetItem(i).Profit;
+                    sum += AlgorithmCoreParameters.GetItem(i).Profit;
                 }
             }
 
@@ -294,11 +294,11 @@ namespace GeneticAlgorithmLogic
             int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
             if (GeneticAlgorithm.GeneticAlgorithmParameters.MutationProbability > randomNumber)
             {
-                int randomIndex1 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
-                int randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
+                int randomIndex1 = Randomizer.Random.Next(AlgorithmCoreParameters.Dimension);
+                int randomIndex2 = Randomizer.Random.Next(AlgorithmCoreParameters.Dimension);
                 while (randomIndex1 == randomIndex2)
                 {
-                    randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
+                    randomIndex2 = Randomizer.Random.Next(AlgorithmCoreParameters.Dimension);
                 }
                 //MUTATE
                 Permutator.Swap(Places, randomIndex1, randomIndex2);
@@ -311,14 +311,14 @@ namespace GeneticAlgorithmLogic
 
         public int[] GetMutation()
         {
-            int[] mutation = new int[GeneticAlgorithmParameters.Dimension];
-            Array.Copy(Places, mutation, GeneticAlgorithmParameters.Dimension);
+            int[] mutation = new int[AlgorithmCoreParameters.Dimension];
+            Array.Copy(Places, mutation, AlgorithmCoreParameters.Dimension);
 
-            int randomIndex1 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
-            int randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
+            int randomIndex1 = Randomizer.Random.Next(AlgorithmCoreParameters.Dimension);
+            int randomIndex2 = Randomizer.Random.Next(AlgorithmCoreParameters.Dimension);
             while (randomIndex1 == randomIndex2)
             {
-                randomIndex2 = Randomizer.Random.Next(GeneticAlgorithmParameters.Dimension);
+                randomIndex2 = Randomizer.Random.Next(AlgorithmCoreParameters.Dimension);
             }
             //MUTATE
             Permutator.Swap(mutation, randomIndex1, randomIndex2);

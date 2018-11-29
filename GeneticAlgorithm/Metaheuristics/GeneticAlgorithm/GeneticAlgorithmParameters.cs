@@ -1,7 +1,4 @@
-﻿using DataModel;
-using GeneticAlgorithmLogic.Metaheuristics.Parameters;
-using Loader;
-using System.Collections.Generic;
+﻿using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
@@ -60,7 +57,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 
         public int NumberOfTournamentParticipants;
         public const int MinNumberOfTournamentParticipants = 2;
-        public static readonly int MaxNumberOfTournamentParticipants = Dimension;
+        public static readonly int MaxNumberOfTournamentParticipants = AlgorithmCoreParameters.Dimension;
 
         /// <summary>
         /// Number of population individuals
@@ -68,54 +65,11 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         public int PopulationSize;
 
         public const int MinPopulationSize = 2;
-        public const int MaxPopulationSize = 10000;
+        public const int MaxPopulationSize = 1000;
 
         /// <summary>
         /// The probability of crossing two individuals. (e. g. 1% )
         /// </summary>
         public int CrossProbability;
-
-        static GeneticAlgorithmParameters()
-        {
-            DataLoader dataLoader = new DataLoader();
-            DataContainer container = dataLoader.GetCreatedDataContainerFromFile(GlobalParameters.PathToTestData);
-
-            Dimension = container.Dimension;
-            MinSpeed = container.MinSpeed;
-            MaxSpeed = container.MaxSpeed;
-            RentingRatio = container.RentingRatio;
-            DistanceMatrix = container.DistanceMatrix;
-            _items = container.Items;
-            NumberOfItems = container.NumberOfItems;
-            MaxCapacityOfKnapsack = container.MaxCapacityOfKnapsack;
-            MaxMinusMinDividedByWeight = (MaxSpeed - MinSpeed) / MaxCapacityOfKnapsack;
-        }
-
-        /// <summary>
-        /// number of places at TSP problem
-        /// </summary>
-        public static readonly int Dimension;
-
-        public static readonly double MaxMinusMinDividedByWeight;
-        public static readonly double MinSpeed;
-
-        public static readonly double MaxSpeed;
-        public static readonly double RentingRatio;
-        public static readonly int NumberOfItems;
-        public static readonly int MaxCapacityOfKnapsack;
-
-        public static double[,] DistanceMatrix;
-        private static Dictionary<int, Item> _items;
-
-        public static Item GetItem(int itemId)
-        {
-            _items.TryGetValue(itemId, out Item item);
-            return item;
-        }
-
-        public static double GetDistance(int i, int j)
-        {
-            return DistanceMatrix[i, j];
-        }
     }
 }

@@ -1,5 +1,5 @@
-﻿using DataModel;
-using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+﻿using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using GeneticAlgorithmLogic.Сommon;
 
 namespace GeneticAlgorithmLogic.Metaheuristics
 {
@@ -13,39 +13,24 @@ namespace GeneticAlgorithmLogic.Metaheuristics
 
         /// <summary>
         /// Starts algorithm
-        /// запускает алгоритм с параметрами </summary>
-        /// и возразщает результат в<param name="algorithmParameters"></param>
+        /// запускает алгоритм с параметрами
+        ///
+        /// алгоритм работает до тех пор, пока N раз не поменяется фитнес.
+        /// N =  GlobalParameters.NumberOfNonchangedFitness
+        /// </summary>
+        /// <param name="algorithmParameters"></param>
         /// <returns></returns>
         public abstract MetaheuristicResult Run(MetaheuristicParameters algorithmParameters);
 
         /// <summary>
-        /// запускает N раз алгоритм
-        /// считает и возращает средний результат для каждой генерации
+        /// Starts algorithm
+        /// запускает алгоритм с параметрами
         ///
-        /// "средний результат" - является поводом, чтобы судить о алгоритме (Efektywność/Skuteczność)
+        /// алгоритм работает generationsNumber
         /// </summary>
         /// <param name="algorithmParameters"></param>
+        /// <param name="generationsNumber"></param>
         /// <returns></returns>
-        //public MetaheuristicResult RunNTimes(MetaheuristicParameters algorithmParameters)
-        //{
-        //    List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>(GlobalParameters.NumberOfRuns);
-        //    for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
-        //    {
-        //        MetaheuristicResult metaheuristicResult = Run(algorithmParameters);
-        //        allLoopsData.Add(metaheuristicResult);
-        //    }
-
-        //    MetaheuristicResult allMetaheuristicsAverage = CalculateAverageForAllRunsOfTheAlgorithm(allLoopsData);
-
-        //    //TODO:
-        //    //CountStandardDeviation
-        //}
-
-        ///// <summary>
-        ///// TODO
-        ///// </summary>
-        ///// <param name="allAlgorithmsResult"></param>
-        ///// <returns></returns>
-        //protected abstract object CalculateAverageForAllRunsOfTheAlgorithm(object allAlgorithmsResult);
+        public abstract MetaheuristicResult Run(MetaheuristicParameters algorithmParameters, int generationsNumber);
     }
 }

@@ -1,5 +1,5 @@
-﻿using DataModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using GeneticAlgorithmLogic.Сommon;
 
 namespace GeneticAlgorithmLogic
 {

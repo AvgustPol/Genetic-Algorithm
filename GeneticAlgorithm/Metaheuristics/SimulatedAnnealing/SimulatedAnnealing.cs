@@ -103,5 +103,10 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
             return metaheuristicResult;
         }
+
+        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters, int generationsNumber)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

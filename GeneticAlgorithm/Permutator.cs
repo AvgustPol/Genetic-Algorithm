@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 
 namespace GeneticAlgorithmLogic
 {
@@ -7,7 +6,7 @@ namespace GeneticAlgorithmLogic
     {
         public static int NotFoundCode = -1;
 
-        private static readonly int MaxPermutationPlacesIndex = GeneticAlgorithmParameters.Dimension - 1;
+        private static readonly int MaxPermutationPlacesIndex = AlgorithmCoreParameters.Dimension - 1;
 
         /// <summary>
         /// Shuffles source array
@@ -100,8 +99,8 @@ namespace GeneticAlgorithmLogic
 
             #region Create child permutation
 
-            int[] childPermutationPlaces = new int[GeneticAlgorithmParameters.Dimension];
-            for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
+            int[] childPermutationPlaces = new int[AlgorithmCoreParameters.Dimension];
+            for (int i = 0; i < AlgorithmCoreParameters.Dimension; i++)
             {
                 // NotFoundCode = -1 - because indexes are integers
                 childPermutationPlaces[i] = NotFoundCode;
@@ -131,7 +130,7 @@ namespace GeneticAlgorithmLogic
 
             #region Fill Empty Array Elements
 
-            for (int i = 0; i < GeneticAlgorithmParameters.Dimension; i++)
+            for (int i = 0; i < AlgorithmCoreParameters.Dimension; i++)
             {
                 if (childPermutationPlaces[i] == NotFoundCode)
                 {
