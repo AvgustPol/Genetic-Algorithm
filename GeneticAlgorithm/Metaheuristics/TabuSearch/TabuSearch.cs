@@ -1,5 +1,6 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+using GeneticAlgorithmLogic.Сommon;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,6 +30,82 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
         }
 
         public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
+        {
+            ItIsTimeToStopAlg = false;
+            int nonChangeFitnessCounter = 0;
+
+            TabuSearchParameters = (TabuSearchParameters)algorithmParameters;
+            TabuList = new Queue<int[]>(TabuSearchParameters.TabuListSize);
+
+            MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
+            List<int[]> neighbors;
+
+            Individual best = new Individual(Population.CreateRandomIndividual());
+            Individual current = best;
+
+            //best fount
+            //current -> best Neighbor
+
+            double bestNeighborFitness = best.Fitness;
+            double averageNeighborFitness = best.Fitness;
+
+            AddToTabuList(current.Places);
+
+            List<double> neighborsFitness = new List<double>(TabuSearchParameters.NumberOfNeighbors);
+
+            while (!ItIsTimeToStopAlg)
+            {
+                neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+
+                foreach (var candidate in neighbors)
+                {
+                    if (!IsContains(candidate))
+                    {
+                        Individual tmpCandidate = new Individual(candidate);
+
+                        #region Save to neighbors fitness list
+
+                        neighborsFitness.Add(tmpCandidate.Fitness);
+
+                        #endregion Save to neighbors fitness list
+
+                        if (tmpCandidate.Fitness > current.Fitness)
+                            current = tmpCandidate;
+                    }
+                }
+                bestNeighborFitness = current.Fitness;
+
+                averageNeighborFitness = neighborsFitness.Average();
+                neighborsFitness.Clear();
+
+                AddToTabuList(current.Places);
+
+                metaheuristicResult.SaveBestFitnessForCurrentGeneration(bestNeighborFitness);
+
+                if (metaheuristicResult.Fitness.ListBest.Count > 1)
+                {
+                    int currentGenerationFitness = metaheuristicResult.Fitness.ListBest.Count - 1;
+                    int previousGenerationFitness = metaheuristicResult.Fitness.ListBest.Count - 2;
+
+                    if (metaheuristicResult.Fitness.ListBest.ElementAt(currentGenerationFitness) == metaheuristicResult.Fitness.ListBest.ElementAt(previousGenerationFitness))
+                    {
+                        nonChangeFitnessCounter++;
+                        if (nonChangeFitnessCounter > GlobalParameters.NumberOfNonchangedFitness)
+                        {
+                            ItIsTimeToStopAlg = true;
+                        }
+                    }
+                    else
+                    {
+                        nonChangeFitnessCounter = 0;
+                    }
+                }
+            }
+
+            return metaheuristicResult;
+        }
+
+        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters, int generationsNumber)
         {
             TabuSearchParameters = (TabuSearchParameters)algorithmParameters;
             TabuList = new Queue<int[]>(TabuSearchParameters.TabuListSize);
@@ -84,11 +161,6 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             }
 
             return metaheuristicResult;
-        }
-
-        public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters, int generationsNumber)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

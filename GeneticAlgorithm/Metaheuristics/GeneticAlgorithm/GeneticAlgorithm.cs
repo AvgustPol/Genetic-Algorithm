@@ -36,6 +36,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 
         public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
         {
+            ItIsTimeToStopAlg = false;
             int nonChangeFitnessCounter = 0;
 
             GeneticAlgorithmParameters = (GeneticAlgorithmParameters)algorithmParameters;
