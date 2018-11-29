@@ -30,28 +30,47 @@ namespace GeneticAlgorithmLogic
             RunAlgorithm(parameters);
         }
 
+        public void RunAnalyticForCurrentFile()
+        {
+            MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
+
+            RunAnalytic(parameters);
+        }
+
         public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
         {
             ToFileLogger toFileLogger = new ToFileLogger($"{SourceDataFile} {MetaheuristicType} result ");
 
             MetaheuristicResult metaheuristicResult = Metaheuristic.Run(metaheuristicParameters);
 
-            //MetaheuristicResult allMetaheuristicsAverage = CalculateAverageFintessForAllRunsOfTheAlgorithm(allLoopsData);
-
-            //var analizeResult = Analize(allLoopsData, allMetaheuristicsAverage.Fitness.ListBest.Last());
-
-            //toFileLogger.LogAnalytic(metaheuristicResult);
             toFileLogger.LogMetaheuristicToFile(metaheuristicParameters, metaheuristicResult);
         }
 
-        private Tuple<double, double, double> Analize(List<MetaheuristicResult> allLoopsData, double averageBest)
+        public void RunAnalytic(MetaheuristicParameters metaheuristicParameters)
+        {
+            ToFileLogger toFileLogger = new ToFileLogger($"{SourceDataFile} {MetaheuristicType} result ");
+
+            List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>();
+
+            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
+            {
+                MetaheuristicResult metaheuristicResult = Metaheuristic.Run(metaheuristicParameters);
+                allLoopsData.Add(metaheuristicResult);
+            }
+
+            var analizeResult = Analize(allLoopsData);
+
+            toFileLogger.LogAnalytic(analizeResult);
+        }
+
+        private Tuple<double, double, double> Analize(List<MetaheuristicResult> allLoopsData)
         {
             double max, avg, dev;
 
             double[] bestArray = GetOnlyBest(allLoopsData);
             max = bestArray.Max();
             avg = bestArray.Average();
-            dev = StandardDeviationCounter.CountStandardDeviation(averageBest, bestArray);
+            dev = StandardDeviationCounter.CountStandardDeviation(avg, bestArray);
 
             return new Tuple<double, double, double>(max, avg, dev);
         }
