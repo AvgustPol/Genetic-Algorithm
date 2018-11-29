@@ -52,7 +52,7 @@ namespace GeneticAlgorithmLogic
 
             /// <summary>
             /// if new global fitness is better than old one
-            /// save new one 
+            /// save new one
             /// </summary>
             /// <param name="newEffectiveness"></param>
             public void TrySaveEfficiency(double newEffectiveness)
@@ -71,7 +71,7 @@ namespace GeneticAlgorithmLogic
         }
 
         //TODO : _fitnessResult should be private ?
-        public readonly FitnessResult _fitnessResult = new FitnessResult();
+        public readonly FitnessResult Fitness = new FitnessResult();
 
         //TODO : _metaheuristicIndicators should be private ?
         public readonly MetaheuristicIndicators _metaheuristicIndicators = new MetaheuristicIndicators();
@@ -82,7 +82,7 @@ namespace GeneticAlgorithmLogic
         /// <param name="currentGenerationBestFitness"></param>
         public void SaveBestFitnessForCurrentGeneration(double currentGenerationBestFitness)
         {
-            _fitnessResult.ListBest.Add(currentGenerationBestFitness);
+            Fitness.ListBest.Add(currentGenerationBestFitness);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace GeneticAlgorithmLogic
         /// <param name="currentGenerationBestFitness"></param>
         public void SaveAverageFitnessForCurrentGeneration(double currentGenerationAverageFitness)
         {
-            _fitnessResult.ListAverage.Add(currentGenerationAverageFitness);
+            Fitness.ListAverage.Add(currentGenerationAverageFitness);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace GeneticAlgorithmLogic
         /// <param name="currentGenerationBestFitness"></param>
         public void SaveWorstFitnessForCurrentGeneration(double currentGenerationWorstFitness)
         {
-            _fitnessResult.ListWorst.Add(currentGenerationWorstFitness);
+            Fitness.ListWorst.Add(currentGenerationWorstFitness);
         }
     }
 }

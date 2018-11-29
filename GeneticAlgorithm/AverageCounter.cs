@@ -23,15 +23,15 @@ namespace GeneticAlgorithmLogic
                 switch (algorithmAndValueParameter)
                 {
                     case GlobalParameters.BestFitness:
-                        sum += item._fitnessResult.ListBest[generationNumber];
+                        sum += item.Fitness.ListBest[generationNumber];
                         break;
 
                     case GlobalParameters.AverageFitness:
-                        sum += item._fitnessResult.ListAverage[generationNumber];
+                        sum += item.Fitness.ListAverage[generationNumber];
                         break;
 
                     case GlobalParameters.WorstFitness:
-                        sum += item._fitnessResult.ListWorst[generationNumber];
+                        sum += item.Fitness.ListWorst[generationNumber];
                         break;
 
                     default:

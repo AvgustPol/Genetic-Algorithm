@@ -24,9 +24,9 @@ namespace GeneticAlgorithmLogic
         {
             _fileName = fileName;
 
-            //DeleteOldData(Path);
-            //DeleteOldData(AnaliticPath);
-            //DeleteOldData(ParametersPath);
+            DeleteOldData(Path);
+            DeleteOldData(AnaliticPath);
+            DeleteOldData(ParametersPath);
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace GeneticAlgorithmLogic
                 new[]
                 {
                     $"Problem {GlobalParameters.FileNames}",
-                    $"Ilość generacji dla każdego algorytmu {GlobalParameters.AlgorithmStopCondition}",
+                    $"Ilość generacji dla każdego algorytmu {GlobalParameters.IntegerAlgorithmStopCondition}",
                     $"Ilość uruchomień dla każdego algorytmu {GlobalParameters.NumberOfRuns},"
                 });
         }
@@ -67,13 +67,15 @@ namespace GeneticAlgorithmLogic
                     $"GA Worst Fitness"
                 });
 
-            for (int i = 0; i < GlobalParameters.AlgorithmStopCondition; i++)
+            int generationsNumber = metaheuristicResult.Fitness.ListBest.Count;
+
+            for (int i = 0; i < generationsNumber; i++)
             {
                 File.AppendAllLines(Path,
                     new[] {
-                        $"{SaveValue(metaheuristicResult._fitnessResult.ListBest[i])}" + "," +
-                        $"{SaveValue(metaheuristicResult._fitnessResult.ListAverage[i])}" + "," +
-                        $"{SaveValue(metaheuristicResult._fitnessResult.ListWorst[i])}"
+                        $"{SaveValue(metaheuristicResult.Fitness.ListBest[i])}" + "," +
+                        $"{SaveValue(metaheuristicResult.Fitness.ListAverage[i])}" + "," +
+                        $"{SaveValue(metaheuristicResult.Fitness.ListWorst[i])}"
                     });
             }
         }

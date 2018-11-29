@@ -1,16 +1,45 @@
-﻿using GeneticAlgorithmLogic.Metaheuristics.Parameters;
+﻿using DataModel;
+using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using System.Linq;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithm : Metaheuristic
     {
+        public bool ItIsTimeToStopAlg;
+
         public static GeneticAlgorithmParameters GeneticAlgorithmParameters;
 
         public Population Population { get; set; }
 
+        //public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
+        //{
+        //    GeneticAlgorithmParameters = (GeneticAlgorithmParameters)algorithmParameters;
+        //    MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
+
+        //    CreatePopulation();
+
+        //    SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
+
+        //    for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
+        //    {
+        //        SaveEffectiveness(metaheuristicResult, SelectAndCross());
+        //        SaveEffectiveness(metaheuristicResult, Mutate());
+        //        CountFitness();
+        //        SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
+
+        //        SaveFitnessData(metaheuristicResult);
+
+        //        SaveEfficiency(metaheuristicResult, metaheuristicResult.Fitness.ListBest.Last());
+        //    }
+
+        //    return metaheuristicResult;
+        //}
+
         public override MetaheuristicResult Run(MetaheuristicParameters algorithmParameters)
         {
+            int nonChangeFitnessCounter = 0;
+
             GeneticAlgorithmParameters = (GeneticAlgorithmParameters)algorithmParameters;
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
@@ -18,7 +47,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 
             SaveEffectiveness(metaheuristicResult, GeneticAlgorithmParameters.Dimension);
 
-            for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
+            ItIsTimeToStopAlg = false; /// ! ! !
+            while (!ItIsTimeToStopAlg)
             {
                 SaveEffectiveness(metaheuristicResult, SelectAndCross());
                 SaveEffectiveness(metaheuristicResult, Mutate());
@@ -27,7 +57,26 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 
                 SaveFitnessData(metaheuristicResult);
 
-                SaveEfficiency(metaheuristicResult, metaheuristicResult._fitnessResult.ListBest.Last());
+                SaveEfficiency(metaheuristicResult, metaheuristicResult.Fitness.ListBest.Last());
+
+                if (metaheuristicResult.Fitness.ListBest.Count > 1)
+                {
+                    int currentGenerationFitness = metaheuristicResult.Fitness.ListBest.Count - 1;
+                    int previousGenerationFitness = metaheuristicResult.Fitness.ListBest.Count - 2;
+
+                    if (metaheuristicResult.Fitness.ListBest.ElementAt(currentGenerationFitness) == metaheuristicResult.Fitness.ListBest.ElementAt(previousGenerationFitness))
+                    {
+                        nonChangeFitnessCounter++;
+                        if (nonChangeFitnessCounter > GlobalParameters.NumberOfNonchangedFitness)
+                        {
+                            ItIsTimeToStopAlg = true;
+                        }
+                    }
+                    else
+                    {
+                        nonChangeFitnessCounter = 0;
+                    }
+                }
             }
 
             return metaheuristicResult;
