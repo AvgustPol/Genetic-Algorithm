@@ -3,12 +3,12 @@
 #undef Generator
 //#undef TspKnp
 
-using GeneticAlgorithmLogic.Individuals;
 using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
 using System.Collections.Generic;
 using System.Linq;
+using GeneticAlgorithmLogic.Сommon.Individuals;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GeneticAlgorithmLogic.Individuals
+namespace GeneticAlgorithmLogic.Сommon.Individuals
 {
     public abstract class Individual : ICloneable, INeighborly
     {

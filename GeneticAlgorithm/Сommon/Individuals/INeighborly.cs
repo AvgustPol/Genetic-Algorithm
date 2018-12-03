@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GeneticAlgorithmLogic.Individuals
+namespace GeneticAlgorithmLogic.Сommon.Individuals
 {
     public interface INeighborly
     {

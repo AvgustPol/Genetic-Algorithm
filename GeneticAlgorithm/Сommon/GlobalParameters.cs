@@ -8,7 +8,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// указывает , сколько раз best fitness
         /// может не изменяться перед тем, как алгоритм перестанет работать
         /// </summary>
-        public const int NumberOfNonchangedFitness = 10;
+        public const int NumberOfNonchangedFitness = 2;
 
         /// <summary>
         /// STOP_CONDITION

@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneticAlgorithm", "GeneticAlgorithm\GeneticAlgorithm.csproj", "{D50BD27A-F087-408F-8765-E153C9F101BF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneticAlgorithm_Tests", "GeneticAlgorithm_Tests\GeneticAlgorithm_Tests.csproj", "{DA7DDC8F-560A-41BF-B0A9-8DEF48D03A26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneticAlgorithm_Tests", "GeneticAlgorithm_Tests\GeneticAlgorithm_Tests.csproj", "{DA7DDC8F-560A-41BF-B0A9-8DEF48D03A26}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Loader", "..\Loader\Loader\Loader.csproj", "{8157AAF7-4C38-48C3-8968-D44256A6E018}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataModel", "..\DataModel\DataModel\DataModel.csproj", "{6EBE42D0-8F7B-42D0-99D3-21E9C316EEF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneticAlgorithmLogic", "GeneticAlgorithm\GeneticAlgorithmLogic.csproj", "{BEE4DFA2-4E37-4680-905F-23FE219D7348}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleCoreUI", "..\ConsoleCoreUI\ConsoleCoreUI\ConsoleCoreUI.csproj", "{C7F60877-E26F-4D5F-822D-3007F01687CB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GlobalData", "..\DataModel\DataModel\GlobalData.csproj", "{79BC29BF-29BB-4355-83E3-F3F6768B6D6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D50BD27A-F087-408F-8765-E153C9F101BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D50BD27A-F087-408F-8765-E153C9F101BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D50BD27A-F087-408F-8765-E153C9F101BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D50BD27A-F087-408F-8765-E153C9F101BF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DA7DDC8F-560A-41BF-B0A9-8DEF48D03A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DA7DDC8F-560A-41BF-B0A9-8DEF48D03A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA7DDC8F-560A-41BF-B0A9-8DEF48D03A26}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -29,10 +27,18 @@ Global
 		{8157AAF7-4C38-48C3-8968-D44256A6E018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8157AAF7-4C38-48C3-8968-D44256A6E018}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8157AAF7-4C38-48C3-8968-D44256A6E018}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6EBE42D0-8F7B-42D0-99D3-21E9C316EEF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6EBE42D0-8F7B-42D0-99D3-21E9C316EEF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6EBE42D0-8F7B-42D0-99D3-21E9C316EEF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6EBE42D0-8F7B-42D0-99D3-21E9C316EEF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEE4DFA2-4E37-4680-905F-23FE219D7348}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEE4DFA2-4E37-4680-905F-23FE219D7348}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEE4DFA2-4E37-4680-905F-23FE219D7348}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEE4DFA2-4E37-4680-905F-23FE219D7348}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7F60877-E26F-4D5F-822D-3007F01687CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7F60877-E26F-4D5F-822D-3007F01687CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7F60877-E26F-4D5F-822D-3007F01687CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7F60877-E26F-4D5F-822D-3007F01687CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79BC29BF-29BB-4355-83E3-F3F6768B6D6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79BC29BF-29BB-4355-83E3-F3F6768B6D6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79BC29BF-29BB-4355-83E3-F3F6768B6D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79BC29BF-29BB-4355-83E3-F3F6768B6D6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

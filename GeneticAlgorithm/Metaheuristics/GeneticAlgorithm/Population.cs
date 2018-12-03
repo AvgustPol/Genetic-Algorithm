@@ -1,6 +1,6 @@
-﻿using System;
+﻿using GeneticAlgorithmLogic.Сommon.Individuals;
+using System;
 using System.Collections.Generic;
-using GeneticAlgorithmLogic.Individuals;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
@@ -122,23 +122,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         {
             for (int i = 0; i < PopulationSize; i++)
             {
-                Individuals.Add(i, new IndividualTspKnp(CreateRandomIndividual()));
+                Individuals.Add(i, new IndividualTspKnp(IndividualTspKnp.CreateRandomIndividual()));
             }
-        }
-
-        public static int[] CreateRandomIndividual()
-        {
-            #region Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
-
-            int[] defaultArray = new int[AlgorithmCoreParameters.Dimension];
-            for (int i = 0; i < AlgorithmCoreParameters.Dimension; i++)
-            {
-                defaultArray[i] = i;
-            }
-
-            #endregion Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
-
-            return Permutator.GetRandomPermutation(defaultArray);
         }
 
         public void CreatePopulationIndividuals()

@@ -1,9 +1,8 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
-using GeneticAlgorithmLogic.Сommon;
 using System;
 using System.Collections.Generic;
 
-namespace GeneticAlgorithmLogic.Individuals
+namespace GeneticAlgorithmLogic.Сommon.Individuals
 {
     public class IndividualTspKnp : Individual
     {
@@ -334,6 +333,21 @@ namespace GeneticAlgorithmLogic.Individuals
             }
 
             return neighbors;
+        }
+
+        public static int[] CreateRandomIndividual()
+        {
+            #region Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
+
+            int[] defaultArray = new int[AlgorithmCoreParameters.Dimension];
+            for (int i = 0; i < AlgorithmCoreParameters.Dimension; i++)
+            {
+                defaultArray[i] = i;
+            }
+
+            #endregion Create new defualt array {0,1,2,3,4,5, ... , dimension-1}
+
+            return Permutator.GetRandomPermutation(defaultArray);
         }
     }
 }

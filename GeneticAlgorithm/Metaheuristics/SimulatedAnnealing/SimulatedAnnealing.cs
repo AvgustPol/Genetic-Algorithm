@@ -1,12 +1,11 @@
-﻿//#define Generator
-#define TspKnp
-#undef Generator
-//#undef TspKnp
+﻿#define Generator
+//#define TspKnp
+//#undef Generator
+#undef TspKnp
 
-using GeneticAlgorithmLogic.Individuals;
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
+using GeneticAlgorithmLogic.Сommon.Individuals;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,10 +62,10 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
             Individual best;
 #if Generator
-            best = new IndividualGenerator(); ;
+            best = new IndividualHybryd();
 #endif
 #if TspKnp
-            best = new IndividualTspKnp(Population.CreateRandomIndividual()); ;
+            best = new IndividualTspKnp(IndividualTspKnp.CreateRandomIndividual()); ;
 #endif
 
             List<int[]> neighbors;
@@ -82,7 +81,12 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
                 foreach (var neighborsRoad in neighbors)
                 {
+#if Generator
+                    IndividualHybryd neighbor = new IndividualHybryd(neighborsRoad);
+#endif
+#if TspKnp
                     IndividualTspKnp neighbor = new IndividualTspKnp(neighborsRoad);
+#endif
 
                     #region Save to neighbors fitness list
 
@@ -141,7 +145,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
             Individual best;
 #if Generator
-            best = new IndividualGenerator(); ;
+            best = new IndividualHybryd(); ;
 #endif
 #if TspKnp
             best = new IndividualTspKnp(Population.CreateRandomIndividual());
