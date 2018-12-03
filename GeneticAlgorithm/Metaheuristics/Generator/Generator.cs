@@ -2,7 +2,7 @@
 
 namespace GeneticAlgorithmLogic.Metaheuristics.Generator
 {
-    internal class Generator : Metaheuristic
+    public class Generator : Metaheuristic
     {
         public Metaheuristic Metaheuristic { get; set; }
 

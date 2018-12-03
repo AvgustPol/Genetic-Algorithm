@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace GeneticAlgorithmLogic.Individuals
 {
-    public class IndividualTspKnp : Individual, ICloneable
+    public class IndividualTspKnp : Individual
     {
         /// <summary>
         /// TSP problem
@@ -184,7 +184,7 @@ namespace GeneticAlgorithmLogic.Individuals
             return Math.Max(minSpeed, currentSpeed);
         }
 
-        public object Clone()
+        public override object Clone()
         {
             IndividualTspKnp clone = new IndividualTspKnp();
             if (Places != null)
@@ -208,7 +208,7 @@ namespace GeneticAlgorithmLogic.Individuals
             return clone;
         }
 
-        public void CountFitness()
+        public override void CountFitness()
         {
             // Fitness = Sum(allItemsValue) - R * ti
             //
@@ -286,7 +286,7 @@ namespace GeneticAlgorithmLogic.Individuals
             return sum;
         }
 
-        public bool Mutate()
+        public override bool Mutate()
         {
             bool didMutate = false;
             int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
@@ -307,7 +307,7 @@ namespace GeneticAlgorithmLogic.Individuals
             return didMutate;
         }
 
-        public int[] GetMutation()
+        public override int[] GetMutation()
         {
             int[] mutation = new int[AlgorithmCoreParameters.Dimension];
             Array.Copy(Places, mutation, AlgorithmCoreParameters.Dimension);
@@ -322,6 +322,18 @@ namespace GeneticAlgorithmLogic.Individuals
             Permutator.Swap(mutation, randomIndex1, randomIndex2);
 
             return mutation;
+        }
+
+        public override List<int[]> GetNeighbors(int numberOfNeighbors)
+        {
+            List<int[]> neighbors = new List<int[]>(numberOfNeighbors);
+
+            for (int i = 0; i < numberOfNeighbors; i++)
+            {
+                neighbors.Add(GetMutation());
+            }
+
+            return neighbors;
         }
     }
 }

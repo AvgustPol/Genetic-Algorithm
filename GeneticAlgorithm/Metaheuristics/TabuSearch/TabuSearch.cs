@@ -1,9 +1,14 @@
-﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+﻿//#define Generator
+#define TspKnp
+#undef Generator
+//#undef TspKnp
+
+using GeneticAlgorithmLogic.Individuals;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
 using System.Collections.Generic;
 using System.Linq;
-using GeneticAlgorithmLogic.Individuals;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
@@ -56,7 +61,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 
             while (!ItIsTimeToStopAlg)
             {
-                neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+                neighbors = current.GetNeighbors(TabuSearchParameters.NumberOfNeighbors);
 
                 foreach (var candidate in neighbors)
                 {
@@ -129,7 +134,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 
             for (_generationsCounter = 0; _algoritmStopCondition; _generationsCounter++)
             {
-                neighbors = NeighborsGenerator.GetNeighbors(current, TabuSearchParameters.NumberOfNeighbors);
+                neighbors = current.GetNeighbors(TabuSearchParameters.NumberOfNeighbors);
 
                 foreach (var candidate in neighbors)
                 {

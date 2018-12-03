@@ -3,6 +3,7 @@ using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
 using GeneticAlgorithmLogic.Сommon;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -62,20 +63,28 @@ namespace GeneticAlgorithmLogic
         {
             File.AppendAllLines(Path,
                 new[] {
-                    $"GA Best Fitness" + "," +
-                    $"GA Average Fitness" + "," +
-                    $"GA Worst Fitness"
+                    $"Best Fitness" + "," +
+                    $"Average Fitness" + "," +
+                    $"Worst Fitness"
                 });
 
             int generationsNumber = metaheuristicResult.Fitness.ListBest.Count;
 
             for (int i = 0; i < generationsNumber; i++)
             {
+                TryLogList(metaheuristicResult.Fitness.ListBest, i);
+                TryLogList(metaheuristicResult.Fitness.ListAverage, i);
+                TryLogList(metaheuristicResult.Fitness.ListWorst, i);
+            }
+        }
+
+        private void TryLogList(List<double> list, int i)
+        {
+            if (list.Count > 0)
+            {
                 File.AppendAllLines(Path,
                     new[] {
-                        $"{SaveValue(metaheuristicResult.Fitness.ListBest[i])}" + "," +
-                        $"{SaveValue(metaheuristicResult.Fitness.ListAverage[i])}" + "," +
-                        $"{SaveValue(metaheuristicResult.Fitness.ListWorst[i])}"
+                        $"{SaveValue(list[i])}" + ","
                     });
             }
         }

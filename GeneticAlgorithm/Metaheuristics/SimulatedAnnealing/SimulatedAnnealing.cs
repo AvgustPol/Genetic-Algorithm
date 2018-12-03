@@ -1,4 +1,9 @@
-﻿using GeneticAlgorithmLogic.Individuals;
+﻿//#define Generator
+#define TspKnp
+#undef Generator
+//#undef TspKnp
+
+using GeneticAlgorithmLogic.Individuals;
 using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
@@ -14,7 +19,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
         public static int LowTemperatureCounter { get; set; }
 
-        public static void TryAvoidLocalOptimum(ref IndividualTspKnp best, ref IndividualTspKnp tmpCandidate, double temperature)
+        public static void TryAvoidLocalOptimum(ref Individual best, ref IndividualTspKnp tmpCandidate, double temperature)
         {
             //отнимаем tmpCandidate - best, потому что для данной проблемы best = biggest
             double expValue = Math.Exp((tmpCandidate.Fitness - best.Fitness) / temperature);
@@ -56,7 +61,13 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
-            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            Individual best;
+#if Generator
+            best = new IndividualGenerator(); ;
+#endif
+#if TspKnp
+            best = new IndividualTspKnp(Population.CreateRandomIndividual()); ;
+#endif
 
             List<int[]> neighbors;
 
@@ -67,7 +78,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
             do
             {
-                neighbors = NeighborsGenerator.GetNeighbors(best, SimulatedAnnealingParameters.NumberOfNeighbors);
+                neighbors = best.GetNeighbors(SimulatedAnnealingParameters.NumberOfNeighbors);
 
                 foreach (var neighborsRoad in neighbors)
                 {
@@ -128,7 +139,13 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
-            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            Individual best;
+#if Generator
+            best = new IndividualGenerator(); ;
+#endif
+#if TspKnp
+            best = new IndividualTspKnp(Population.CreateRandomIndividual());
+#endif
 
             List<int[]> neighbors;
 
@@ -139,7 +156,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
             do
             {
-                neighbors = NeighborsGenerator.GetNeighbors(best, SimulatedAnnealingParameters.NumberOfNeighbors);
+                neighbors = best.GetNeighbors(SimulatedAnnealingParameters.NumberOfNeighbors);
 
                 foreach (var neighborsRoad in neighbors)
                 {
