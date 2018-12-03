@@ -3,7 +3,7 @@ using static GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm.GeneticAlgori
 
 namespace GeneticAlgorithmLogic.Individuals
 {
-    public class IndividualGa
+    public class IndividualGa : Individual
     {
         public int[] gaParameters;
 

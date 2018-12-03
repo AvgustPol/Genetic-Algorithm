@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using GeneticAlgorithmLogic.Individuals;
 
 namespace GeneticAlgorithmLogic
 {
     internal class NeighborsGenerator
     {
-        public static List<int[]> GetNeighbors(Individual current, int numberOfNeighbors)
+        public static List<int[]> GetNeighbors(IndividualTspKnp current, int numberOfNeighbors)
         {
             List<int[]> neighbors = new List<int[]>(numberOfNeighbors);
 

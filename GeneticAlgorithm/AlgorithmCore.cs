@@ -10,10 +10,6 @@ namespace GeneticAlgorithmLogic
 {
     public class AlgorithmCore
     {
-        public Metaheuristic Metaheuristic { get; set; }
-        public MetaheuristicParameters.MetaheuristicType MetaheuristicType { get; set; }
-        public string SourceDataFile { get; set; }
-
         public AlgorithmCore(MetaheuristicParameters.MetaheuristicType metaheuristicType, string sourceDataFile)
         {
             AlgorithmCoreParameters.ReadDataFromFileAndCreateAlgorithmCoreParameters(sourceDataFile);
@@ -23,21 +19,11 @@ namespace GeneticAlgorithmLogic
             Metaheuristic = MetaheuristicFactory.CreateMetaheuristic(metaheuristicType);
         }
 
-        public void RunForCurrentFile()
-        {
-            MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
+        public Metaheuristic Metaheuristic { get; set; }
+        public MetaheuristicParameters.MetaheuristicType MetaheuristicType { get; set; }
+        public string SourceDataFile { get; set; }
 
-            RunAlgorithm(parameters);
-        }
-
-        public void RunAnalyticForCurrentFile()
-        {
-            MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
-
-            RunAnalytic(parameters);
-        }
-
-        public void RunAlgorithm(MetaheuristicParameters metaheuristicParameters)
+        public void RunAndLogAlgorithm(MetaheuristicParameters metaheuristicParameters)
         {
             ToFileLogger toFileLogger = new ToFileLogger($"{SourceDataFile} {MetaheuristicType} result ");
 
@@ -63,6 +49,20 @@ namespace GeneticAlgorithmLogic
             toFileLogger.LogAnalytic(analizeResult);
         }
 
+        public void RunAnalyticForCurrentFile()
+        {
+            MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
+
+            RunAnalytic(parameters);
+        }
+
+        public void RunAndLogForCurrentFile()
+        {
+            MetaheuristicParameters parameters = MetaheuristicParametersFactory.CreateParameters(MetaheuristicType);
+
+            RunAndLogAlgorithm(parameters);
+        }
+
         private Tuple<double, double, double> Analize(List<MetaheuristicResult> allLoopsData)
         {
             double max, avg, dev;
@@ -73,19 +73,6 @@ namespace GeneticAlgorithmLogic
             dev = StandardDeviationCounter.CountStandardDeviation(avg, bestArray);
 
             return new Tuple<double, double, double>(max, avg, dev);
-        }
-
-        private double[] GetOnlyBest(List<MetaheuristicResult> allLoopsData)
-        {
-            double[] bestFintess = new double[GlobalParameters.NumberOfRuns];
-            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
-            {
-                var metaheuristicResult = allLoopsData[i];
-                double best = metaheuristicResult.Fitness.ListBest.Last();
-                bestFintess[i] = best;
-            }
-
-            return bestFintess;
         }
 
         private MetaheuristicResult CalculateAverageFintessForAllRunsOfTheAlgorithm(List<MetaheuristicResult> allLoopsData)
@@ -103,6 +90,19 @@ namespace GeneticAlgorithmLogic
             }
 
             return allAlgorithmsAverage;
+        }
+
+        private double[] GetOnlyBest(List<MetaheuristicResult> allLoopsData)
+        {
+            double[] bestFintess = new double[GlobalParameters.NumberOfRuns];
+            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
+            {
+                var metaheuristicResult = allLoopsData[i];
+                double best = metaheuristicResult.Fitness.ListBest.Last();
+                bestFintess[i] = best;
+            }
+
+            return bestFintess;
         }
     }
 }

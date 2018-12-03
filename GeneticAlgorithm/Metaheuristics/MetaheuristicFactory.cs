@@ -21,6 +21,10 @@ namespace GeneticAlgorithmLogic.Metaheuristics
                     metaheuristic = new TabuSearch.TabuSearch();
                     break;
 
+                case MetaheuristicParameters.MetaheuristicType.Generator:
+                    metaheuristic = new Generator.Generator();
+                    break;
+
                 default:
                     break;
             }

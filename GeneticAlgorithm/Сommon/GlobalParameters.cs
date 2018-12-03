@@ -26,9 +26,9 @@ namespace GeneticAlgorithmLogic.Сommon
 
         #region Source data
 
-        public static readonly List<string> FileNames = new List<string>() { "trivial_0.ttp", "easy_0.ttp" };
+        //public static readonly List<string> FileNames = new List<string>() { "trivial_0.ttp", "easy_0.ttp" };
 
-        //public static readonly List<string> FileNames = new List<string>() { "easy_2.ttp", "easy_3.ttp", "medium_2.ttp", "medium_3.ttp", "hard_2.ttp" };
+        public static readonly List<string> FileNames = new List<string>() { "easy_2.ttp", "easy_3.ttp", "medium_2.ttp", "medium_3.ttp", "hard_2.ttp" };
 
         #endregion Source data
 

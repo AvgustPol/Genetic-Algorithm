@@ -3,17 +3,15 @@ using GeneticAlgorithmLogic.Сommon;
 using System;
 using System.Collections.Generic;
 
-namespace GeneticAlgorithmLogic
+namespace GeneticAlgorithmLogic.Individuals
 {
-    public class Individual : ICloneable
+    public class IndividualTspKnp : Individual, ICloneable
     {
         /// <summary>
         /// TSP problem
         /// Places sequence is a road
         /// </summary>
         public int[] Places { get; set; }
-
-        public double Fitness { get; set; }
 
         /// <summary>
         /// id - placeId
@@ -28,11 +26,11 @@ namespace GeneticAlgorithmLogic
         /// </summary
         public bool[] Items { get; set; }
 
-        public Individual()
+        public IndividualTspKnp()
         {
         }
 
-        public Individual(int[] road)
+        public IndividualTspKnp(int[] road)
         {
             Places = road;
             CreateItems();
@@ -188,7 +186,7 @@ namespace GeneticAlgorithmLogic
 
         public object Clone()
         {
-            Individual clone = new Individual();
+            IndividualTspKnp clone = new IndividualTspKnp();
             if (Places != null)
             {
                 clone.Places = (int[])Places.Clone();

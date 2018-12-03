@@ -3,6 +3,7 @@ using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
 using System.Collections.Generic;
 using System.Linq;
+using GeneticAlgorithmLogic.Individuals;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
@@ -40,8 +41,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
             List<int[]> neighbors;
 
-            Individual best = new Individual(Population.CreateRandomIndividual());
-            Individual current = best;
+            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            IndividualTspKnp current = best;
 
             //best fount
             //current -> best Neighbor
@@ -61,7 +62,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
                 {
                     if (!IsContains(candidate))
                     {
-                        Individual tmpCandidate = new Individual(candidate);
+                        IndividualTspKnp tmpCandidate = new IndividualTspKnp(candidate);
 
                         #region Save to neighbors fitness list
 
@@ -113,8 +114,8 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
             List<int[]> neighbors;
 
-            Individual best = new Individual(Population.CreateRandomIndividual());
-            Individual current = best;
+            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            IndividualTspKnp current = best;
 
             //best fount
             //current -> best Neighbor
@@ -134,7 +135,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
                 {
                     if (!IsContains(candidate))
                     {
-                        Individual tmpCandidate = new Individual(candidate);
+                        IndividualTspKnp tmpCandidate = new IndividualTspKnp(candidate);
 
                         #region Save to neighbors fitness list
 

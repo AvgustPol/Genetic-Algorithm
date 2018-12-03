@@ -6,7 +6,8 @@
         {
             GA,
             SA,
-            TS
+            TS,
+            Generator
         }
 
         public int AlgorithmStopCondition { get; set; } = 1779;

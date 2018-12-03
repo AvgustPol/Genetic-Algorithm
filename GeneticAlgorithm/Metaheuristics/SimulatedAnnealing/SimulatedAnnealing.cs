@@ -1,4 +1,5 @@
-﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+﻿using GeneticAlgorithmLogic.Individuals;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
 using System;
@@ -13,7 +14,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
         public static int LowTemperatureCounter { get; set; }
 
-        public static void TryAvoidLocalOptimum(ref Individual best, ref Individual tmpCandidate, double temperature)
+        public static void TryAvoidLocalOptimum(ref IndividualTspKnp best, ref IndividualTspKnp tmpCandidate, double temperature)
         {
             //отнимаем tmpCandidate - best, потому что для данной проблемы best = biggest
             double expValue = Math.Exp((tmpCandidate.Fitness - best.Fitness) / temperature);
@@ -55,7 +56,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
-            Individual best = new Individual(Population.CreateRandomIndividual());
+            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
 
             List<int[]> neighbors;
 
@@ -70,7 +71,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
                 foreach (var neighborsRoad in neighbors)
                 {
-                    Individual neighbor = new Individual(neighborsRoad);
+                    IndividualTspKnp neighbor = new IndividualTspKnp(neighborsRoad);
 
                     #region Save to neighbors fitness list
 
@@ -127,7 +128,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
 
             double currentTemperature = SimulatedAnnealingParameters.InitializeTemperature;
-            Individual best = new Individual(Population.CreateRandomIndividual());
+            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
 
             List<int[]> neighbors;
 
@@ -142,7 +143,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
                 foreach (var neighborsRoad in neighbors)
                 {
-                    Individual neighbor = new Individual(neighborsRoad);
+                    IndividualTspKnp neighbor = new IndividualTspKnp(neighborsRoad);
 
                     #region Save to neighbors fitness list
 

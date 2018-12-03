@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using GeneticAlgorithmLogic.Individuals;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
@@ -7,7 +8,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
     {
         public readonly int PopulationSize;
 
-        public Dictionary<int, Individual> Individuals { get; set; }
+        public Dictionary<int, IndividualTspKnp> Individuals { get; set; }
 
         public Population()
         {
@@ -92,23 +93,23 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         public int SelectAndCross()
         {
             int counter = 0;
-            Dictionary<int, Individual> nextPopulation = new Dictionary<int, Individual>();
+            Dictionary<int, IndividualTspKnp> nextPopulation = new Dictionary<int, IndividualTspKnp>();
 
             while (nextPopulation.Count != PopulationSize)
             {
                 int randomNumber = Randomizer.Random.Next(GeneticAlgorithmParameters.MaxProbability);
                 if (GeneticAlgorithm.GeneticAlgorithmParameters.CrossProbability > randomNumber)
                 {
-                    Individual parent1 = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
-                    Individual parent2 = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    IndividualTspKnp parent1 = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    IndividualTspKnp parent2 = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
-                    Individual child = Cross(parent1, parent2);
+                    IndividualTspKnp child = Cross(parent1, parent2);
                     nextPopulation.Add(nextPopulation.Count, child);
                     counter++;
                 }
                 else
                 {
-                    Individual winner = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
+                    IndividualTspKnp winner = GetTournamentSelectionWinner(GeneticAlgorithm.GeneticAlgorithmParameters.NumberOfTournamentParticipants);
 
                     nextPopulation.Add(nextPopulation.Count, winner);
                 }
@@ -121,7 +122,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
         {
             for (int i = 0; i < PopulationSize; i++)
             {
-                Individuals.Add(i, new Individual(CreateRandomIndividual()));
+                Individuals.Add(i, new IndividualTspKnp(CreateRandomIndividual()));
             }
         }
 
@@ -142,13 +143,13 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 
         public void CreatePopulationIndividuals()
         {
-            Individuals = new Dictionary<int, Individual>(PopulationSize);
+            Individuals = new Dictionary<int, IndividualTspKnp>(PopulationSize);
             CreateNewRandomPopulation();
         }
 
-        private Individual Cross(Individual firstIndividual, Individual secondIndividual)
+        private IndividualTspKnp Cross(IndividualTspKnp firstIndividualTspKnp, IndividualTspKnp secondIndividualTspKnp)
         {
-            Individual child = CrossAndGetChild(firstIndividual, secondIndividual);
+            IndividualTspKnp child = CrossAndGetChild(firstIndividualTspKnp, secondIndividualTspKnp);
 
             child.CreateItems();
             child.CountFitness();
@@ -165,7 +166,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
             return Randomizer.Random.Next(PopulationSize);
         }
 
-        private Individual GetTournamentSelectionWinner(int numberOfTournamentParticipants)
+        private IndividualTspKnp GetTournamentSelectionWinner(int numberOfTournamentParticipants)
         {
             int bestId = GetRandomId();
             numberOfTournamentParticipants--;
@@ -181,12 +182,12 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
             return Individuals[bestId];
         }
 
-        private Individual CrossAndGetChild(Individual firstIndividual, Individual secondIndividual)
+        private IndividualTspKnp CrossAndGetChild(IndividualTspKnp firstIndividualTspKnp, IndividualTspKnp secondIndividualTspKnp)
         {
-            int[] firstIndividualCopy = (int[])firstIndividual.Places.Clone();
-            int[] secondIndividualCopy = (int[])secondIndividual.Places.Clone();
+            int[] firstIndividualCopy = (int[])firstIndividualTspKnp.Places.Clone();
+            int[] secondIndividualCopy = (int[])secondIndividualTspKnp.Places.Clone();
 
-            return new Individual()
+            return new IndividualTspKnp()
             {
                 Places = Permutator.CrossPermutations(firstIndividualCopy, secondIndividualCopy)
             };

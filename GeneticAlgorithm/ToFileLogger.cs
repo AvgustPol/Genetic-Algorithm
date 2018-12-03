@@ -1,10 +1,10 @@
 ﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
+using GeneticAlgorithmLogic.Сommon;
 using System;
 using System.Globalization;
 using System.IO;
-using GeneticAlgorithmLogic.Сommon;
 
 namespace GeneticAlgorithmLogic
 {
@@ -120,8 +120,8 @@ namespace GeneticAlgorithmLogic
                     new[]
                     {
                         $"Genetic Algorithm " ,
-                        $"Ilość osobników w populacji: {parameters.PopulationSize}" ,
-                        $"Ilość uczestników  w turnieju: {parameters.NumberOfTournamentParticipants}" ,
+                        $"Liczba osobników w populacji: {parameters.PopulationSize}" ,
+                        $"Liczba uczestników  w turnieju: {parameters.NumberOfTournamentParticipants}" ,
                         $"Krzyżowanie: {parameters.CrossProbability}%" ,
                         $"Mutacja: {parameters.MutationProbability}%" ,
                     });
@@ -144,7 +144,7 @@ namespace GeneticAlgorithmLogic
             //    //    {
             //    //        $"Tabu Search" ,
             //    //        $"Rozmiar  listy tabu {TabuSearchParameters.TabuListSize}" ,
-            //    //        $"Ilość sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
+            //    //        $"Liczba sąsiedzi w jednej generacji {TabuSearchParameters.NumberOfNeighbors}" ,
             //    //        $"Poziom sąsiedztwa 1" ,
             //    //    });
             //}
