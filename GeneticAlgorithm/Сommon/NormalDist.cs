@@ -67,8 +67,6 @@ namespace GeneticAlgorithmLogic.Сommon
         // c_ is just oneOverSigma_*OneOverRoot2Pi
         private double c_;
 
-        private double mean_;
-
         // Once we have the mean and variance, the following are constants
         // that are needed to evaluate the pdf.
         private double oneOverSigma_;
@@ -90,7 +88,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// <remarks>The variance of the distribution is the standard deviation squared.</remarks>
         public NormalDist(double mean, double var)
         {
-            mean_ = mean;
+            Mean = mean;
             Variance = var;
         }
 
@@ -118,18 +116,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// <summary>
         /// Gets and sets the mean of the density.
         /// </summary>
-        public double Mean
-        {
-            get
-            {
-                return mean_;
-            }
-
-            set
-            {
-                mean_ = value;
-            }
-        }
+        public double Mean { get; set; }
 
         /// <summary>
         /// Gets the skewness, a measure of the degree of asymmetry of
@@ -196,7 +183,7 @@ namespace GeneticAlgorithmLogic.Сommon
             int i;
             double del, temp, z, xden, xnum, y, xsq, min;
             double result, ccum;
-            double arg = (x - mean_) / sigma_;
+            double arg = (x - Mean) / sigma_;
 
             min = double.Epsilon;
             z = arg;
@@ -290,7 +277,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// <returns>The probability density function evaluated at <c>x</c>.</returns>
         public double PDF(double x)
         {
-            double y = (x - mean_);
+            double y = (x - Mean);
             double xMinusMuSqr = y * y;
 
             // c_ is a constant equal to one over sigma times one over square root of 2 PI

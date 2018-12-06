@@ -15,6 +15,8 @@ namespace GeneticAlgorithmLogic.Сommon.Individuals
         {
             CreateParameters();
             Metaheuristic = (GeneticAlgorithm)MetaheuristicFactory.CreateMetaheuristic(Type);
+
+            CountFitness();
         }
 
         public IndividualHybryd(int[] parameters)
@@ -38,10 +40,6 @@ namespace GeneticAlgorithmLogic.Сommon.Individuals
             for (int i = 0; i < length; i++)
             {
                 RandomParameters[i] = Randomizer.Random.Next(GeneticAlgorithmParameters.MinProbability, GeneticAlgorithmParameters.MaxProbability);
-
-                double mean = RandomParameters[i];
-                double sigma = 9.9;
-                NormalDist dist = new NormalDist(mean, sigma);
             }
 
             return RandomParameters;
@@ -97,7 +95,25 @@ namespace GeneticAlgorithmLogic.Сommon.Individuals
 
         public override int[] GetMutation()
         {
-            return Permutator.GetRandomPermutation(Parameters);
+            int[] tmp = new int[Parameters.Length];
+
+            for (int i = 0; i < Parameters.Length; i++)
+            {
+                //double mean = 0;
+                //double sigma = 10;
+                //NormalDist dist = new NormalDist(mean, sigma);
+                //var NormalDistribution = (int)dist.PDF(Parameters[i]);
+
+                //var max = Math.Max(NormalDistribution, GeneticAlgorithmParameters.MinProbability);
+                //var newParameter = Math.Min(max, GeneticAlgorithmParameters.MaxProbability);
+
+                //tmp[i] = newParameter;
+
+                tmp[i] = Randomizer.Random.Next(GeneticAlgorithmParameters.MinProbability,
+                    GeneticAlgorithmParameters.MaxProbability);
+            }
+
+            return tmp;
         }
 
         public override List<int[]> GetNeighbors(int numberOfNeighbors)

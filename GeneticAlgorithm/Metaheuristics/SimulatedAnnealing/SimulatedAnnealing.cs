@@ -1,7 +1,12 @@
-﻿#define Generator
-//#define TspKnp
-//#undef Generator
-#undef TspKnp
+﻿//#define Generator
+////#define TspKnp
+////#undef Generator
+//#undef TspKnp
+
+//#define Generator
+#define TspKnp
+#undef Generator
+//#undef TspKnp
 
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
@@ -79,13 +84,13 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             {
                 neighbors = best.GetNeighbors(SimulatedAnnealingParameters.NumberOfNeighbors);
 
-                foreach (var neighborsRoad in neighbors)
+                foreach (var parameters in neighbors)
                 {
 #if Generator
-                    Individual neighbor = new IndividualHybryd(neighborsRoad);
+                    Individual neighbor = new IndividualHybryd(parameters);
 #endif
 #if TspKnp
-                    IndividualTspKnp neighbor = new IndividualTspKnp(neighborsRoad);
+                    Individual neighbor = new IndividualTspKnp(parameters);
 #endif
 
                     #region Save to neighbors fitness list
@@ -148,7 +153,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
             best = new IndividualHybryd(); ;
 #endif
 #if TspKnp
-            best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            best = new IndividualTspKnp(IndividualTspKnp.CreateRandomIndividual());
 #endif
 
             List<int[]> neighbors;

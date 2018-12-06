@@ -8,7 +8,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// указывает , сколько раз best fitness
         /// может не изменяться перед тем, как алгоритм перестанет работать
         /// </summary>
-        public const int NumberOfNonchangedFitness = 2;
+        public const int NumberOfNonchangedFitness = 3;
 
         /// <summary>
         /// STOP_CONDITION
@@ -20,7 +20,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// STOP_CONDITION
         /// Number of runs algorcoreithm to exlore it
         /// </summary>
-        public const int NumberOfRuns = 5;
+        public const int NumberOfRuns = 3;
 
         public const string PathToTestFolder = @"D:\7 semestr\Metaheurystyki\Data\ttp_student\";
 
