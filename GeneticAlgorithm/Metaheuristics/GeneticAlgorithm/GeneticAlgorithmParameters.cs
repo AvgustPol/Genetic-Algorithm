@@ -4,6 +4,18 @@ namespace GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm
 {
     public class GeneticAlgorithmParameters : MetaheuristicParameters
     {
+        public GeneticAlgorithmParameters()
+        {
+        }
+
+        public GeneticAlgorithmParameters(int[] parameters)
+        {
+            PopulationSize = parameters[0];
+            NumberOfTournamentParticipants = parameters[1];
+            MutationProbability = parameters[2];
+            CrossProbability = parameters[3];
+        }
+
         public enum GeneticAlgorithmParametersType
         {
             PopulationSize,

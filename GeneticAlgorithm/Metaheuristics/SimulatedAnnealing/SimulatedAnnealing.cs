@@ -18,7 +18,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
         public static int LowTemperatureCounter { get; set; }
 
-        public static void TryAvoidLocalOptimum(ref Individual best, ref IndividualTspKnp tmpCandidate, double temperature)
+        public static void TryAvoidLocalOptimum(ref Individual best, ref Individual tmpCandidate, double temperature)
         {
             //отнимаем tmpCandidate - best, потому что для данной проблемы best = biggest
             double expValue = Math.Exp((tmpCandidate.Fitness - best.Fitness) / temperature);
@@ -82,7 +82,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
                 foreach (var neighborsRoad in neighbors)
                 {
 #if Generator
-                    IndividualHybryd neighbor = new IndividualHybryd(neighborsRoad);
+                    Individual neighbor = new IndividualHybryd(neighborsRoad);
 #endif
 #if TspKnp
                     IndividualTspKnp neighbor = new IndividualTspKnp(neighborsRoad);
@@ -164,7 +164,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing
 
                 foreach (var neighborsRoad in neighbors)
                 {
-                    IndividualTspKnp neighbor = new IndividualTspKnp(neighborsRoad);
+                    Individual neighbor = new IndividualTspKnp(neighborsRoad);
 
                     #region Save to neighbors fitness list
 

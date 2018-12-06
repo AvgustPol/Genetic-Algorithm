@@ -13,7 +13,7 @@ namespace GeneticAlgorithmLogic.Сommon.Distribution
 
             double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
 
-            double randNormal = mean + stdDev * randStdNormal; //random normal(mean,stdDev^2)
+            //double randNormal = mean + stdDev * randStdNormal; //random normal(mean,stdDev^2)
         }
     }
 }

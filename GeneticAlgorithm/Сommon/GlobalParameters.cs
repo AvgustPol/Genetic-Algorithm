@@ -20,7 +20,7 @@ namespace GeneticAlgorithmLogic.Сommon
         /// STOP_CONDITION
         /// Number of runs algorcoreithm to exlore it
         /// </summary>
-        public const int NumberOfRuns = 10;
+        public const int NumberOfRuns = 5;
 
         public const string PathToTestFolder = @"D:\7 semestr\Metaheurystyki\Data\ttp_student\";
 

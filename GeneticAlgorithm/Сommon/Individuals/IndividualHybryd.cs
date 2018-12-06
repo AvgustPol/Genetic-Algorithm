@@ -1,10 +1,11 @@
-﻿using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
+﻿using GeneticAlgorithmLogic.Metaheuristics;
+using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
-using GeneticAlgorithmLogic.Metaheuristics.SimulatedAnnealing;
 using StatisticsCounter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static GeneticAlgorithmLogic.Metaheuristics.Parameters.MetaheuristicParameters;
 
 namespace GeneticAlgorithmLogic.Сommon.Individuals
 {
@@ -12,21 +13,109 @@ namespace GeneticAlgorithmLogic.Сommon.Individuals
     {
         public IndividualHybryd()
         {
-            Parameters = new int[Enum.GetNames(typeof(GeneticAlgorithmParameters.GeneticAlgorithmParametersType)).Length];
+            CreateParameters();
+            Metaheuristic = (GeneticAlgorithm)MetaheuristicFactory.CreateMetaheuristic(Type);
         }
 
         public IndividualHybryd(int[] parameters)
         {
             Parameters = parameters;
-            MetaheuristicParameters = new SimulatedAnnealingParameters(parameters);
+            MetaheuristicParameters = new GeneticAlgorithmParameters(parameters);
+            Metaheuristic = (GeneticAlgorithm)MetaheuristicFactory.CreateMetaheuristic(Type);
 
             CountFitness();
         }
 
+        private void CreateParameters()
+        {
+            Parameters = CreateRandomParameters();
+        }
+
+        private int[] CreateRandomParameters()
+        {
+            int length = Enum.GetNames(typeof(GeneticAlgorithmParameters.GeneticAlgorithmParametersType)).Length;
+            var RandomParameters = new int[length];
+            for (int i = 0; i < length; i++)
+            {
+                RandomParameters[i] = Randomizer.Random.Next(GeneticAlgorithmParameters.MinProbability, GeneticAlgorithmParameters.MaxProbability);
+
+                double mean = RandomParameters[i];
+                double sigma = 9.9;
+                NormalDist dist = new NormalDist(mean, sigma);
+            }
+
+            return RandomParameters;
+        }
+
+        public GeneticAlgorithm Metaheuristic { get; set; }
+        public const MetaheuristicType Type = MetaheuristicType.GA;
+        public MetaheuristicParameters MetaheuristicParameters { get; set; }
         public int[] Parameters { get; set; }
 
-        public SimulatedAnnealing Metaheuristic { get; set; }
-        public MetaheuristicParameters MetaheuristicParameters { get; set; }
+        public override object Clone()
+        {
+            IndividualHybryd clone = new IndividualHybryd();
+            if (Parameters != null)
+            {
+                clone.Parameters = (int[])Parameters.Clone();
+            }
+
+            if (Metaheuristic != null)
+            {
+                clone.Metaheuristic = Metaheuristic;
+            }
+
+            if (MetaheuristicParameters != null)
+            {
+                clone.MetaheuristicParameters = MetaheuristicParameters;
+            }
+            //TODO : точно ли тебе нужно клонировать все таблицы?
+
+            //if (ItemsLocation != null)
+            //{
+            //    clone.ItemsLocation = (int[])ItemsLocation.Clone();
+            //}
+
+            clone.Fitness = Fitness;
+
+            return clone;
+        }
+
+        public override void CountFitness()
+        {
+            List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>();
+
+            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
+            {
+                MetaheuristicResult metaheuristicResult = Metaheuristic.Run(MetaheuristicParameters);
+                allLoopsData.Add(metaheuristicResult);
+            }
+
+            double median = GetMedian(allLoopsData);
+            Fitness = median;
+        }
+
+        public override int[] GetMutation()
+        {
+            return Permutator.GetRandomPermutation(Parameters);
+        }
+
+        public override List<int[]> GetNeighbors(int numberOfNeighbors)
+        {
+            List<int[]> neighbors = new List<int[]>(numberOfNeighbors);
+
+            for (int i = 0; i < numberOfNeighbors; i++)
+            {
+                neighbors.Add(GetMutation());
+            }
+
+            return neighbors;
+        }
+
+        public override bool Mutate()
+        {
+            throw new NotImplementedException();
+        }
 
         private double GetMedian(List<MetaheuristicResult> allLoopsData)
         {
@@ -47,40 +136,6 @@ namespace GeneticAlgorithmLogic.Сommon.Individuals
             }
 
             return bestFintess;
-        }
-
-        public override object Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void CountFitness()
-        {
-            List<MetaheuristicResult> allLoopsData = new List<MetaheuristicResult>();
-
-            for (int i = 0; i < GlobalParameters.NumberOfRuns; i++)
-            {
-                MetaheuristicResult metaheuristicResult = Metaheuristic.Run(MetaheuristicParameters);
-                allLoopsData.Add(metaheuristicResult);
-            }
-
-            double median = GetMedian(allLoopsData);
-            Fitness = median;
-        }
-
-        public override int[] GetMutation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override List<int[]> GetNeighbors(int numberOfNeighbors)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Mutate()
-        {
-            throw new NotImplementedException();
         }
     }
 }

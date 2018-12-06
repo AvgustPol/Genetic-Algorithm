@@ -6,11 +6,7 @@
         {
             GA,
             SA,
-            TS,
-            Generator
+            TS
         }
-
-        public int AlgorithmStopCondition { get; set; } = 1779;
-        //public int AlgorithmStopCondition { get; set; } = 2878;
     }
 }

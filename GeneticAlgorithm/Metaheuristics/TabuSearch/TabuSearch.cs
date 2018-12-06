@@ -3,12 +3,11 @@
 #undef Generator
 //#undef TspKnp
 
-using GeneticAlgorithmLogic.Metaheuristics.GeneticAlgorithm;
 using GeneticAlgorithmLogic.Metaheuristics.Parameters;
 using GeneticAlgorithmLogic.Сommon;
+using GeneticAlgorithmLogic.Сommon.Individuals;
 using System.Collections.Generic;
 using System.Linq;
-using GeneticAlgorithmLogic.Сommon.Individuals;
 
 namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
 {
@@ -46,7 +45,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
             List<int[]> neighbors;
 
-            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            IndividualTspKnp best = new IndividualTspKnp(IndividualTspKnp.CreateRandomIndividual());
             IndividualTspKnp current = best;
 
             //best fount
@@ -119,7 +118,7 @@ namespace GeneticAlgorithmLogic.Metaheuristics.TabuSearch
             MetaheuristicResult metaheuristicResult = new MetaheuristicResult();
             List<int[]> neighbors;
 
-            IndividualTspKnp best = new IndividualTspKnp(Population.CreateRandomIndividual());
+            IndividualTspKnp best = new IndividualTspKnp(IndividualTspKnp.CreateRandomIndividual());
             IndividualTspKnp current = best;
 
             //best fount
